@@ -340,17 +340,94 @@
             <div class="form-group">
                 <label>생년월일</label>
                 <div class="date-inputs">
-                    <input type="number" id="year" placeholder="년 (예: 1990)" min="1900" max="2100">
-                    <input type="number" id="month" placeholder="월" min="1" max="12">
-                    <input type="number" id="day" placeholder="일" min="1" max="31">
+                    <input type="number" id="year" placeholder="년 (예: 1990)" min="1900" max="2100" required>
+                    <select id="month" required>
+                        <option value="">월</option>
+                        <option value="1">1월</option>
+                        <option value="2">2월</option>
+                        <option value="3">3월</option>
+                        <option value="4">4월</option>
+                        <option value="5">5월</option>
+                        <option value="6">6월</option>
+                        <option value="7">7월</option>
+                        <option value="8">8월</option>
+                        <option value="9">9월</option>
+                        <option value="10">10월</option>
+                        <option value="11">11월</option>
+                        <option value="12">12월</option>
+                    </select>
+                    <select id="day" required>
+                        <option value="">일</option>
+                        <option value="1">1일</option>
+                        <option value="2">2일</option>
+                        <option value="3">3일</option>
+                        <option value="4">4일</option>
+                        <option value="5">5일</option>
+                        <option value="6">6일</option>
+                        <option value="7">7일</option>
+                        <option value="8">8일</option>
+                        <option value="9">9일</option>
+                        <option value="10">10일</option>
+                        <option value="11">11일</option>
+                        <option value="12">12일</option>
+                        <option value="13">13일</option>
+                        <option value="14">14일</option>
+                        <option value="15">15일</option>
+                        <option value="16">16일</option>
+                        <option value="17">17일</option>
+                        <option value="18">18일</option>
+                        <option value="19">19일</option>
+                        <option value="20">20일</option>
+                        <option value="21">21일</option>
+                        <option value="22">22일</option>
+                        <option value="23">23일</option>
+                        <option value="24">24일</option>
+                        <option value="25">25일</option>
+                        <option value="26">26일</option>
+                        <option value="27">27일</option>
+                        <option value="28">28일</option>
+                        <option value="29">29일</option>
+                        <option value="30">30일</option>
+                        <option value="31">31일</option>
+                    </select>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>태어난 시간 (선택사항)</label>
                 <div class="time-inputs">
-                    <input type="number" id="hour" placeholder="시 (0-23)" min="0" max="23">
-                    <input type="number" id="minute" placeholder="분 (0-59)" min="0" max="59">
+                    <select id="hour">
+                        <option value="">시 (선택)</option>
+                        <option value="0">0시 (자시 23-01)</option>
+                        <option value="1">1시 (축시 01-03)</option>
+                        <option value="2">2시</option>
+                        <option value="3">3시 (인시 03-05)</option>
+                        <option value="4">4시</option>
+                        <option value="5">5시 (묘시 05-07)</option>
+                        <option value="6">6시</option>
+                        <option value="7">7시 (진시 07-09)</option>
+                        <option value="8">8시</option>
+                        <option value="9">9시 (사시 09-11)</option>
+                        <option value="10">10시</option>
+                        <option value="11">11시 (오시 11-13)</option>
+                        <option value="12">12시</option>
+                        <option value="13">13시 (미시 13-15)</option>
+                        <option value="14">14시</option>
+                        <option value="15">15시 (신시 15-17)</option>
+                        <option value="16">16시</option>
+                        <option value="17">17시 (유시 17-19)</option>
+                        <option value="18">18시</option>
+                        <option value="19">19시 (술시 19-21)</option>
+                        <option value="20">20시</option>
+                        <option value="21">21시 (해시 21-23)</option>
+                        <option value="22">22시</option>
+                        <option value="23">23시</option>
+                    </select>
+                    <select id="minute">
+                        <option value="">분 (선택)</option>
+                        <option value="0">0분</option>
+                        <option value="30">30분</option>
+                    </select>
                 </div>
             </div>
 

@@ -533,20 +533,47 @@ function generateEnhancedGeneralAdvice(element, elementBalance, dayStem, yearPil
 // 메인 함수들
 function calculateSaju() {
     const gender = document.getElementById('gender').value;
-    const year = parseInt(document.getElementById('year').value);
-    const month = parseInt(document.getElementById('month').value);
-    const day = parseInt(document.getElementById('day').value);
+    const yearInput = document.getElementById('year').value;
+    const monthInput = document.getElementById('month').value;
+    const dayInput = document.getElementById('day').value;
     const hour = document.getElementById('hour').value;
     const minute = document.getElementById('minute').value;
     const calendar = document.getElementById('calendar').value;
     
-    if (!year || !month || !day) {
+    // 입력 검증
+    if (!yearInput || !monthInput || !dayInput) {
         alert('생년월일을 모두 입력해주세요.');
         return;
     }
     
-    if (month < 1 || month > 12 || day < 1 || day > 31) {
-        alert('올바른 날짜를 입력해주세요.');
+    const year = parseInt(yearInput);
+    const month = parseInt(monthInput);
+    const day = parseInt(dayInput);
+    
+    // 년도 범위 검증
+    if (year < 1900 || year > 2100) {
+        alert('년도는 1900년부터 2100년 사이로 입력해주세요.');
+        return;
+    }
+    
+    // 월 검증
+    if (month < 1 || month > 12) {
+        alert('월은 1월부터 12월 사이로 선택해주세요.');
+        return;
+    }
+    
+    // 일 검증 (월별 일수 체크)
+    const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    
+    // 윤년 체크
+    const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+    if (isLeapYear) {
+        daysInMonth[1] = 29;
+    }
+    
+    const maxDay = daysInMonth[month - 1];
+    if (day < 1 || day > maxDay) {
+        alert(`${month}월은 1일부터 ${maxDay}일까지만 있습니다.`);
         return;
     }
     
