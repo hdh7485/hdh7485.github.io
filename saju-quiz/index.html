@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사주팔자 - 당신의 운명을 알아보세요</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 40px 0;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .date-inputs {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .time-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .saju-display {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .pillar {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+        }
+
+        .pillar-title {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .pillar-char {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .fortune-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .fortune-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .fortune-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .fortune-item h4 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .fortune-item p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .element-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 5px 5px 0 0;
+        }
+
+        .wood { background: #4caf50; color: white; }
+        .fire { background: #f44336; color: white; }
+        .earth { background: #ff9800; color: white; }
+        .metal { background: #9e9e9e; color: white; }
+        .water { background: #2196f3; color: white; }
+
+        .back-button {
+            background: #6c757d;
+            margin-top: 20px;
+        }
+
+        .analysis-score {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .score-item {
+            flex: 1;
+        }
+
+        .score-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0 auto 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔮 사주팔자</h1>
+            <p class="subtitle">당신의 운명을 알아보세요</p>
+        </header>
+
+        <div class="card input-form">
+            <h2 style="margin-bottom: 30px; color: #333;">생년월일시 입력</h2>
+            
+            <div class="form-group">
+                <label>성별</label>
+                <select id="gender">
+                    <option value="male">남성</option>
+                    <option value="female">여성</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>생년월일</label>
+                <div class="date-inputs">
+                    <input type="number" id="year" placeholder="년 (예: 1990)" min="1900" max="2100">
+                    <input type="number" id="month" placeholder="월" min="1" max="12">
+                    <input type="number" id="day" placeholder="일" min="1" max="31">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>태어난 시간 (선택사항)</label>
+                <div class="time-inputs">
+                    <input type="number" id="hour" placeholder="시 (0-23)" min="0" max="23">
+                    <input type="number" id="minute" placeholder="분 (0-59)" min="0" max="59">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>양력/음력</label>
+                <select id="calendar">
+                    <option value="solar">양력</option>
+                    <option value="lunar">음력</option>
+                </select>
+            </div>
+
+            <button onclick="calculateSaju()">사주팔자 보기</button>
+        </div>
+
+        <div class="card result" id="result">
+            <h2 style="margin-bottom: 20px; color: #333;">당신의 사주팔자</h2>
+            
+            <div id="basicInfo" style="text-align: center; margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                <!-- 기본 정보 표시 -->
+            </div>
+
+            <div class="saju-display">
+                <div class="pillar">
+                    <div class="pillar-title">시주 (時柱)</div>
+                    <div class="pillar-char" id="hour-sky">甲</div>
+                    <div class="pillar-char" id="hour-earth">子</div>
+                </div>
+                <div class="pillar">
+                    <div class="pillar-title">일주 (日柱)</div>
+                    <div class="pillar-char" id="day-sky">乙</div>
+                    <div class="pillar-char" id="day-earth">丑</div>
+                </div>
+                <div class="pillar">
+                    <div class="pillar-title">월주 (月柱)</div>
+                    <div class="pillar-char" id="month-sky">丙</div>
+                    <div class="pillar-char" id="month-earth">寅</div>
+                </div>
+                <div class="pillar">
+                    <div class="pillar-title">년주 (年柱)</div>
+                    <div class="pillar-char" id="year-sky">丁</div>
+                    <div class="pillar-char" id="year-earth">卯</div>
+                </div>
+            </div>
+
+            <div id="elements" style="margin: 20px 0; text-align: center;">
+                <!-- 오행 분석 -->
+            </div>
+
+            <div class="analysis-score">
+                <div class="score-item">
+                    <div class="score-circle" id="health-score">85</div>
+                    <div>건강운</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-circle" id="wealth-score">72</div>
+                    <div>재물운</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-circle" id="career-score">90</div>
+                    <div>직업운</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-circle" id="love-score">68</div>
+                    <div>애정운</div>
+                </div>
+            </div>
+
+            <div class="fortune-section">
+                <h3>💼 직업운</h3>
+                <div class="fortune-item" id="career-fortune">
+                    <p>분석 중...</p>
+                </div>
+            </div>
+
+            <div class="fortune-section">
+                <h3>💰 재물운</h3>
+                <div class="fortune-item" id="wealth-fortune">
+                    <p>분석 중...</p>
+                </div>
+            </div>
+
+            <div class="fortune-section">
+                <h3>❤️ 애정운</h3>
+                <div class="fortune-item" id="love-fortune">
+                    <p>분석 중...</p>
+                </div>
+            </div>
+
+            <div class="fortune-section">
+                <h3>🏥 건강운</h3>
+                <div class="fortune-item" id="health-fortune">
+                    <p>분석 중...</p>
+                </div>
+            </div>
+
+            <div class="fortune-section">
+                <h3>🎯 종합 조언</h3>
+                <div class="fortune-item" id="general-advice">
+                    <p>분석 중...</p>
+                </div>
+            </div>
+
+            <button class="back-button" onclick="resetForm()">다시 보기</button>
+        </div>
+    </div>
+
+    <script src="saju.js"></script>
+</body>
+</html>

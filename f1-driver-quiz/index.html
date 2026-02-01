@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>당신은 어떤 F1 드라이버? 🏎️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #e61e32 0%, #000000 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 40px 0;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            margin-bottom: 30px;
+        }
+
+        .intro-screen, .question-screen, .result-screen {
+            display: none;
+        }
+
+        .intro-screen.active, .question-screen.active, .result-screen.active {
+            display: block;
+        }
+
+        .intro-content {
+            text-align: center;
+        }
+
+        .intro-content h2 {
+            color: #e61e32;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .intro-content p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e61e32 0%, #ff6b6b 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-content h3 {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .question-number {
+            color: #e61e32;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            color: #222;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 20px;
+            background: #f8f9fa;
+            border: 3px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1em;
+        }
+
+        .option:hover {
+            background: #fff5f5;
+            border-color: #e61e32;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: #e61e32;
+            color: white;
+            border-color: #e61e32;
+            transform: translateX(5px);
+        }
+
+        button.primary {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #e61e32 0%, #c41e3a 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        button.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(230, 30, 50, 0.4);
+        }
+
+        button.primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-header {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .driver-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #e61e32, #ff6b6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6em;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .driver-name {
+            font-size: 2.5em;
+            color: #e61e32;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .driver-team {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .match-percentage {
+            font-size: 3em;
+            color: #e61e32;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .trait-bars {
+            margin: 40px 0;
+        }
+
+        .trait {
+            margin-bottom: 25px;
+        }
+
+        .trait-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .trait-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .trait-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e61e32, #ff6b6b);
+            transition: width 1s ease;
+        }
+
+        .description {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #e61e32;
+            margin: 30px 0;
+        }
+
+        .description h4 {
+            color: #e61e32;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .description p {
+            line-height: 1.8;
+            color: #555;
+            font-size: 1.05em;
+        }
+
+        .share-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .share-section h4 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .retry-button {
+            background: #6c757d;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+            
+            .driver-image {
+                width: 150px;
+                height: 150px;
+                font-size: 4em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏎️ F1 드라이버 테스트</h1>
+            <p class="subtitle">당신은 어떤 F1 드라이버와 비슷할까요?</p>
+        </header>
+
+        <!-- 인트로 화면 -->
+        <div class="card intro-screen active">
+            <div class="intro-content">
+                <h2>🏁 레이스를 시작하기 전에...</h2>
+                <p>12개의 질문을 통해 당신의 레이싱 스타일과 성격을 분석합니다.</p>
+                <p>현역 F1 드라이버 중 당신과 가장 비슷한 선수를 찾아드립니다!</p>
+                <p><strong>솔직하게 답변해주세요. 정답은 없습니다! 🎯</strong></p>
+                <button class="primary" onclick="startTest()">테스트 시작하기</button>
+            </div>
+        </div>
+
+        <!-- 질문 화면 -->
+        <div class="card question-screen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            
+            <div class="question-content">
+                <div class="question-number" id="questionNumber">질문 1/12</div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="options"></div>
+                <button class="primary" id="nextButton" onclick="nextQuestion()" disabled>다음 질문</button>
+            </div>
+        </div>
+
+        <!-- 결과 화면 -->
+        <div class="card result-screen">
+            <div class="result-header">
+                <div class="driver-image" id="driverEmoji">🏎️</div>
+                <div class="driver-name" id="driverName">Max Verstappen</div>
+                <div class="driver-team" id="driverTeam">Red Bull Racing</div>
+                <div class="match-percentage" id="matchPercentage">95%</div>
+                <p style="color: #666; font-size: 1.1em;">일치율</p>
+            </div>
+
+            <div class="trait-bars" id="traitBars">
+                <!-- 특성 바들이 여기 추가됨 -->
+            </div>
+
+            <div class="description" id="driverDescription">
+                <!-- 드라이버 설명이 여기 추가됨 -->
+            </div>
+
+            <div class="share-section">
+                <h4>결과가 마음에 드시나요?</h4>
+                <button class="primary retry-button" onclick="retryTest()">다시 테스트하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="test.js"></script>
+</body>
+</html>
