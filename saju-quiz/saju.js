@@ -287,11 +287,10 @@ function generatePersonalityAnalysis(dayStem, dayBranch, elementBalance) {
     const dayElement = elements[dayStem];
     const branchElement = elements[dayBranch];
     
-    let analysis = `<h4>🧘 타고난 성격</h4>`;
-    analysis += `<p><strong>${stemInfo.name} (${stemInfo.char})</strong></p>`;
-    analysis += `<p>${stemInfo.personality}</p>`;
+    let analysis = `<p><strong>${stemInfo.name} (${stemInfo.char})</strong></p>`;
+    analysis += `<p>${stemInfo.personality}</p><br>`;
     analysis += `<p><strong>✨ 강점:</strong> ${stemInfo.strength}</p>`;
-    analysis += `<p><strong>⚠️ 약점:</strong> ${stemInfo.weakness}</p>`;
+    analysis += `<p><strong>⚠️ 약점:</strong> ${stemInfo.weakness}</p><br>`;
     
     // 천간과 지지의 조화
     if (dayElement === branchElement) {
@@ -482,9 +481,7 @@ function generateEnhancedLoveFortune(element, dayStem, score, gender, elementBal
 
 function generateEnhancedGeneralAdvice(element, elementBalance, dayStem, yearPillar, monthPillar) {
     const stemInfo = dayStemDescriptions[dayStem];
-    let advice = `<h4>🎯 당신에 대한 종합 분석</h4>`;
-    
-    advice += `<p><strong>${stemInfo.name}</strong>의 기운을 타고났습니다. ${stemInfo.personality}</p>`;
+    let advice = `<p><strong>${stemInfo.name}</strong>의 기운을 타고났습니다. ${stemInfo.personality}</p>`;
     advice += `<p><strong>인생 조언:</strong> ${stemInfo.advice}</p><br>`;
     
     // 오행 균형 분석
@@ -493,10 +490,10 @@ function generateEnhancedGeneralAdvice(element, elementBalance, dayStem, yearPil
     const secondStrongest = sorted[1][0];
     const weakest = sorted[sorted.length - 1][0];
     
-    advice += `<h5>⚖️ 오행 균형 분석</h5>`;
+    advice += `<p><strong>⚖️ 오행 균형 분석</strong></p>`;
     advice += `<p><strong>가장 강한 기운:</strong> ${strongest}(${elementBalance[strongest]}개)<br>`;
     advice += `<strong>두 번째 강한 기운:</strong> ${secondStrongest}(${elementBalance[secondStrongest]}개)<br>`;
-    advice += `<strong>가장 약한 기운:</strong> ${weakest}(${elementBalance[weakest]}개)</p>`;
+    advice += `<strong>가장 약한 기운:</strong> ${weakest}(${elementBalance[weakest]}개)</p><br>`;
     
     if (elementBalance[strongest] > elementBalance[weakest] * 2) {
         const balanceAdvice = {
@@ -522,9 +519,9 @@ function generateEnhancedGeneralAdvice(element, elementBalance, dayStem, yearPil
             }
         };
         
-        advice += `<br><p><strong>⚡ 오행 조화 방법:</strong><br>${balanceAdvice[strongest].advice}</p>`;
+        advice += `<p><strong>⚡ 오행 조화 방법:</strong><br>${balanceAdvice[strongest].advice}</p>`;
     } else {
-        advice += `<br><p>오행의 균형이 비교적 잘 맞아 조화로운 삶을 살 수 있습니다. 현재의 균형을 잘 유지하세요.</p>`;
+        advice += `<p>오행의 균형이 비교적 잘 맞아 조화로운 삶을 살 수 있습니다. 현재의 균형을 잘 유지하세요.</p>`;
     }
     
     return advice;
@@ -644,7 +641,10 @@ function calculateSaju() {
     // 성격 분석 추가
     const personalitySection = document.createElement('div');
     personalitySection.className = 'fortune-section';
-    personalitySection.innerHTML = fortune.personality;
+    personalitySection.innerHTML = `
+        <h3>🧘 타고난 성격</h3>
+        <div class="fortune-item">${fortune.personality}</div>
+    `;
     document.getElementById('health-fortune').parentElement.parentElement.insertBefore(
         personalitySection,
         document.getElementById('health-fortune').parentElement
