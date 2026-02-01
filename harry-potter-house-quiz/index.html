@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>호그와트 기숙사 배정 테스트 ⚡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #2c003e 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 40px 0;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            margin-bottom: 30px;
+        }
+
+        .intro-screen, .question-screen, .result-screen {
+            display: none;
+        }
+
+        .intro-screen.active, .question-screen.active, .result-screen.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #740001 0%, #ae0001 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            color: #222;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 20px;
+            background: #f8f9fa;
+            border: 3px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1em;
+        }
+
+        .option:hover {
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            color: white;
+            border-color: #740001;
+            transform: translateX(5px);
+        }
+
+        button.primary {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #740001 0%, #ae0001 100%);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        button.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(116, 0, 1, 0.4);
+        }
+
+        .house-logo {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            font-size: 8em;
+            text-align: center;
+        }
+
+        .house-name {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .house-motto {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .description {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .description h4 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .description p {
+            line-height: 1.8;
+            color: #555;
+            font-size: 1.05em;
+        }
+
+        .gryffindor { background: #740001; }
+        .slytherin { background: #1a472a; }
+        .ravenclaw { background: #0e1a40; }
+        .hufflepuff { background: #ecb939; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ 호그와트 기숙사 배정</h1>
+            <p class="subtitle">분류 모자가 당신을 어디로 보낼까요?</p>
+        </header>
+
+        <div class="card intro-screen active">
+            <div style="text-align: center;">
+                <h2 style="margin-bottom: 30px; color: #333;">🎩 분류 모자를 쓸 준비가 되셨나요?</h2>
+                <p style="font-size: 1.2em; line-height: 1.8; color: #555; margin-bottom: 15px;">
+                    10개의 질문으로 당신에게 맞는 기숙사를 찾아드립니다.
+                </p>
+                <p style="font-size: 1.2em; line-height: 1.8; color: #555; margin-bottom: 15px;">
+                    그리핀도르, 슬리데린, 래번클로, 후플푸프
+                </p>
+                <button class="primary" onclick="startTest()">분류 모자 쓰기</button>
+            </div>
+        </div>
+
+        <div class="card question-screen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            
+            <div class="question-content">
+                <div style="color: #740001; font-size: 1.1em; margin-bottom: 20px;" id="questionNumber">질문 1/10</div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="options"></div>
+                <button class="primary" id="nextButton" onclick="nextQuestion()" disabled>다음 질문</button>
+            </div>
+        </div>
+
+        <div class="card result-screen">
+            <div class="house-logo" id="houseLogo">🦁</div>
+            <div class="house-name" id="houseName" style="color: #740001;">그리핀도르</div>
+            <div class="house-motto" id="houseMotto">"Courage, Bravery, Determination"</div>
+            
+            <div class="description" id="houseDescription">
+                <!-- 기숙사 설명 -->
+            </div>
+
+            <button class="primary" style="background: #6c757d;" onclick="retryTest()">다시 배정받기</button>
+        </div>
+    </div>
+
+    <script src="quiz.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 포켓몬 테스트</title>
+    <link rel="stylesheet" href="../harry-potter-house-quiz/index.html" type="text/css">
+    <style>
+        body { background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%); }
+        .progress-fill { background: linear-gradient(90deg, #ff6b6b 0%, #ff8787 100%); }
+        .option.selected { background: #ff6b6b; border-color: #ff6b6b; }
+        .result-title { color: #ff6b6b; }
+        .description { border-left-color: #ff6b6b; }
+        .description h4 { color: #ff6b6b; }
+        button.primary { background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ MBTI 포켓몬 테스트</h1>
+            <p class="subtitle">당신과 닮은 포켓몬을 찾아보세요!</p>
+        </header>
+        <div class="card intro-screen active">
+            <div style="text-align: center;">
+                <h2 style="margin-bottom: 30px; color: #333;">🎮 어떤 포켓몬이 나올까?</h2>
+                <p style="font-size: 1.2em; line-height: 1.8; color: #555; margin-bottom: 15px;">12개 질문으로 당신의 MBTI를 분석하고<br>그에 맞는 포켓몬을 찾아드립니다!</p>
+                <button class="primary" onclick="startTest()">테스트 시작</button>
+            </div>
+        </div>
+        <div class="card question-screen">
+            <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+            <div class="question-content">
+                <div style="color: #ff6b6b; font-size: 1.1em; margin-bottom: 20px;" id="questionNumber">질문 1/12</div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="options"></div>
+                <button class="primary" id="nextButton" onclick="nextQuestion()" disabled>다음</button>
+            </div>
+        </div>
+        <div class="card result-screen">
+            <div class="result-icon" id="resultIcon">⚡</div>
+            <div class="result-title" id="resultTitle">피카츄</div>
+            <div style="text-align: center; font-size: 1.3em; color: #666; margin-bottom: 20px;" id="mbtiType">ENFP</div>
+            <div class="description" id="resultDescription"></div>
+            <button class="primary" style="background: #6c757d;" onclick="retryTest()">다시 하기</button>
+        </div>
+    </div>
+    <script src="quiz.js"></script>
+</body>
+</html>
