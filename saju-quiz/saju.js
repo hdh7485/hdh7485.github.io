@@ -527,29 +527,6 @@ function generateEnhancedGeneralAdvice(element, elementBalance, dayStem, yearPil
         advice += `<br><p>오행의 균형이 비교적 잘 맞아 조화로운 삶을 살 수 있습니다. 현재의 균형을 잘 유지하세요.</p>`;
     }
     
-    // 계절에 따른 조언
-    const monthBranch = monthPillar.branch;
-    const seasonAdvice = {
-        '寅': '봄', '卯': '봄', '辰': '봄',
-        '巳': '여름', '午': '여름', '未': '여름',
-        '申': '가을', '酉': '가을', '戌': '가을',
-        '亥': '겨울', '子': '겨울', '丑': '겨울'
-    };
-    
-    const season = seasonAdvice[monthBranch];
-    advice += `<br><p><strong>🌸 출생 계절:</strong> ${season}에 태어났습니다. `;
-    
-    if (season === '봄' && element === '목') {
-        advice += '봄의 목기운이 강해 성장과 발전의 기운이 왕성합니다!';
-    } else if (season === '여름' && element === '화') {
-        advice += '여름의 화기운이 강해 열정과 추진력이 뛰어납니다!';
-    } else if (season === '가을' && element === '금') {
-        advice += '가을의 금기운이 강해 결실과 성과를 얻기 좋습니다!';
-    } else if (season === '겨울' && element === '수') {
-        advice += '겨울의 수기운이 강해 지혜와 사색이 깊습니다!';
-    }
-    advice += `</p>`;
-    
     return advice;
 }
 
