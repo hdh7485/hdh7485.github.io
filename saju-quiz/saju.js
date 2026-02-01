@@ -527,8 +527,94 @@ function generateEnhancedGeneralAdvice(element, elementBalance, dayStem, yearPil
     return advice;
 }
 
+// 실시간 유효성 검사
+function validateInputs() {
+    const yearInput = document.getElementById('year');
+    const monthInput = document.getElementById('month');
+    const dayInput = document.getElementById('day');
+    const button = document.getElementById('calculateButton');
+    const errorDiv = document.getElementById('dateError');
+    
+    const year = parseInt(yearInput.value);
+    const month = parseInt(monthInput.value);
+    const day = parseInt(dayInput.value);
+    
+    // 필수 입력 확인
+    if (!yearInput.value || !monthInput.value || !dayInput.value) {
+        button.disabled = true;
+        errorDiv.style.display = 'none';
+        return;
+    }
+    
+    // 년도 검증
+    if (year < 1900 || year > 2100) {
+        button.disabled = true;
+        errorDiv.textContent = '년도는 1900년부터 2100년 사이로 입력해주세요.';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    // 월 검증
+    if (month < 1 || month > 12) {
+        button.disabled = true;
+        errorDiv.textContent = '월은 1월부터 12월 사이로 입력해주세요.';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    // 일 검증 (월별 일수)
+    const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+    if (isLeapYear) {
+        daysInMonth[1] = 29;
+    }
+    
+    const maxDay = daysInMonth[month - 1];
+    if (day < 1 || day > maxDay) {
+        button.disabled = true;
+        errorDiv.textContent = `${month}월은 1일부터 ${maxDay}일까지만 있습니다.`;
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    // 모든 검증 통과
+    button.disabled = false;
+    errorDiv.style.display = 'none';
+    
+    // 입력 필드 스타일
+    yearInput.classList.add('valid');
+    monthInput.classList.add('valid');
+    dayInput.classList.add('valid');
+}
+
+// 페이지 로드 시 이벤트 리스너 추가
+if (typeof window !== 'undefined') {
+    window.addEventListener('DOMContentLoaded', () => {
+        const yearInput = document.getElementById('year');
+        const monthInput = document.getElementById('month');
+        const dayInput = document.getElementById('day');
+        
+        if (yearInput && monthInput && dayInput) {
+            yearInput.addEventListener('input', validateInputs);
+            monthInput.addEventListener('input', validateInputs);
+            dayInput.addEventListener('input', validateInputs);
+        }
+    });
+}
+
 // 메인 함수들
 function calculateSaju() {
+    // 입력 폼 숨기고 로딩 화면 표시
+    document.querySelector('.input-form').style.display = 'none';
+    document.querySelector('.loading-screen').classList.add('active');
+    
+    // 약간의 딜레이 후 계산 (로딩 애니메이션을 보여주기 위해)
+    setTimeout(() => {
+        performCalculation();
+    }, 1500);
+}
+
+function performCalculation() {
     const gender = document.getElementById('gender').value;
     const yearInput = document.getElementById('year').value;
     const monthInput = document.getElementById('month').value;
@@ -537,42 +623,9 @@ function calculateSaju() {
     const minute = document.getElementById('minute').value;
     const calendar = document.getElementById('calendar').value;
     
-    // 입력 검증
-    if (!yearInput || !monthInput || !dayInput) {
-        alert('생년월일을 모두 입력해주세요.');
-        return;
-    }
-    
     const year = parseInt(yearInput);
     const month = parseInt(monthInput);
     const day = parseInt(dayInput);
-    
-    // 년도 범위 검증
-    if (year < 1900 || year > 2100) {
-        alert('년도는 1900년부터 2100년 사이로 입력해주세요.');
-        return;
-    }
-    
-    // 월 검증
-    if (month < 1 || month > 12) {
-        alert('월은 1월부터 12월 사이로 선택해주세요.');
-        return;
-    }
-    
-    // 일 검증 (월별 일수 체크)
-    const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    
-    // 윤년 체크
-    const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
-    if (isLeapYear) {
-        daysInMonth[1] = 29;
-    }
-    
-    const maxDay = daysInMonth[month - 1];
-    if (day < 1 || day > maxDay) {
-        alert(`${month}월은 1일부터 ${maxDay}일까지만 있습니다.`);
-        return;
-    }
     
     const yearPillar = getYearStemBranch(year);
     const monthPillar = getMonthStemBranch(year, month);
@@ -662,13 +715,25 @@ function calculateSaju() {
     document.getElementById('love-fortune').innerHTML = `<p>${fortune.love.text}</p>`;
     document.getElementById('general-advice').innerHTML = `${fortune.general}`;
     
-    // 화면 전환
-    document.querySelector('.input-form').style.display = 'none';
+    // 화면 전환 (로딩 화면 숨기고 결과 표시)
+    document.querySelector('.loading-screen').classList.remove('active');
     document.getElementById('result').classList.add('show');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function resetForm() {
+    // 입력 필드 초기화
+    document.getElementById('year').value = '';
+    document.getElementById('month').value = '';
+    document.getElementById('day').value = '';
+    document.getElementById('hour').value = '';
+    document.getElementById('minute').value = '';
+    
+    // 검증 초기화
+    document.getElementById('calculateButton').disabled = true;
+    document.getElementById('dateError').style.display = 'none';
+    
+    // 화면 전환
     document.querySelector('.input-form').style.display = 'block';
     document.getElementById('result').classList.remove('show');
     window.scrollTo({ top: 0, behavior: 'smooth' });
