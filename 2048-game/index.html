@@ -104,25 +104,31 @@
             border-radius: 10px;
             padding: 15px;
             position: relative;
+            width: 100%;
+            max-width: 500px;
         }
         
         .grid-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 15px;
-            margin-bottom: 20px;
+            position: relative;
         }
         
         .grid-cell {
             background: rgba(238, 228, 218, 0.35);
             border-radius: 8px;
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2em;
-            font-weight: bold;
+            width: 100%;
+            padding-top: 100%;
             position: relative;
+        }
+        
+        .tile-container {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
         }
         
         .tile {
@@ -132,7 +138,36 @@
             justify-content: center;
             border-radius: 8px;
             font-weight: bold;
+            font-size: 2em;
             transition: all 0.15s ease-in-out;
+            animation: appear 0.2s ease-in-out;
+        }
+        
+        @keyframes appear {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .tile.tile-merged {
+            animation: pop 0.2s ease-in-out;
+        }
+        
+        @keyframes pop {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
         }
         
         /* 타일 색상 */
@@ -167,6 +202,16 @@
         
         .game-message.show {
             display: flex;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
         
         .message-text {
@@ -209,7 +254,7 @@
         
         @media (max-width: 520px) {
             h1 { font-size: 3em; }
-            .grid-cell { font-size: 1.5em; }
+            .tile { font-size: 1.5em; }
             .tile-128, .tile-256, .tile-512 { font-size: 1.3em; }
             .tile-1024, .tile-2048 { font-size: 1.1em; }
         }
@@ -239,7 +284,25 @@
         </div>
         
         <div class="game-container">
-            <div id="grid" class="grid-container"></div>
+            <div class="grid-container" id="gridContainer">
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="grid-cell"></div>
+                <div class="tile-container" id="tileContainer"></div>
+            </div>
             <div id="gameMessage" class="game-message">
                 <p class="message-text"></p>
                 <button class="new-game-btn" onclick="game.restart()">다시 시작</button>
@@ -260,38 +323,45 @@
             constructor() {
                 this.size = 4;
                 this.grid = [];
+                this.tiles = [];
                 this.score = 0;
                 this.best = localStorage.getItem('best2048') || 0;
                 this.gameOver = false;
                 this.won = false;
                 this.touchStartX = 0;
                 this.touchStartY = 0;
+                this.cellSize = 0;
+                this.cellGap = 15;
                 
                 this.init();
             }
             
             init() {
                 this.createGrid();
+                this.calculateCellSize();
                 this.updateBestScore();
                 this.addRandomTile();
                 this.addRandomTile();
                 this.render();
                 this.setupEventListeners();
+                window.addEventListener('resize', () => {
+                    this.calculateCellSize();
+                    this.render();
+                });
+            }
+            
+            calculateCellSize() {
+                const container = document.getElementById('gridContainer');
+                const containerWidth = container.offsetWidth - 30; // padding
+                this.cellSize = (containerWidth - (this.cellGap * 3)) / 4;
             }
             
             createGrid() {
                 this.grid = [];
-                const gridContainer = document.getElementById('grid');
-                gridContainer.innerHTML = '';
-                
                 for (let i = 0; i < this.size; i++) {
                     this.grid[i] = [];
                     for (let j = 0; j < this.size; j++) {
                         this.grid[i][j] = 0;
-                        const cell = document.createElement('div');
-                        cell.className = 'grid-cell';
-                        cell.id = `cell-${i}-${j}`;
-                        gridContainer.appendChild(cell);
                     }
                 }
             }
@@ -299,7 +369,7 @@
             setupEventListeners() {
                 document.addEventListener('keydown', (e) => this.handleKeyPress(e));
                 
-                const gridContainer = document.getElementById('grid');
+                const gridContainer = document.getElementById('gridContainer');
                 gridContainer.addEventListener('touchstart', (e) => this.handleTouchStart(e));
                 gridContainer.addEventListener('touchend', (e) => this.handleTouchEnd(e));
             }
@@ -328,9 +398,11 @@
                 }
                 
                 if (moved) {
-                    this.addRandomTile();
-                    this.render();
-                    this.checkGameStatus();
+                    setTimeout(() => {
+                        this.addRandomTile();
+                        this.render();
+                        this.checkGameStatus();
+                    }, 150);
                 }
             }
             
@@ -358,22 +430,29 @@
                 }
                 
                 if (moved) {
-                    this.addRandomTile();
-                    this.render();
-                    this.checkGameStatus();
+                    setTimeout(() => {
+                        this.addRandomTile();
+                        this.render();
+                        this.checkGameStatus();
+                    }, 150);
                 }
             }
             
             move(direction) {
                 const oldGrid = JSON.stringify(this.grid);
+                let mergedPositions = [];
                 
                 if (direction === 'left') {
                     for (let i = 0; i < this.size; i++) {
-                        this.grid[i] = this.mergeLine(this.grid[i]);
+                        const result = this.mergeLine(this.grid[i]);
+                        this.grid[i] = result.line;
+                        result.merged.forEach(j => mergedPositions.push({i, j}));
                     }
                 } else if (direction === 'right') {
                     for (let i = 0; i < this.size; i++) {
-                        this.grid[i] = this.mergeLine(this.grid[i].reverse()).reverse();
+                        const result = this.mergeLine(this.grid[i].reverse());
+                        this.grid[i] = result.line.reverse();
+                        result.merged.forEach(j => mergedPositions.push({i, j: 3 - j}));
                     }
                 } else if (direction === 'up') {
                     for (let j = 0; j < this.size; j++) {
@@ -381,10 +460,12 @@
                         for (let i = 0; i < this.size; i++) {
                             column.push(this.grid[i][j]);
                         }
-                        column = this.mergeLine(column);
+                        const result = this.mergeLine(column);
+                        column = result.line;
                         for (let i = 0; i < this.size; i++) {
                             this.grid[i][j] = column[i];
                         }
+                        result.merged.forEach(i => mergedPositions.push({i, j}));
                     }
                 } else if (direction === 'down') {
                     for (let j = 0; j < this.size; j++) {
@@ -392,23 +473,41 @@
                         for (let i = 0; i < this.size; i++) {
                             column.push(this.grid[i][j]);
                         }
-                        column = this.mergeLine(column.reverse()).reverse();
+                        const result = this.mergeLine(column.reverse());
+                        column = result.line.reverse();
                         for (let i = 0; i < this.size; i++) {
                             this.grid[i][j] = column[i];
                         }
+                        result.merged.forEach(i => mergedPositions.push({i: 3 - i, j}));
                     }
                 }
                 
-                return oldGrid !== JSON.stringify(this.grid);
+                const moved = oldGrid !== JSON.stringify(this.grid);
+                if (moved) {
+                    this.render();
+                    // 합쳐진 타일에 팝 애니메이션 추가
+                    setTimeout(() => {
+                        mergedPositions.forEach(pos => {
+                            const tile = document.querySelector(`[data-position="${pos.i}-${pos.j}"]`);
+                            if (tile) {
+                                tile.classList.add('tile-merged');
+                            }
+                        });
+                    }, 50);
+                }
+                
+                return moved;
             }
             
             mergeLine(line) {
+                let merged = [];
                 line = line.filter(cell => cell !== 0);
                 
                 for (let i = 0; i < line.length - 1; i++) {
                     if (line[i] === line[i + 1]) {
                         line[i] *= 2;
                         this.score += line[i];
+                        merged.push(i);
                         line.splice(i + 1, 1);
                     }
                 }
@@ -417,7 +516,7 @@
                     line.push(0);
                 }
                 
-                return line;
+                return { line, merged };
             }
             
             addRandomTile() {
@@ -436,12 +535,18 @@
                 }
             }
             
+            getTilePosition(row, col) {
+                return {
+                    left: col * (this.cellSize + this.cellGap),
+                    top: row * (this.cellSize + this.cellGap)
+                };
+            }
+            
             render() {
                 document.getElementById('score').textContent = this.score;
                 
-                const gridContainer = document.getElementById('grid');
-                const tiles = gridContainer.querySelectorAll('.tile');
-                tiles.forEach(tile => tile.remove());
+                const tileContainer = document.getElementById('tileContainer');
+                tileContainer.innerHTML = '';
                 
                 for (let i = 0; i < this.size; i++) {
                     for (let j = 0; j < this.size; j++) {
@@ -450,18 +555,22 @@
                             const tile = document.createElement('div');
                             tile.className = `tile tile-${value > 2048 ? 'super' : value}`;
                             tile.textContent = value;
+                            tile.setAttribute('data-position', `${i}-${j}`);
                             
-                            const cell = document.getElementById(`cell-${i}-${j}`);
-                            const rect = cell.getBoundingClientRect();
-                            const container = gridContainer.getBoundingClientRect();
+                            const pos = this.getTilePosition(i, j);
+                            tile.style.width = this.cellSize + 'px';
+                            tile.style.height = this.cellSize + 'px';
+                            tile.style.left = pos.left + 'px';
+                            tile.style.top = pos.top + 'px';
+                            tile.style.lineHeight = this.cellSize + 'px';
                             
-                            tile.style.width = cell.offsetWidth + 'px';
-                            tile.style.height = cell.offsetHeight + 'px';
-                            tile.style.left = (rect.left - container.left) + 'px';
-                            tile.style.top = (rect.top - container.top) + 'px';
-                            tile.style.fontSize = value > 512 ? '1.5em' : '2em';
+                            if (value > 512) {
+                                tile.style.fontSize = '1.5em';
+                            } else if (value > 99) {
+                                tile.style.fontSize = '1.8em';
+                            }
                             
-                            gridContainer.appendChild(tile);
+                            tileContainer.appendChild(tile);
                         }
                     }
                 }
