@@ -27,6 +27,8 @@
             justify-content: center;
             padding: 20px;
             color: #776e65;
+            overflow: hidden;
+            touch-action: none;
         }
         
         .container {
@@ -371,8 +373,9 @@
                 document.addEventListener('keydown', (e) => this.handleKeyPress(e));
                 
                 const gridContainer = document.getElementById('gridContainer');
-                gridContainer.addEventListener('touchstart', (e) => this.handleTouchStart(e));
-                gridContainer.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+                gridContainer.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
+                gridContainer.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+                gridContainer.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: false });
             }
             
             handleKeyPress(e) {
@@ -413,9 +416,15 @@
             handleTouchStart(e) {
                 this.touchStartX = e.touches[0].clientX;
                 this.touchStartY = e.touches[0].clientY;
+                e.preventDefault();
+            }
+            
+            handleTouchMove(e) {
+                e.preventDefault();
             }
             
             handleTouchEnd(e) {
+                e.preventDefault();
                 if (this.gameOver || this.isMoving) return;
                 
                 const touchEndX = e.changedTouches[0].clientX;
@@ -540,34 +549,70 @@
                 document.getElementById('score').textContent = this.score;
                 
                 const tileContainer = document.getElementById('tileContainer');
-                tileContainer.innerHTML = '';
+                
+                // 기존 타일들의 맵 생성
+                const existingTiles = {};
+                Array.from(tileContainer.children).forEach(tile => {
+                    const pos = tile.getAttribute('data-position');
+                    if (pos) {
+                        existingTiles[pos] = tile;
+                    }
+                });
+                
+                // 현재 그리드의 타일들
+                const currentTiles = new Set();
                 
                 for (let i = 0; i < this.size; i++) {
                     for (let j = 0; j < this.size; j++) {
                         const value = this.grid[i][j];
+                        const posKey = `${i}-${j}`;
+                        
                         if (value !== 0) {
-                            const tile = document.createElement('div');
-                            tile.className = `tile tile-${value > 2048 ? 'super' : value}`;
-                            tile.textContent = value;
-                            tile.setAttribute('data-position', `${i}-${j}`);
+                            currentTiles.add(posKey);
                             
-                            const pos = this.getTilePosition(i, j);
-                            tile.style.width = this.cellSize + 'px';
-                            tile.style.height = this.cellSize + 'px';
-                            tile.style.left = pos.left + 'px';
-                            tile.style.top = pos.top + 'px';
-                            tile.style.lineHeight = this.cellSize + 'px';
-                            
-                            if (value > 512) {
-                                tile.style.fontSize = '1.5em';
-                            } else if (value > 99) {
-                                tile.style.fontSize = '1.8em';
+                            if (existingTiles[posKey] && 
+                                existingTiles[posKey].textContent == value) {
+                                // 기존 타일 위치만 업데이트
+                                const tile = existingTiles[posKey];
+                                const pos = this.getTilePosition(i, j);
+                                tile.style.left = pos.left + 'px';
+                                tile.style.top = pos.top + 'px';
+                            } else {
+                                // 기존 타일 제거하고 새로 생성
+                                if (existingTiles[posKey]) {
+                                    existingTiles[posKey].remove();
+                                }
+                                
+                                const tile = document.createElement('div');
+                                tile.className = `tile tile-${value > 2048 ? 'super' : value}`;
+                                tile.textContent = value;
+                                tile.setAttribute('data-position', posKey);
+                                
+                                const pos = this.getTilePosition(i, j);
+                                tile.style.width = this.cellSize + 'px';
+                                tile.style.height = this.cellSize + 'px';
+                                tile.style.left = pos.left + 'px';
+                                tile.style.top = pos.top + 'px';
+                                tile.style.lineHeight = this.cellSize + 'px';
+                                
+                                if (value > 512) {
+                                    tile.style.fontSize = '1.5em';
+                                } else if (value > 99) {
+                                    tile.style.fontSize = '1.8em';
+                                }
+                                
+                                tileContainer.appendChild(tile);
                             }
-                            
-                            tileContainer.appendChild(tile);
                         }
                     }
                 }
+                
+                // 사라진 타일 제거
+                Object.keys(existingTiles).forEach(posKey => {
+                    if (!currentTiles.has(posKey)) {
+                        existingTiles[posKey].remove();
+                    }
+                });
             }
             
             checkGameStatus() {
