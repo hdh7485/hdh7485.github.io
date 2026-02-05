@@ -332,6 +332,7 @@
                 this.touchStartY = 0;
                 this.cellSize = 0;
                 this.cellGap = 15;
+                this.isMoving = false;
                 
                 this.init();
             }
@@ -375,7 +376,7 @@
             }
             
             handleKeyPress(e) {
-                if (this.gameOver) return;
+                if (this.gameOver || this.isMoving) return;
                 
                 let moved = false;
                 switch(e.key) {
@@ -398,11 +399,13 @@
                 }
                 
                 if (moved) {
+                    this.isMoving = true;
                     this.render();
                     setTimeout(() => {
                         this.addRandomTile();
                         this.render();
                         this.checkGameStatus();
+                        this.isMoving = false;
                     }, 150);
                 }
             }
@@ -413,7 +416,7 @@
             }
             
             handleTouchEnd(e) {
-                if (this.gameOver) return;
+                if (this.gameOver || this.isMoving) return;
                 
                 const touchEndX = e.changedTouches[0].clientX;
                 const touchEndY = e.changedTouches[0].clientY;
@@ -431,11 +434,13 @@
                 }
                 
                 if (moved) {
+                    this.isMoving = true;
                     this.render();
                     setTimeout(() => {
                         this.addRandomTile();
                         this.render();
                         this.checkGameStatus();
+                        this.isMoving = false;
                     }, 150);
                 }
             }
@@ -625,6 +630,7 @@
                 this.score = 0;
                 this.gameOver = false;
                 this.won = false;
+                this.isMoving = false;
                 document.getElementById('gameMessage').classList.remove('show');
                 this.createGrid();
                 this.addRandomTile();
