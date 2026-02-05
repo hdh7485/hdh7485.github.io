@@ -398,6 +398,7 @@
                 }
                 
                 if (moved) {
+                    this.render();
                     setTimeout(() => {
                         this.addRandomTile();
                         this.render();
@@ -430,6 +431,7 @@
                 }
                 
                 if (moved) {
+                    this.render();
                     setTimeout(() => {
                         this.addRandomTile();
                         this.render();
@@ -483,19 +485,6 @@
                 }
                 
                 const moved = oldGrid !== JSON.stringify(this.grid);
-                if (moved) {
-                    this.render();
-                    // 합쳐진 타일에 팝 애니메이션 추가
-                    setTimeout(() => {
-                        mergedPositions.forEach(pos => {
-                            const tile = document.querySelector(`[data-position="${pos.i}-${pos.j}"]`);
-                            if (tile) {
-                                tile.classList.add('tile-merged');
-                            }
-                        });
-                    }, 50);
-                }
-                
                 return moved;
             }
             
