@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[39756,["/hope-hands/_next/static/chunks/ff1a16fafef87110.js","/hope-hands/_next/static/chunks/d2be314c3ece3fbe.js"],"default"]
+3:I[37457,["/hope-hands/_next/static/chunks/ff1a16fafef87110.js","/hope-hands/_next/static/chunks/d2be314c3ece3fbe.js"],"default"]
+4:I[22016,["/hope-hands/_next/static/chunks/06b5c998977728e5.js"],""]
+:HL["/hope-hands/_next/static/chunks/a5e0ee7f24422e80.css","style"]
+0:{"buildId":"gvKIuTB6tbjEtmX6FLzPD","rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/hope-hands/_next/static/chunks/a5e0ee7f24422e80.css","precedence":"next"}]],["$","html",null,{"lang":"ko","children":["$","body",null,{"className":"antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}],"notFound":[["$","div",null,{"className":"min-h-screen bg-gray-50 flex items-center justify-center px-4","children":["$","div",null,{"className":"text-center","children":[["$","h1",null,{"className":"text-6xl font-bold text-gray-900 mb-4","children":"404"}],["$","p",null,{"className":"text-xl text-gray-600 mb-8","children":"페이지를 찾을 수 없습니다"}],["$","$L4",null,{"href":"/","className":"inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors","children":"홈으로 돌아가기"}]]}]}],[]]}]}]}]]}],"loading":null,"isPartial":false}
