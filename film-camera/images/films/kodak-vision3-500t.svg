@@ -1,0 +1,38 @@
+<svg width="400" height="500" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="500" fill="#1a1a1a"/>
+  
+  <!-- Film box -->
+  <rect x="50" y="80" width="300" height="340" rx="8" fill="#2a2a2a" stroke="#DC143C" stroke-width="3"/>
+  
+  <!-- Kodak branding -->
+  <text x="200" y="130" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#DC143C" text-anchor="middle">KODAK</text>
+  
+  <!-- Film name -->
+  <text x="200" y="180" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Vision3 500T</text>
+  
+  <!-- Film code -->
+  <text x="200" y="215" font-family="Arial, sans-serif" font-size="20" fill="#DC143C" text-anchor="middle">5219</text>
+  
+  <!-- Film strip illustration -->
+  <rect x="150" y="240" width="100" height="80" rx="4" fill="#4a4a4a"/>
+  <rect x="155" y="245" width="15" height="15" fill="#2a2a2a"/>
+  <rect x="175" y="245" width="15" height="15" fill="#2a2a2a"/>
+  <rect x="195" y="245" width="15" height="15" fill="#2a2a2a"/>
+  <rect x="215" y="245" width="15" height="15" fill="#2a2a2a"/>
+  <rect x="235" y="245" width="15" height="15" fill="#2a2a2a"/>
+  
+  <rect x="155" y="300" width="15" height="15" fill="#2a2a2a"/>
+  <rect x="175" y="300" width="15" height="15" fill="#2a2a2a"/>
+  <rect x="195" y="300" width="15" height="15" fill="#2a2a2a"/>
+  <rect x="215" y="300" width="15" height="15" fill="#2a2a2a"/>
+  <rect x="235" y="300" width="15" height="15" fill="#2a2a2a"/>
+  
+  <!-- ISO -->
+  <circle cx="200" cy="360" r="30" fill="#DC143C"/>
+  <text x="200" y="373" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#FFFFFF" text-anchor="middle">500</text>
+  
+  <!-- Bottom info -->
+  <text x="200" y="450" font-family="Arial, sans-serif" font-size="16" fill="#DC143C" text-anchor="middle">CINEMA FILM</text>
+  <text x="200" y="475" font-family="Arial, sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle">ECN-2 • Tungsten</text>
+</svg>
