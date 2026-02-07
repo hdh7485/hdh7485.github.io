@@ -1,9 +1,35 @@
 <svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
-  <rect width="800" height="600" fill="#6b7280"/>
-  <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">
-    Yashica T4
-  </text>
-  <text x="50%" y="60%" font-family="Arial, sans-serif" font-size="24" fill="#d1d5db" text-anchor="middle" dominant-baseline="middle">
-    Film Camera
-  </text>
+  <!-- Background -->
+  <rect width="800" height="600" fill="#fed7aa"/>
+  
+  <!-- Camera Body -->
+  <g transform="translate(400, 300)">
+    <!-- Main Body -->
+    <rect x="-150" y="-80" width="300" height="160" fill="#78350f" rx="15"/>
+    
+    <!-- Lens -->
+    <circle cx="0" cy="0" r="70" fill="#f97316"/>
+    <circle cx="0" cy="0" r="50" fill="#78350f"/>
+    <circle cx="0" cy="0" r="35" fill="#9a3412" opacity="0.3"/>
+    
+    <!-- Lens Rings -->
+    <circle cx="0" cy="0" r="60" fill="none" stroke="#9a3412" stroke-width="2" opacity="0.2"/>
+    <circle cx="0" cy="0" r="45" fill="none" stroke="#9a3412" stroke-width="1" opacity="0.2"/>
+    
+    <!-- Viewfinder -->
+    <rect x="60" y="-70" width="50" height="35" fill="#f97316" rx="5"/>
+    <rect x="67" y="-63" width="36" height="21" fill="#9a3412" opacity="0.3" rx="3"/>
+    
+    <!-- Shutter Button -->
+    <circle cx="120" cy="-55" r="8" fill="#9a3412" opacity="0.5"/>
+    
+    <!-- Film Counter -->
+    <rect x="-130" y="-65" width="40" height="20" fill="#9a3412" opacity="0.2" rx="3"/>
+    
+    <!-- Brand Text -->
+    <text x="0" y="-100" font-family="Arial, sans-serif" font-size="24" fill="#9a3412" text-anchor="middle" font-weight="bold" opacity="0.8">YASHICA T4</text>
+    
+    <!-- Bottom Label -->
+    <text x="0" y="140" font-family="Arial, sans-serif" font-size="16" fill="#9a3412" text-anchor="middle" opacity="0.6">Film Camera</text>
+  </g>
 </svg>
