@@ -1,21 +1,40 @@
-<svg width="400" height="500" viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
-  <rect width="400" height="500" fill="#000000"/>
-  <rect x="50" y="80" width="300" height="340" rx="8" fill="#1a1a2e" stroke="#00D9FF" stroke-width="3"/>
-  <text x="200" y="130" font-family="Arial, sans-serif" font-size="32" font-weight="bold" fill="#00D9FF" text-anchor="middle">CineStill</text>
-  <text x="200" y="180" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="#FFFFFF" text-anchor="middle">800T</text>
-  <rect x="150" y="240" width="100" height="80" rx="4" fill="#4a4a6a"/>
-  <rect x="155" y="245" width="15" height="15" fill="#1a1a2e"/>
-  <rect x="175" y="245" width="15" height="15" fill="#1a1a2e"/>
-  <rect x="195" y="245" width="15" height="15" fill="#1a1a2e"/>
-  <rect x="215" y="245" width="15" height="15" fill="#1a1a2e"/>
-  <rect x="235" y="245" width="15" height="15" fill="#1a1a2e"/>
-  <rect x="155" y="300" width="15" height="15" fill="#1a1a2e"/>
-  <rect x="175" y="300" width="15" height="15" fill="#1a1a2e"/>
-  <rect x="195" y="300" width="15" height="15" fill="#1a1a2e"/>
-  <rect x="215" y="300" width="15" height="15" fill="#1a1a2e"/>
-  <rect x="235" y="300" width="15" height="15" fill="#1a1a2e"/>
-  <circle cx="200" cy="360" r="30" fill="#00D9FF"/>
-  <text x="200" y="373" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#000000" text-anchor="middle">800</text>
-  <text x="200" y="450" font-family="Arial, sans-serif" font-size="16" fill="#00D9FF" text-anchor="middle">CINEMA FILM</text>
-  <text x="200" y="475" font-family="Arial, sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle">Tungsten • Halation</text>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-cinestill-800t" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:0.08" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="1200" height="800" fill="url(#bg-cinestill-800t)"/>
+  
+  <g transform="translate(600.0, 320.0)">
+    <rect x="-80" y="-120" width="160" height="240" rx="10" fill="#f59e0b" opacity="0.2"/>
+    <rect x="-70" y="-110" width="140" height="220" rx="8" fill="white" opacity="0.05"/>
+    
+    <rect x="-60" y="-90" width="120" height="30" fill="#f59e0b" opacity="0.3"/>
+    <rect x="-60" y="-50" width="120" height="30" fill="#f59e0b" opacity="0.3"/>
+    <rect x="-60" y="-10" width="120" height="30" fill="#f59e0b" opacity="0.3"/>
+    <rect x="-60" y="30" width="120" height="30" fill="#f59e0b" opacity="0.3"/>
+    
+    <circle cx="-55" cy="-75" r="3" fill="#f59e0b" opacity="0.5"/>
+    <circle cx="55" cy="-75" r="3" fill="#f59e0b" opacity="0.5"/>
+    <circle cx="-55" cy="-35" r="3" fill="#f59e0b" opacity="0.5"/>
+    <circle cx="55" cy="-35" r="3" fill="#f59e0b" opacity="0.5"/>
+    <circle cx="-55" cy="5" r="3" fill="#f59e0b" opacity="0.5"/>
+    <circle cx="55" cy="5" r="3" fill="#f59e0b" opacity="0.5"/>
+    <circle cx="-55" cy="45" r="3" fill="#f59e0b" opacity="0.5"/>
+    <circle cx="55" cy="45" r="3" fill="#f59e0b" opacity="0.5"/>
+  </g>
+  
+  <text x="600.0" y="580.0" font-family="system-ui, -apple-system, sans-serif" font-size="48" font-weight="700" fill="#f59e0b" text-anchor="middle" opacity="0.9">
+    CineStill
+  </text>
+  <text x="600.0" y="630.0" font-family="system-ui, -apple-system, sans-serif" font-size="36" font-weight="400" fill="#f59e0b" text-anchor="middle" opacity="0.7">
+    800T
+  </text>
+  <text x="600.0" y="670.0" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="300" fill="#64748b" text-anchor="middle" opacity="0.6">
+    ISO 800 · COLOR
+  </text>
 </svg>
