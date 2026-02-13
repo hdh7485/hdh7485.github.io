@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="재미있는 퀴즈와 게임 모음 - 2048 게임, 해리포터, 디즈니, LOL, MBTI 포켓몬, BTS, 밈 퀴즈">
-    <title>퀴즈&게임 모음 🎮 | 2048, 성격 테스트 & 재미있는 퀴즈</title>
+    <meta name="description" content="2048 게임, MBTI 성격 테스트, 디즈니·BTS·포켓몬 퀴즈 등 17가지 재미있는 온라인 퀴즈와 게임 모음. 무료로 즐기는 한국어 성격 테스트와 심리 테스트 사이트">
+    <meta name="keywords" content="퀴즈, 성격테스트, MBTI, 2048게임, 디즈니, BTS, 포켓몬, 심리테스트, 온라인게임, 무료퀴즈">
+    <title>퀴즈&게임 모음 🎮 | 17종 성격 테스트 & 재미있는 퀴즈</title>
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5473168023476210"
@@ -21,21 +22,20 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
         
         .container {
             max-width: 1200px;
             width: 100%;
+            margin: 0 auto;
         }
         
         header {
             text-align: center;
             color: white;
             margin-bottom: 50px;
+            padding: 40px 20px;
         }
         
         h1 {
@@ -47,6 +47,68 @@
         .subtitle {
             font-size: 1.2em;
             opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .intro-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .intro-section h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .intro-section h3 {
+            color: #333;
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+        }
+        
+        .intro-section p {
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .intro-section ul {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .intro-section li {
+            margin: 10px 0;
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
         }
         
         .quiz-grid {
@@ -109,10 +171,22 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         
+        .category-section {
+            margin-top: 50px;
+        }
+        
+        .category-title {
+            color: white;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
         footer {
             text-align: center;
             color: white;
             margin-top: 50px;
+            padding: 30px;
             opacity: 0.8;
         }
         
@@ -124,6 +198,10 @@
             .quiz-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .intro-section {
+                padding: 25px;
+            }
         }
     </style>
 </head>
@@ -131,183 +209,261 @@
     <div class="container">
         <header>
             <h1>🎮 재미있는 퀴즈 & 게임</h1>
-            <p class="subtitle">2048 게임부터 성격 테스트까지!</p>
+            <p class="subtitle">2048 게임부터 성격 테스트까지! 17가지 무료 콘텐츠</p>
         </header>
         
-        <div class="quiz-grid">
-            <a href="2048-game/" class="quiz-card">
-                <div class="quiz-icon">🎯🔢</div>
-                <div class="quiz-title">2048 게임</div>
-                <div class="quiz-description">
-                    중독성 강한 숫자 퍼즐!<br>
-                    2048을 만들어보세요!
-                </div>
-                <button class="quiz-button">게임 시작</button>
-            </a>
+        <!-- 소개 섹션 -->
+        <div class="intro-section">
+            <h2>🎯 어서오세요!</h2>
+            <p>이 사이트는 <strong>재미있고 유익한 온라인 퀴즈와 게임</strong>을 모아놓은 곳입니다. 성격 테스트부터 중독성 강한 퍼즐 게임까지, 혼자서도, 친구들과 함께해도 즐거운 17가지 콘텐츠가 준비되어 있습니다.</p>
             
-            <a href="harry-potter-house-quiz/" class="quiz-card">
-                <div class="quiz-icon">⚡🦁</div>
-                <div class="quiz-title">호그와트 기숙사 배정</div>
-                <div class="quiz-description">
-                    분류 모자가 당신을<br>
-                    어느 기숙사로 보낼까요?
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">17+</div>
+                    <div class="stat-label">퀴즈 & 게임</div>
                 </div>
-                <button class="quiz-button">분류 모자 쓰기</button>
-            </a>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">무료</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">회원가입 불필요</div>
+                </div>
+            </div>
             
-            <a href="mbti-pokemon-quiz/" class="quiz-card">
-                <div class="quiz-icon">🎮⚡</div>
-                <div class="quiz-title">MBTI 포켓몬 퀴즈</div>
-                <div class="quiz-description">
-                    12개 질문으로 알아보는<br>
-                    나와 찰떡인 포켓몬!
-                </div>
-                <button class="quiz-button">시작하기</button>
-            </a>
+            <h3>🎮 어떤 콘텐츠가 있나요?</h3>
+            <p>다양한 카테고리의 재미있는 콘텐츠들이 여러분을 기다리고 있습니다:</p>
+            <ul>
+                <li><strong>성격 테스트</strong> - MBTI 포켓몬, 디즈니 캐릭터, BTS 멤버, 성격 음식, 전생 직업 등</li>
+                <li><strong>게임</strong> - 2048 퍼즐, F1 리액션 테스트, 점심 메뉴 룰렛</li>
+                <li><strong>팬덤 퀴즈</strong> - 해리포터 기숙사 배정, LOL 포지션, 2025 밈 퀴즈</li>
+                <li><strong>라이프스타일</strong> - 맥주 추천, 여행지 추천, 사주팔자</li>
+                <li><strong>정보</strong> - 필름 카메라 가이드, 희망의손길 프로젝트</li>
+            </ul>
             
-            <a href="meme-quiz-2025/" class="quiz-card">
-                <div class="quiz-icon">🔥😂</div>
-                <div class="quiz-title">2025 밈 퀴즈</div>
-                <div class="quiz-description">
-                    올해 가장 핫한 밈,<br>
-                    얼마나 알고 계신가요?
-                </div>
-                <button class="quiz-button">도전하기</button>
-            </a>
+            <h3>✨ 왜 우리 사이트를 선택해야 하나요?</h3>
+            <ul>
+                <li><strong>완전 무료</strong> - 모든 퀴즈와 게임을 무료로 즐기실 수 있습니다</li>
+                <li><strong>회원가입 불필요</strong> - 번거로운 가입 절차 없이 바로 시작하세요</li>
+                <li><strong>모바일 최적화</strong> - 스마트폰, 태블릿, PC 어디서나 쾌적하게</li>
+                <li><strong>개인정보 보호</strong> - 결과는 저장되지 않으며 완전히 익명입니다</li>
+                <li><strong>SNS 공유 가능</strong> - 친구들과 결과를 공유하고 비교해보세요</li>
+            </ul>
             
-            <a href="lol-position-quiz/" class="quiz-card">
-                <div class="quiz-icon">🎮🏆</div>
-                <div class="quiz-title">LOL 포지션 테스트</div>
-                <div class="quiz-description">
-                    나에게 맞는 롤 포지션은?<br>
-                    탑, 정글, 미드, 원딜, 서폿
-                </div>
-                <button class="quiz-button">포지션 찾기</button>
-            </a>
+            <h3>💡 어떻게 즐길까요?</h3>
+            <p>사용법은 간단합니다! 아래에서 관심 있는 퀴즈나 게임을 선택하고, 질문에 솔직하게 답변하거나 게임을 플레이하세요. 대부분의 퀴즈는 <strong>3-5분</strong> 안에 완료할 수 있으며, 즉시 결과를 확인하실 수 있습니다.</p>
             
-            <a href="disney-character-quiz/" class="quiz-card">
-                <div class="quiz-icon">✨👸</div>
-                <div class="quiz-title">디즈니 캐릭터 테스트</div>
-                <div class="quiz-description">
-                    나와 닮은 디즈니 주인공은?<br>
-                    엘사, 안나, 벨, 뮬란...
-                </div>
-                <button class="quiz-button">캐릭터 찾기</button>
-            </a>
+            <p>결과가 마음에 드시나요? 스크린샷을 찍거나 친구들에게 링크를 공유해보세요. 같은 결과가 나온 사람끼리는 성격이나 취향이 비슷할 가능성이 높답니다!</p>
             
-            <a href="bts-member-quiz/" class="quiz-card">
-                <div class="quiz-icon">💜🎤</div>
-                <div class="quiz-title">BTS 멤버 테스트</div>
-                <div class="quiz-description">
-                    나와 어울리는 방탄소년단<br>
-                    멤버는 누구일까요?
-                </div>
-                <button class="quiz-button">멤버 찾기</button>
-            </a>
-            
-            <a href="personality-food-quiz/" class="quiz-card">
-                <div class="quiz-icon">🍕🍰</div>
-                <div class="quiz-title">성격 음식 테스트</div>
-                <div class="quiz-description">
-                    내 성격을 음식으로 표현하면?<br>
-                    피자, 스시, 라면, 케이크...
-                </div>
-                <button class="quiz-button">음식 찾기</button>
-            </a>
-            
-            <a href="past-life-job-quiz/" class="quiz-card">
-                <div class="quiz-icon">🏛️👑</div>
-                <div class="quiz-title">전생 직업 테스트</div>
-                <div class="quiz-description">
-                    과거의 나는 누구였을까?<br>
-                    왕, 기사, 예술가, 학자...
-                </div>
-                <button class="quiz-button">전생 보기</button>
-            </a>
-            
-            <a href="saju-quiz/" class="quiz-card">
-                <div class="quiz-icon">🔮✨</div>
-                <div class="quiz-title">사주팔자 보기</div>
-                <div class="quiz-description">
-                    생년월일시로 알아보는<br>
-                    당신의 운명과 운세
-                </div>
-                <button class="quiz-button">사주 보기</button>
-            </a>
-            
-            <a href="f1-driver-quiz/" class="quiz-card">
-                <div class="quiz-icon">🏎️🏁</div>
-                <div class="quiz-title">F1 드라이버 테스트</div>
-                <div class="quiz-description">
-                    나와 비슷한 F1 드라이버는?<br>
-                    베르스타펜, 해밀턴, 노리스...
-                </div>
-                <button class="quiz-button">드라이버 찾기</button>
-            </a>
-            
-            <a href="f1-reaction-test/" class="quiz-card">
-                <div class="quiz-icon">⚡🏎️</div>
-                <div class="quiz-title">F1 리액션 테스트</div>
-                <div class="quiz-description">
-                    F1 스타트 라이트 반응 속도!<br>
-                    드라이버급 반응 속도를 가졌나요?
-                </div>
-                <button class="quiz-button">반응 테스트</button>
-            </a>
-            
-            <a href="beer-recommendation-quiz/" class="quiz-card">
-                <div class="quiz-icon">🍺🍻</div>
-                <div class="quiz-title">맥주 추천 테스트</div>
-                <div class="quiz-description">
-                    당신의 취향에 맞는 맥주는?<br>
-                    라거, 에일, IPA, 스타우트...
-                </div>
-                <button class="quiz-button">맥주 찾기</button>
-            </a>
-            
-            <a href="lunch-roulette/" class="quiz-card">
-                <div class="quiz-icon">🍽️🎲</div>
-                <div class="quiz-title">점심 메뉴 룰렛</div>
-                <div class="quiz-description">
-                    오늘 뭐 먹지? 고민 끝!<br>
-                    200개 메뉴 중 랜덤 선택
-                </div>
-                <button class="quiz-button">메뉴 뽑기</button>
-            </a>
-            
-            <a href="travel-destination-quiz/" class="quiz-card">
-                <div class="quiz-icon">🌍✈️</div>
-                <div class="quiz-title">여행지 추천 테스트</div>
-                <div class="quiz-description">
-                    나에게 딱 맞는 여행지는?<br>
-                    도쿄, 파리, 발리, 뉴욕...
-                </div>
-                <button class="quiz-button">여행지 찾기</button>
-            </a>
-            
-            <a href="film-camera/" class="quiz-card">
-                <div class="quiz-icon">📷🎞️</div>
-                <div class="quiz-title">필름 카메라 가이드</div>
-                <div class="quiz-description">
-                    필름 카메라 추천부터<br>
-                    필름, 현상소 정보까지
-                </div>
-                <button class="quiz-button">둘러보기</button>
-            </a>
-            
-            <a href="hope-hands/" class="quiz-card">
-                <div class="quiz-icon">🤝❤️</div>
-                <div class="quiz-title">희망의손길</div>
-                <div class="quiz-description">
-                    보상받지 못하는 피해자를 위한<br>
-                    투명한 모금 플랫폼 (프로토타입)
-                </div>
-                <button class="quiz-button">둘러보기</button>
-            </a>
+            <h3>🌟 인기 컨텐츠 Top 5</h3>
+            <ol>
+                <li><strong>MBTI 포켓몬 퀴즈</strong> - 가장 인기있는 성격 테스트! 나와 닮은 포켓몬을 찾아보세요</li>
+                <li><strong>2048 게임</strong> - 중독성 강한 숫자 퍼즐 게임</li>
+                <li><strong>해리포터 기숙사 배정</strong> - 그리핀도르? 슬리데린? 당신의 기숙사는?</li>
+                <li><strong>디즈니 캐릭터 테스트</strong> - 당신과 닮은 디즈니 주인공 찾기</li>
+                <li><strong>점심 메뉴 룰렛</strong> - 오늘 뭐 먹지? 고민 해결사!</li>
+            </ol>
+        </div>
+        
+        <!-- 성격 테스트 섹션 -->
+        <div class="category-section">
+            <h2 class="category-title">🎭 성격 테스트 & 심리 테스트</h2>
+            <div class="quiz-grid">
+                <a href="mbti-pokemon-quiz/" class="quiz-card">
+                    <div class="quiz-icon">🎮⚡</div>
+                    <div class="quiz-title">MBTI 포켓몬 퀴즈</div>
+                    <div class="quiz-description">
+                        12개 질문으로 알아보는<br>
+                        나와 찰떡인 포켓몬!
+                    </div>
+                    <button class="quiz-button">시작하기</button>
+                </a>
+                
+                <a href="disney-character-quiz/" class="quiz-card">
+                    <div class="quiz-icon">✨👸</div>
+                    <div class="quiz-title">디즈니 캐릭터 테스트</div>
+                    <div class="quiz-description">
+                        나와 닮은 디즈니 주인공은?<br>
+                        엘사, 안나, 벨, 뮬란...
+                    </div>
+                    <button class="quiz-button">캐릭터 찾기</button>
+                </a>
+                
+                <a href="bts-member-quiz/" class="quiz-card">
+                    <div class="quiz-icon">💜🎤</div>
+                    <div class="quiz-title">BTS 멤버 테스트</div>
+                    <div class="quiz-description">
+                        나와 어울리는 방탄소년단<br>
+                        멤버는 누구일까요?
+                    </div>
+                    <button class="quiz-button">멤버 찾기</button>
+                </a>
+                
+                <a href="personality-food-quiz/" class="quiz-card">
+                    <div class="quiz-icon">🍕🍰</div>
+                    <div class="quiz-title">성격 음식 테스트</div>
+                    <div class="quiz-description">
+                        내 성격을 음식으로 표현하면?<br>
+                        피자, 스시, 라면, 케이크...
+                    </div>
+                    <button class="quiz-button">음식 찾기</button>
+                </a>
+                
+                <a href="past-life-job-quiz/" class="quiz-card">
+                    <div class="quiz-icon">🏛️👑</div>
+                    <div class="quiz-title">전생 직업 테스트</div>
+                    <div class="quiz-description">
+                        과거의 나는 누구였을까?<br>
+                        왕, 기사, 예술가, 학자...
+                    </div>
+                    <button class="quiz-button">전생 보기</button>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 게임 & 팬덤 섹션 -->
+        <div class="category-section">
+            <h2 class="category-title">🎮 게임 & 팬덤 퀴즈</h2>
+            <div class="quiz-grid">
+                <a href="2048-game/" class="quiz-card">
+                    <div class="quiz-icon">🎯🔢</div>
+                    <div class="quiz-title">2048 게임</div>
+                    <div class="quiz-description">
+                        중독성 강한 숫자 퍼즐!<br>
+                        2048을 만들어보세요!
+                    </div>
+                    <button class="quiz-button">게임 시작</button>
+                </a>
+                
+                <a href="harry-potter-house-quiz/" class="quiz-card">
+                    <div class="quiz-icon">⚡🦁</div>
+                    <div class="quiz-title">호그와트 기숙사 배정</div>
+                    <div class="quiz-description">
+                        분류 모자가 당신을<br>
+                        어느 기숙사로 보낼까요?
+                    </div>
+                    <button class="quiz-button">분류 모자 쓰기</button>
+                </a>
+                
+                <a href="lol-position-quiz/" class="quiz-card">
+                    <div class="quiz-icon">🎮🏆</div>
+                    <div class="quiz-title">LOL 포지션 테스트</div>
+                    <div class="quiz-description">
+                        나에게 맞는 롤 포지션은?<br>
+                        탑, 정글, 미드, 원딜, 서폿
+                    </div>
+                    <button class="quiz-button">포지션 찾기</button>
+                </a>
+                
+                <a href="meme-quiz-2025/" class="quiz-card">
+                    <div class="quiz-icon">🔥😂</div>
+                    <div class="quiz-title">2025 밈 퀴즈</div>
+                    <div class="quiz-description">
+                        올해 가장 핫한 밈,<br>
+                        얼마나 알고 계신가요?
+                    </div>
+                    <button class="quiz-button">도전하기</button>
+                </a>
+                
+                <a href="f1-reaction-test/" class="quiz-card">
+                    <div class="quiz-icon">⚡🏎️</div>
+                    <div class="quiz-title">F1 리액션 테스트</div>
+                    <div class="quiz-description">
+                        F1 스타트 라이트 반응 속도!<br>
+                        드라이버급 반응 속도를 가졌나요?
+                    </div>
+                    <button class="quiz-button">반응 테스트</button>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 라이프스타일 섹션 -->
+        <div class="category-section">
+            <h2 class="category-title">🌟 라이프스타일 & 추천</h2>
+            <div class="quiz-grid">
+                <a href="f1-driver-quiz/" class="quiz-card">
+                    <div class="quiz-icon">🏎️🏁</div>
+                    <div class="quiz-title">F1 드라이버 테스트</div>
+                    <div class="quiz-description">
+                        나와 비슷한 F1 드라이버는?<br>
+                        베르스타펜, 해밀턴, 노리스...
+                    </div>
+                    <button class="quiz-button">드라이버 찾기</button>
+                </a>
+                
+                <a href="beer-recommendation-quiz/" class="quiz-card">
+                    <div class="quiz-icon">🍺🍻</div>
+                    <div class="quiz-title">맥주 추천 테스트</div>
+                    <div class="quiz-description">
+                        당신의 취향에 맞는 맥주는?<br>
+                        라거, 에일, IPA, 스타우트...
+                    </div>
+                    <button class="quiz-button">맥주 찾기</button>
+                </a>
+                
+                <a href="lunch-roulette/" class="quiz-card">
+                    <div class="quiz-icon">🍽️🎲</div>
+                    <div class="quiz-title">점심 메뉴 룰렛</div>
+                    <div class="quiz-description">
+                        오늘 뭐 먹지? 고민 끝!<br>
+                        200개 메뉴 중 랜덤 선택
+                    </div>
+                    <button class="quiz-button">메뉴 뽑기</button>
+                </a>
+                
+                <a href="travel-destination-quiz/" class="quiz-card">
+                    <div class="quiz-icon">🌍✈️</div>
+                    <div class="quiz-title">여행지 추천 테스트</div>
+                    <div class="quiz-description">
+                        나에게 딱 맞는 여행지는?<br>
+                        도쿄, 파리, 발리, 뉴욕...
+                    </div>
+                    <button class="quiz-button">여행지 찾기</button>
+                </a>
+                
+                <a href="saju-quiz/" class="quiz-card">
+                    <div class="quiz-icon">🔮✨</div>
+                    <div class="quiz-title">사주팔자 보기</div>
+                    <div class="quiz-description">
+                        생년월일시로 알아보는<br>
+                        당신의 운명과 운세
+                    </div>
+                    <button class="quiz-button">사주 보기</button>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 정보 & 프로젝트 섹션 -->
+        <div class="category-section">
+            <h2 class="category-title">📚 정보 & 프로젝트</h2>
+            <div class="quiz-grid">
+                <a href="film-camera/" class="quiz-card">
+                    <div class="quiz-icon">📷🎞️</div>
+                    <div class="quiz-title">필름 카메라 가이드</div>
+                    <div class="quiz-description">
+                        필름 카메라 추천부터<br>
+                        필름, 현상소 정보까지
+                    </div>
+                    <button class="quiz-button">둘러보기</button>
+                </a>
+                
+                <a href="hope-hands/" class="quiz-card">
+                    <div class="quiz-icon">🤝❤️</div>
+                    <div class="quiz-title">희망의손길</div>
+                    <div class="quiz-description">
+                        보상받지 못하는 피해자를 위한<br>
+                        투명한 모금 플랫폼 (프로토타입)
+                    </div>
+                    <button class="quiz-button">둘러보기</button>
+                </a>
+            </div>
         </div>
         
         <footer>
+            <p style="font-size: 1.2em; margin-bottom: 20px;">새로운 퀴즈와 게임이 계속 추가됩니다! 🎉</p>
             <p>© 2026 Quiz Collection | Made with ❤️</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">모든 퀴즈는 재미를 위한 것이며, 전문적인 진단을 대체할 수 없습니다.</p>
         </footer>
     </div>
 </body>

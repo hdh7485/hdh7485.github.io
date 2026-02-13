@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MBTI 포켓몬 테스트</title>
+    <meta name="description" content="MBTI 유형별로 찾아보는 나와 닮은 포켓몬! 12가지 질문으로 당신의 성격을 분석하고 가장 잘 어울리는 포켓몬을 찾아드립니다. ENFP는 피카츄, INTJ는 뮤츠 등 16가지 결과!">
+    <meta name="keywords" content="MBTI, 포켓몬, 성격테스트, MBTI포켓몬, 피카츄, 뮤츠, 성격유형, 퀴즈">
+    <title>MBTI 포켓몬 테스트 | 나와 닮은 포켓몬 찾기</title>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5473168023476210"
+         crossorigin="anonymous"></script>
+    
     <link rel="stylesheet" href="../harry-potter-house-quiz/index.html" type="text/css">
     <style>
         body { background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%); }
@@ -13,6 +20,54 @@
         .description { border-left-color: #ff6b6b; }
         .description h4 { color: #ff6b6b; }
         button.primary { background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%); }
+        
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .content-section h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        .content-section h3 {
+            color: #333;
+            margin: 25px 0 15px 0;
+            font-size: 1.3em;
+        }
+        .content-section p {
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .content-section ul {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+        .content-section li {
+            margin: 10px 0;
+            line-height: 1.6;
+            color: #555;
+        }
+        .pokemon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .pokemon-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .pokemon-card strong {
+            color: #ff6b6b;
+        }
     </style>
 </head>
 <body>
@@ -21,6 +76,8 @@
             <h1>⚡ MBTI 포켓몬 테스트</h1>
             <p class="subtitle">당신과 닮은 포켓몬을 찾아보세요!</p>
         </header>
+        
+        <!-- 테스트 화면 -->
         <div class="card intro-screen active">
             <div style="text-align: center;">
                 <h2 style="margin-bottom: 30px; color: #333;">🎮 어떤 포켓몬이 나올까?</h2>
@@ -28,6 +85,7 @@
                 <button class="primary" onclick="startTest()">테스트 시작</button>
             </div>
         </div>
+        
         <div class="card question-screen">
             <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
             <div class="question-content">
@@ -37,6 +95,7 @@
                 <button class="primary" id="nextButton" onclick="nextQuestion()" disabled>다음</button>
             </div>
         </div>
+        
         <div class="card result-screen">
             <div class="result-icon" id="resultIcon">⚡</div>
             <div class="result-title" id="resultTitle">피카츄</div>
@@ -44,7 +103,93 @@
             <div class="description" id="resultDescription"></div>
             <button class="primary" style="background: #6c757d;" onclick="retryTest()">다시 하기</button>
         </div>
+        
+        <!-- 소개 콘텐츠 -->
+        <div class="content-section">
+            <h2>🎯 MBTI와 포켓몬의 만남</h2>
+            <p>MBTI(Myers-Briggs Type Indicator)는 심리학자 칼 융의 이론을 바탕으로 개발된 성격 유형 검사입니다. 16가지 성격 유형을 통해 개인의 선호도와 행동 패턴을 이해할 수 있죠.</p>
+            <p>포켓몬 세계에는 900종이 넘는 다양한 포켓몬이 있으며, 각각은 독특한 성격과 특징을 가지고 있습니다. 이 테스트는 MBTI의 16가지 유형과 포켓몬의 성격 특성을 매칭하여, 여러분과 가장 닮은 포켓몬을 찾아드립니다.</p>
+            
+            <h3>📊 어떻게 작동하나요?</h3>
+            <p>이 테스트는 12가지 질문을 통해 MBTI의 4가지 주요 지표를 측정합니다:</p>
+            <ul>
+                <li><strong>E(외향) vs I(내향)</strong> - 에너지를 어디서 얻는가?</li>
+                <li><strong>S(감각) vs N(직관)</strong> - 정보를 어떻게 받아들이는가?</li>
+                <li><strong>T(사고) vs F(감정)</strong> - 의사결정을 어떻게 하는가?</li>
+                <li><strong>J(판단) vs P(인식)</strong> - 생활 방식은 어떠한가?</li>
+            </ul>
+            <p>각 질문에 솔직하게 답변하시면, 당신의 MBTI 유형과 가장 잘 맞는 포켓몬을 만나실 수 있습니다!</p>
+            
+            <h3>⚡ 대표 포켓몬 예시</h3>
+            <div class="pokemon-grid">
+                <div class="pokemon-card">
+                    <div style="font-size: 2em;">⚡</div>
+                    <strong>피카츄</strong>
+                    <p style="font-size: 0.9em; margin-top: 5px;">ENFP - 활발하고 사교적</p>
+                </div>
+                <div class="pokemon-card">
+                    <div style="font-size: 2em;">🔮</div>
+                    <strong>뮤츠</strong>
+                    <p style="font-size: 0.9em; margin-top: 5px;">INTJ - 전략적이고 독립적</p>
+                </div>
+                <div class="pokemon-card">
+                    <div style="font-size: 2em;">🌺</div>
+                    <strong>이브이</strong>
+                    <p style="font-size: 0.9em; margin-top: 5px;">INFP - 순수하고 적응력 높음</p>
+                </div>
+                <div class="pokemon-card">
+                    <div style="font-size: 2em;">🔥</div>
+                    <strong>리자몽</strong>
+                    <p style="font-size: 0.9em; margin-top: 5px;">ESTP - 모험적이고 대담함</p>
+                </div>
+            </div>
+            
+            <h3>🎮 왜 이 테스트를 해야 하나요?</h3>
+            <p>포켓몬은 단순한 게임 캐릭터가 아닙니다. 각 포켓몬은 고유한 성격, 능력, 그리고 매력을 가지고 있죠. 자신과 닮은 포켓몬을 발견하는 것은:</p>
+            <ul>
+                <li><strong>자기 이해 증진</strong> - 재미있는 방식으로 자신의 성격을 돌아볼 수 있습니다</li>
+                <li><strong>포켓몬 세계관 탐험</strong> - 몰랐던 포켓몬의 특징을 알게 됩니다</li>
+                <li><strong>친구들과 공유</strong> - SNS에 공유하며 친구들의 결과와 비교해보세요</li>
+                <li><strong>팀 빌딩</strong> - 게임 플레이 시 자신에게 맞는 포켓몬을 선택하는 참고 자료</li>
+            </ul>
+            
+            <h3>💡 테스트 팁</h3>
+            <ul>
+                <li>너무 오래 고민하지 마세요. 직관적으로 선택하는 것이 가장 정확합니다</li>
+                <li>"이상적인 나"가 아닌 "실제 나"의 모습을 선택하세요</li>
+                <li>정답은 없습니다. 모든 유형은 각자의 장점이 있습니다</li>
+                <li>결과가 마음에 들지 않아도 괜찮아요! 다시 테스트해보실 수 있습니다</li>
+            </ul>
+            
+            <h3>🌟 모든 결과는 특별합니다</h3>
+            <p>MBTI 16가지 유형마다 각각의 대표 포켓몬이 배정되어 있습니다. 인기 많은 전설의 포켓몬부터 귀여운 일반 포켓몬까지, 모든 결과는 그 자체로 의미가 있습니다. 중요한 것은 순위가 아니라, 나와 닮은 포켓몬을 통해 나 자신을 더 잘 이해하는 것입니다.</p>
+            
+            <p style="margin-top: 30px; text-align: center; color: #999;">
+                테스트는 약 3-5분 정도 소요됩니다. 지금 바로 시작해보세요! ⚡
+            </p>
+        </div>
+        
+        <!-- FAQ -->
+        <div class="content-section">
+            <h2>❓ 자주 묻는 질문</h2>
+            
+            <h3>Q. MBTI 테스트와 정확도가 같나요?</h3>
+            <p>이 테스트는 재미를 위한 간소화된 버전입니다. 정식 MBTI 검사는 전문가의 해석이 필요하며, 이 테스트는 참고용으로만 사용해주세요.</p>
+            
+            <h3>Q. 결과가 마음에 들지 않아요</h3>
+            <p>MBTI는 고정된 것이 아니며, 상황에 따라 달라질 수 있습니다. 다시 테스트를 해보거나, 결과를 재미로 받아들여주세요!</p>
+            
+            <h3>Q. 어떤 포켓몬들이 나올 수 있나요?</h3>
+            <p>피카츄, 뮤츠, 이브이, 리자몽, 잠만보, 루카리오, 가디안, 나시, 뮤, 레쿠쟈, 지라치, 야도란, 딱구리, 망나뇽, 팬텀, 샹델라 등 16종의 포켓몬이 준비되어 있습니다.</p>
+            
+            <h3>Q. 친구와 결과를 비교하고 싶어요</h3>
+            <p>결과 화면을 캡처하거나 SNS에 공유하여 친구들의 결과와 비교해보세요! 같은 포켓몬이 나온 친구는 성격이 비슷할 가능성이 높습니다.</p>
+            
+            <h3>Q. 데이터는 저장되나요?</h3>
+            <p>아니요. 모든 테스트는 브라우저에서만 진행되며, 어떤 개인정보나 결과도 서버에 저장되지 않습니다.</p>
+        </div>
     </div>
+    
     <script src="quiz.js"></script>
 </body>
 </html>
