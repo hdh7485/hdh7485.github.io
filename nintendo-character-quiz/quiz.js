@@ -115,93 +115,93 @@ const characters = {
 
 const questions = [
     {
-        text: "위험한 모험이 당신을 기다립니다. 어떻게 하시겠습니까?",
+        text: "갑자기 유령의 집에 갇혔습니다! 어떻게 하시겠습니까?",
         options: [
-            { text: "즉시 뛰어들어 해결한다!", character: 'mario', points: 3 },
-            { text: "조심스럽게 접근한다", character: 'luigi', points: 3 },
-            { text: "전략을 먼저 세운다", character: 'zelda', points: 3 },
-            { text: "신중하게 관찰 후 행동한다", character: 'link', points: 3 }
+            { text: "겁나지만 친구를 위해 탐험한다", character: 'luigi', points: 3 },
+            { text: "무서워도 용감하게 앞으로 나아간다", character: 'mario', points: 2 },
+            { text: "침착하게 탈출구를 찾는다", character: 'link', points: 2 },
+            { text: "혼자서도 문제없이 해결한다", character: 'samus', points: 3 }
         ]
     },
     {
-        text: "친구가 곤경에 처했습니다. 당신의 행동은?",
+        text: "보물 상자를 발견했습니다. 하지만 함정이 있을 수도 있어요.",
         options: [
-            { text: "무조건 도와주러 간다!", character: 'mario', points: 2 },
-            { text: "친구를 위해 용기를 낸다", character: 'luigi', points: 3 },
-            { text: "최선의 방법을 찾아 돕는다", character: 'zelda', points: 2 },
-            { text: "말없이 바로 행동한다", character: 'link', points: 3 }
+            { text: "일단 열어본다! 모험이잖아!", character: 'mario', points: 3 },
+            { text: "주변을 꼼꼼히 조사 후 연다", character: 'link', points: 3 },
+            { text: "함정을 예상하고 전략적으로 접근", character: 'zelda', points: 3 },
+            { text: "장비로 안전하게 스캔 후 연다", character: 'samus', points: 2 }
         ]
     },
     {
-        text: "당신의 성격을 가장 잘 표현한다면?",
+        text: "친구들과 음식을 나눠 먹으려 합니다. 당신은?",
         options: [
-            { text: "밝고 긍정적이다", character: 'kirby', points: 3 },
-            { text: "온화하고 친근하다", character: 'yoshi', points: 3 },
-            { text: "냉정하고 독립적이다", character: 'samus', points: 3 },
-            { text: "책임감 있고 리더십이 있다", character: 'fox', points: 3 }
+            { text: "다같이 골고루 나눠 먹는다", character: 'yoshi', points: 3 },
+            { text: "맛있게 먹고 즐거운 분위기 만들기", character: 'kirby', points: 3 },
+            { text: "필요한 만큼만 효율적으로 먹는다", character: 'samus', points: 2 },
+            { text: "모두가 만족할 방법을 찾는다", character: 'zelda', points: 2 }
         ]
     },
     {
-        text: "팀 프로젝트를 한다면 당신의 역할은?",
+        text: "마왕이 나타났습니다! 당신의 대응은?",
         options: [
-            { text: "앞장서서 이끈다", character: 'mario', points: 2 },
-            { text: "서포트하며 돕는다", character: 'yoshi', points: 3 },
-            { text: "전략을 세우고 조언한다", character: 'fox', points: 3 },
-            { text: "혼자 맡은 부분을 완벽히 한다", character: 'samus', points: 3 }
+            { text: "팀을 이끌고 전략적으로 싸운다", character: 'fox', points: 3 },
+            { text: "정면돌파! 용감하게 맞선다", character: 'mario', points: 3 },
+            { text: "약점을 분석하고 계획을 세운다", character: 'zelda', points: 3 },
+            { text: "묵묵히 검을 뽑고 전투 준비", character: 'link', points: 2 }
         ]
     },
     {
-        text: "스트레스를 받을 때 당신은?",
+        text: "비 오는 날, 당신은 무엇을 하고 싶으신가요?",
         options: [
-            { text: "긍정적으로 생각하고 극복한다", character: 'mario', points: 3 },
-            { text: "조용히 혼자 해결한다", character: 'link', points: 3 },
-            { text: "친구들과 이야기하며 풀다", character: 'kirby', points: 2 },
-            { text: "냉정하게 분석하고 대처한다", character: 'samus', points: 2 }
+            { text: "친구들과 함께 실내에서 놀기", character: 'kirby', points: 2 },
+            { text: "편안하게 친구와 시간 보내기", character: 'yoshi', points: 3 },
+            { text: "혼자 조용히 책 읽거나 정비하기", character: 'samus', points: 3 },
+            { text: "비를 맞으며 모험 떠나기!", character: 'mario', points: 2 }
         ]
     },
     {
-        text: "새로운 도전 앞에서 당신은?",
+        text: "당신이 가장 자신있는 것은?",
         options: [
-            { text: "신나게 도전한다!", character: 'mario', points: 3 },
-            { text: "겁나지만 해본다", character: 'luigi', points: 3 },
-            { text: "계획을 세우고 시작한다", character: 'zelda', points: 3 },
-            { text: "차근차근 준비한다", character: 'link', points: 2 }
+            { text: "어려운 문제를 해결하는 지혜", character: 'zelda', points: 3 },
+            { text: "위기 상황에서의 침착함", character: 'link', points: 3 },
+            { text: "팀을 이끄는 리더십", character: 'fox', points: 3 },
+            { text: "어떤 상황도 이겨내는 용기", character: 'mario', points: 2 }
         ]
     },
     {
-        text: "사람들과의 관계에서 당신은?",
+        text: "새로운 게임을 배울 때, 당신은?",
         options: [
-            { text: "많은 친구와 어울린다", character: 'kirby', points: 3 },
-            { text: "소수의 친한 친구가 있다", character: 'yoshi', points: 3 },
-            { text: "혼자 있는 것이 편하다", character: 'samus', points: 3 },
-            { text: "팀으로 일하는 것을 선호한다", character: 'fox', points: 3 }
+            { text: "설명서를 읽고 차근차근 배운다", character: 'link', points: 2 },
+            { text: "일단 해보면서 배운다!", character: 'mario', points: 3 },
+            { text: "공략을 보고 효율적으로 클리어", character: 'zelda', points: 2 },
+            { text: "혼자서 모든 걸 탐험하며 배운다", character: 'samus', points: 3 }
         ]
     },
     {
-        text: "중요한 결정을 내릴 때?",
+        text: "말다툼이 일어났을 때 당신의 역할은?",
         options: [
-            { text: "직관을 믿고 결정한다", character: 'mario', points: 2 },
-            { text: "신중하게 고민한다", character: 'luigi', points: 2 },
-            { text: "논리적으로 분석한다", character: 'zelda', points: 3 },
-            { text: "경험을 바탕으로 판단한다", character: 'link', points: 2 }
+            { text: "중재하고 화해시킨다", character: 'yoshi', points: 3 },
+            { text: "분위기를 밝게 만든다", character: 'kirby', points: 3 },
+            { text: "공정한 해결책을 제시한다", character: 'fox', points: 2 },
+            { text: "조용히 지켜보다 필요하면 개입", character: 'luigi', points: 2 }
         ]
     },
     {
-        text: "당신의 강점은?",
+        text: "파티에 초대받았습니다. 당신은?",
         options: [
-            { text: "긍정적인 에너지", character: 'kirby', points: 2 },
-            { text: "충성심과 신뢰", character: 'yoshi', points: 2 },
-            { text: "강한 자립심", character: 'samus', points: 2 },
-            { text: "리더십과 책임감", character: 'fox', points: 2 }
+            { text: "신나게 춤추고 분위기를 이끈다", character: 'kirby', points: 3 },
+            { text: "친구들과 편하게 대화한다", character: 'yoshi', points: 2 },
+            { text: "조용히 옆에서 즐긴다", character: 'luigi', points: 3 },
+            { text: "파티보다 혼자 있는 게 편하다", character: 'samus', points: 3 }
         ]
     },
     {
-        text: "이상적인 하루는?",
+        text: "여행을 간다면 어떤 스타일?",
         options: [
-            { text: "신나는 모험으로 가득!", character: 'mario', points: 3 },
-            { text: "친구들과 함께 편안하게", character: 'yoshi', points: 2 },
-            { text: "혼자만의 시간을 갖는다", character: 'samus', points: 2 },
-            { text: "목표를 향해 열심히 일한다", character: 'fox', points: 2 }
+            { text: "계획표 완벽! 모든 일정 체크", character: 'fox', points: 3 },
+            { text: "대략적인 계획만 세우고 자유롭게", character: 'mario', points: 3 },
+            { text: "중요한 곳만 정하고 유연하게", character: 'zelda', points: 2 },
+            { text: "혼자 배낭 메고 즉흥 여행", character: 'samus', points: 2 }
         ]
     }
 ];
