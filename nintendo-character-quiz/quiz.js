@@ -115,93 +115,93 @@ const characters = {
 
 const questions = [
     {
-        text: "갑자기 유령의 집에 갇혔습니다! 어떻게 하시겠습니까?",
+        text: "쿠파가 피치 공주를 납치했습니다!",
         options: [
-            { text: "겁나지만 친구를 위해 탐험한다", character: 'luigi', points: 3 },
-            { text: "무서워도 용감하게 앞으로 나아간다", character: 'mario', points: 2 },
-            { text: "침착하게 탈출구를 찾는다", character: 'link', points: 2 },
-            { text: "혼자서도 문제없이 해결한다", character: 'samus', points: 3 }
+            { text: "\"Let's go!\" 바로 성으로 돌진!", character: 'mario', points: 3 },
+            { text: "\"으... 무섭지만 형을 도와야지...\"", character: 'luigi', points: 3 },
+            { text: "구출 작전을 세밀하게 계획한다", character: 'zelda', points: 3 },
+            { text: "검을 들고 조용히 잠입한다", character: 'link', points: 3 }
         ]
     },
     {
-        text: "보물 상자를 발견했습니다. 하지만 함정이 있을 수도 있어요.",
+        text: "친구가 케이크를 만들어왔어요!",
         options: [
-            { text: "일단 열어본다! 모험이잖아!", character: 'mario', points: 3 },
-            { text: "주변을 꼼꼼히 조사 후 연다", character: 'link', points: 3 },
-            { text: "함정을 예상하고 전략적으로 접근", character: 'zelda', points: 3 },
-            { text: "장비로 안전하게 스캔 후 연다", character: 'samus', points: 2 }
+            { text: "\"와! 맛있겠다!\" 신나게 먹는다", character: 'kirby', points: 3 },
+            { text: "\"고마워!\" 다 같이 나눠먹자고 한다", character: 'yoshi', points: 3 },
+            { text: "\"감사합니다\" 정중하게 받고 조금만", character: 'zelda', points: 2 },
+            { text: "조용히 고맙다는 눈빛을 보낸다", character: 'link', points: 2 }
         ]
     },
     {
-        text: "친구들과 음식을 나눠 먹으려 합니다. 당신은?",
+        text: "우주 해적이 나타났습니다!",
         options: [
-            { text: "다같이 골고루 나눠 먹는다", character: 'yoshi', points: 3 },
-            { text: "맛있게 먹고 즐거운 분위기 만들기", character: 'kirby', points: 3 },
-            { text: "필요한 만큼만 효율적으로 먹는다", character: 'samus', points: 2 },
-            { text: "모두가 만족할 방법을 찾는다", character: 'zelda', points: 2 }
+            { text: "\"팀원들, 포메이션 Alpha!\"", character: 'fox', points: 3 },
+            { text: "전투복을 입고 혼자 처리한다", character: 'samus', points: 3 },
+            { text: "\"이건 내가 막을게!\" 앞으로 나선다", character: 'mario', points: 2 },
+            { text: "함정을 파고 전략적으로 유인한다", character: 'zelda', points: 2 }
         ]
     },
     {
-        text: "마왕이 나타났습니다! 당신의 대응은?",
+        text: "유령의 집에 갇혔어요. 손전등이 하나 있습니다.",
         options: [
-            { text: "팀을 이끌고 전략적으로 싸운다", character: 'fox', points: 3 },
-            { text: "정면돌파! 용감하게 맞선다", character: 'mario', points: 3 },
-            { text: "약점을 분석하고 계획을 세운다", character: 'zelda', points: 3 },
-            { text: "묵묵히 검을 뽑고 전투 준비", character: 'link', points: 2 }
+            { text: "\"으아아악!\" 하지만 친구 위해 탐색", character: 'luigi', points: 3 },
+            { text: "\"재밌겠는데?\" 유령 찾으러 간다", character: 'mario', points: 2 },
+            { text: "냉정하게 탈출구를 찾아 스캔한다", character: 'samus', points: 2 },
+            { text: "손전등 없이도 검으로 길을 찾는다", character: 'link', points: 3 }
         ]
     },
     {
-        text: "비 오는 날, 당신은 무엇을 하고 싶으신가요?",
+        text: "마을에 축제가 열렸습니다!",
         options: [
-            { text: "친구들과 함께 실내에서 놀기", character: 'kirby', points: 2 },
-            { text: "편안하게 친구와 시간 보내기", character: 'yoshi', points: 3 },
-            { text: "혼자 조용히 책 읽거나 정비하기", character: 'samus', points: 3 },
-            { text: "비를 맞으며 모험 떠나기!", character: 'mario', points: 2 }
+            { text: "\"야호!\" 모든 게임을 다 해본다", character: 'kirby', points: 3 },
+            { text: "친구들과 함께 천천히 구경한다", character: 'yoshi', points: 3 },
+            { text: "축제보다 훈련이 필요하다", character: 'samus', points: 3 },
+            { text: "팀원들 안전 확인 후 즐긴다", character: 'fox', points: 2 }
         ]
     },
     {
-        text: "당신이 가장 자신있는 것은?",
+        text: "새로운 던전을 발견했습니다!",
         options: [
-            { text: "어려운 문제를 해결하는 지혜", character: 'zelda', points: 3 },
-            { text: "위기 상황에서의 침착함", character: 'link', points: 3 },
-            { text: "팀을 이끄는 리더십", character: 'fox', points: 3 },
-            { text: "어떤 상황도 이겨내는 용기", character: 'mario', points: 2 }
+            { text: "\"신난다!\" 바로 들어간다", character: 'mario', points: 3 },
+            { text: "던전 구조를 분석하고 지도를 그린다", character: 'zelda', points: 3 },
+            { text: "필요한 장비를 점검하고 진입한다", character: 'link', points: 3 },
+            { text: "\"보상이 있나?\" 효율적으로 클리어", character: 'samus', points: 2 }
         ]
     },
     {
-        text: "새로운 게임을 배울 때, 당신은?",
+        text: "팀 미션이 주어졌습니다. 당신의 역할은?",
         options: [
-            { text: "설명서를 읽고 차근차근 배운다", character: 'link', points: 2 },
-            { text: "일단 해보면서 배운다!", character: 'mario', points: 3 },
-            { text: "공략을 보고 효율적으로 클리어", character: 'zelda', points: 2 },
-            { text: "혼자서 모든 걸 탐험하며 배운다", character: 'samus', points: 3 }
+            { text: "\"내가 지휘를 맡겠다!\"", character: 'fox', points: 3 },
+            { text: "\"전략은 내가 짜볼게\"", character: 'zelda', points: 2 },
+            { text: "\"나는 뒤에서 서포트!\"", character: 'yoshi', points: 3 },
+            { text: "혼자서 정찰 임무를 수행한다", character: 'samus', points: 3 }
         ]
     },
     {
-        text: "말다툼이 일어났을 때 당신의 역할은?",
+        text: "친구가 실수로 당신의 물건을 망가뜨렸어요.",
         options: [
-            { text: "중재하고 화해시킨다", character: 'yoshi', points: 3 },
-            { text: "분위기를 밝게 만든다", character: 'kirby', points: 3 },
-            { text: "공정한 해결책을 제시한다", character: 'fox', points: 2 },
-            { text: "조용히 지켜보다 필요하면 개입", character: 'luigi', points: 2 }
+            { text: "\"괜찮아!\" 웃으며 넘긴다", character: 'kirby', points: 2 },
+            { text: "\"그럴 수 있지\" 따뜻하게 위로한다", character: 'yoshi', points: 3 },
+            { text: "\"...\" 아무 말 없지만 괜찮다는 표정", character: 'link', points: 3 },
+            { text: "\"괜찮아. 다음엔 조심하자!\"", character: 'mario', points: 3 }
         ]
     },
     {
-        text: "파티에 초대받았습니다. 당신은?",
+        text: "어려운 보스가 나타났습니다. 3번 도전했지만 실패했어요.",
         options: [
-            { text: "신나게 춤추고 분위기를 이끈다", character: 'kirby', points: 3 },
-            { text: "친구들과 편하게 대화한다", character: 'yoshi', points: 2 },
-            { text: "조용히 옆에서 즐긴다", character: 'luigi', points: 3 },
-            { text: "파티보다 혼자 있는 게 편하다", character: 'samus', points: 3 }
+            { text: "\"한 번 더!\" 계속 도전한다", character: 'mario', points: 3 },
+            { text: "\"무섭지만 포기 못 해!\" 떨면서 도전", character: 'luigi', points: 3 },
+            { text: "패턴을 분석하고 약점을 찾는다", character: 'zelda', points: 3 },
+            { text: "장비를 업그레이드하고 다시 간다", character: 'samus', points: 2 }
         ]
     },
     {
-        text: "여행을 간다면 어떤 스타일?",
+        text: "생일에 뭘 받고 싶으세요?",
         options: [
-            { text: "계획표 완벽! 모든 일정 체크", character: 'fox', points: 3 },
-            { text: "대략적인 계획만 세우고 자유롭게", character: 'mario', points: 3 },
-            { text: "중요한 곳만 정하고 유연하게", character: 'zelda', points: 2 },
-            { text: "혼자 배낭 메고 즉흥 여행", character: 'samus', points: 2 }
+            { text: "친구들과 함께하는 파티!", character: 'kirby', points: 3 },
+            { text: "진심 담긴 편지면 충분해", character: 'yoshi', points: 3 },
+            { text: "새로운 장비나 기술서", character: 'samus', points: 3 },
+            { text: "팀원들과의 우정 강화 훈련", character: 'fox', points: 3 }
         ]
     }
 ];
