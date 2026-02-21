@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 오목 게임 - AI와 오목 대결</title>
+    <meta name="description" content="AI와 오목 게임을 플레이하세요. 5개를 먼저 연결하는 사람이 승리!">
+    
+    <!-- Google AdSense -->
+    <meta name="google-adsense-account" content="ca-pub-9206874822169440">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9206874822169440" crossorigin="anonymous"></script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7CRKE11P9E"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-7CRKE11P9E');
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            margin: 20px auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .difficulty {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .difficulty label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        select {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 2px solid #f5576c;
+            font-size: 16px;
+        }
+        
+        #board {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background: #dcb35c;
+            border: 3px solid #8b6914;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 0;
+            background: #dcb35c;
+        }
+        
+        .cell {
+            aspect-ratio: 1;
+            background: #dcb35c;
+            border: 1px solid #8b6914;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s;
+        }
+        
+        .cell:hover {
+            background: #c9a44a;
+        }
+        
+        .cell.black::after,
+        .cell.white::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .cell.black::after {
+            background: radial-gradient(circle at 30% 30%, #555, #000);
+        }
+        
+        .cell.white::after {
+            background: radial-gradient(circle at 30% 30%, #fff, #ddd);
+        }
+        
+        .cell.winning::after {
+            animation: pulse 0.5s ease-in-out;
+            box-shadow: 0 0 15px #ffd700;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.2); }
+        }
+        
+        .status {
+            text-align: center;
+            font-size: 18px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            color: #333;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .info {
+            background: #fff5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 5px solid #f5576c;
+        }
+        
+        .info h3 {
+            color: #f5576c;
+            margin-bottom: 10px;
+        }
+        
+        .info p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            color: #f5576c;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="home-btn">🏠 홈으로</a>
+    
+    <div class="container">
+        <h1>⚫ AI 오목 게임 ⚪</h1>
+        <p class="subtitle">AI와 오목 대결을 펼쳐보세요!</p>
+        
+        <div class="difficulty">
+            <label for="difficulty-select">난이도:</label>
+            <select id="difficulty-select" onchange="newGame()">
+                <option value="1">쉬움 (1단계)</option>
+                <option value="2" selected>보통 (2단계)</option>
+                <option value="3">어려움 (3단계)</option>
+            </select>
+        </div>
+        
+        <div class="status" id="status">당신의 차례입니다 (흑)</div>
+        
+        <div id="board">
+            <div id="grid"></div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" onclick="newGame()">🔄 새 게임</button>
+            <button class="btn" onclick="undoMove()">↩️ 무르기</button>
+        </div>
+        
+        <div class="info">
+            <h3>게임 방법</h3>
+            <p>🎯 <strong>목표:</strong> 가로, 세로, 대각선으로 5개의 돌을 먼저 연결하세요!</p>
+            <p>🎮 <strong>조작:</strong> 빈 칸을 클릭하여 돌을 놓으세요</p>
+            <p>🤖 <strong>AI 난이도:</strong> 쉬움, 보통, 어려움 중 선택 가능</p>
+            <p>⚫ <strong>플레이어:</strong> 흑돌 (먼저 시작)</p>
+            <p>⚪ <strong>AI:</strong> 백돌</p>
+        </div>
+    </div>
+    
+    <script>
+        const BOARD_SIZE = 15;
+        const EMPTY = 0;
+        const BLACK = 1;
+        const WHITE = 2;
+        
+        let board = [];
+        let currentPlayer = BLACK;
+        let gameOver = false;
+        let moveHistory = [];
+        
+        function initBoard() {
+            board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(EMPTY));
+            currentPlayer = BLACK;
+            gameOver = false;
+            moveHistory = [];
+            renderBoard();
+            updateStatus();
+        }
+        
+        function renderBoard() {
+            const grid = document.getElementById('grid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < BOARD_SIZE; i++) {
+                for (let j = 0; j < BOARD_SIZE; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    
+                    if (board[i][j] === BLACK) {
+                        cell.classList.add('black');
+                    } else if (board[i][j] === WHITE) {
+                        cell.classList.add('white');
+                    }
+                    
+                    cell.addEventListener('click', handleCellClick);
+                    grid.appendChild(cell);
+                }
+            }
+        }
+        
+        function handleCellClick(e) {
+            if (gameOver || currentPlayer === WHITE) return;
+            
+            const row = parseInt(e.target.dataset.row);
+            const col = parseInt(e.target.dataset.col);
+            
+            if (board[row][col] !== EMPTY) return;
+            
+            makeMove(row, col, BLACK);
+            
+            if (!gameOver) {
+                setTimeout(() => {
+                    makeAIMove();
+                }, 300);
+            }
+        }
+        
+        function makeMove(row, col, player) {
+            board[row][col] = player;
+            moveHistory.push({row, col, player});
+            renderBoard();
+            
+            const winner = checkWinner(row, col);
+            if (winner) {
+                gameOver = true;
+                highlightWinningStones(winner.stones);
+                updateStatus(winner.player);
+                return;
+            }
+            
+            if (isBoardFull()) {
+                gameOver = true;
+                updateStatus(0);
+                return;
+            }
+            
+            currentPlayer = player === BLACK ? WHITE : BLACK;
+            updateStatus();
+        }
+        
+        function makeAIMove() {
+            const difficulty = parseInt(document.getElementById('difficulty-select').value);
+            const move = getBestMove(difficulty);
+            
+            if (move) {
+                makeMove(move.row, move.col, WHITE);
+            }
+        }
+        
+        function getBestMove(depth) {
+            let bestScore = -Infinity;
+            let bestMove = null;
+            
+            // 공격과 방어 우선순위 체크
+            const criticalMove = findCriticalMove();
+            if (criticalMove) return criticalMove;
+            
+            // Minimax 알고리즘
+            for (let i = 0; i < BOARD_SIZE; i++) {
+                for (let j = 0; j < BOARD_SIZE; j++) {
+                    if (board[i][j] === EMPTY && hasNeighbor(i, j)) {
+                        board[i][j] = WHITE;
+                        const score = minimax(depth - 1, false, -Infinity, Infinity);
+                        board[i][j] = EMPTY;
+                        
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestMove = {row: i, col: j};
+                        }
+                    }
+                }
+            }
+            
+            return bestMove || {row: 7, col: 7}; // 중앙을 기본값으로
+        }
+        
+        function findCriticalMove() {
+            // AI가 이길 수 있는 수 찾기
+            for (let i = 0; i < BOARD_SIZE; i++) {
+                for (let j = 0; j < BOARD_SIZE; j++) {
+                    if (board[i][j] === EMPTY) {
+                        board[i][j] = WHITE;
+                        if (checkWinner(i, j)) {
+                            board[i][j] = EMPTY;
+                            return {row: i, col: j};
+                        }
+                        board[i][j] = EMPTY;
+                    }
+                }
+            }
+            
+            // 플레이어가 이기는 것을 막기
+            for (let i = 0; i < BOARD_SIZE; i++) {
+                for (let j = 0; j < BOARD_SIZE; j++) {
+                    if (board[i][j] === EMPTY) {
+                        board[i][j] = BLACK;
+                        if (checkWinner(i, j)) {
+                            board[i][j] = EMPTY;
+                            return {row: i, col: j};
+                        }
+                        board[i][j] = EMPTY;
+                    }
+                }
+            }
+            
+            return null;
+        }
+        
+        function minimax(depth, isMaximizing, alpha, beta) {
+            if (depth === 0) {
+                return evaluateBoard();
+            }
+            
+            if (isMaximizing) {
+                let maxScore = -Infinity;
+                for (let i = 0; i < BOARD_SIZE; i++) {
+                    for (let j = 0; j < BOARD_SIZE; j++) {
+                        if (board[i][j] === EMPTY && hasNeighbor(i, j)) {
+                            board[i][j] = WHITE;
+                            const score = minimax(depth - 1, false, alpha, beta);
+                            board[i][j] = EMPTY;
+                            maxScore = Math.max(maxScore, score);
+                            alpha = Math.max(alpha, score);
+                            if (beta <= alpha) break;
+                        }
+                    }
+                }
+                return maxScore;
+            } else {
+                let minScore = Infinity;
+                for (let i = 0; i < BOARD_SIZE; i++) {
+                    for (let j = 0; j < BOARD_SIZE; j++) {
+                        if (board[i][j] === EMPTY && hasNeighbor(i, j)) {
+                            board[i][j] = BLACK;
+                            const score = minimax(depth - 1, true, alpha, beta);
+                            board[i][j] = EMPTY;
+                            minScore = Math.min(minScore, score);
+                            beta = Math.min(beta, score);
+                            if (beta <= alpha) break;
+                        }
+                    }
+                }
+                return minScore;
+            }
+        }
+        
+        function evaluateBoard() {
+            let score = 0;
+            
+            // 간단한 평가 함수
+            for (let i = 0; i < BOARD_SIZE; i++) {
+                for (let j = 0; j < BOARD_SIZE; j++) {
+                    if (board[i][j] !== EMPTY) {
+                        const patterns = getPatterns(i, j, board[i][j]);
+                        score += board[i][j] === WHITE ? patterns : -patterns;
+                    }
+                }
+            }
+            
+            return score;
+        }
+        
+        function getPatterns(row, col, player) {
+            let score = 0;
+            const directions = [[0,1], [1,0], [1,1], [1,-1]];
+            
+            for (const [dx, dy] of directions) {
+                let count = 1;
+                let openEnds = 0;
+                
+                // 양 방향으로 체크
+                for (let dir of [-1, 1]) {
+                    for (let i = 1; i < 5; i++) {
+                        const newRow = row + dx * i * dir;
+                        const newCol = col + dy * i * dir;
+                        
+                        if (newRow < 0 || newRow >= BOARD_SIZE || newCol < 0 || newCol >= BOARD_SIZE) break;
+                        if (board[newRow][newCol] === player) {
+                            count++;
+                        } else {
+                            if (board[newRow][newCol] === EMPTY) openEnds++;
+                            break;
+                        }
+                    }
+                }
+                
+                if (count >= 5) score += 100000;
+                else if (count === 4 && openEnds === 2) score += 10000;
+                else if (count === 4 && openEnds === 1) score += 1000;
+                else if (count === 3 && openEnds === 2) score += 100;
+                else if (count === 3 && openEnds === 1) score += 10;
+                else if (count === 2 && openEnds === 2) score += 5;
+            }
+            
+            return score;
+        }
+        
+        function hasNeighbor(row, col) {
+            for (let i = Math.max(0, row - 2); i <= Math.min(BOARD_SIZE - 1, row + 2); i++) {
+                for (let j = Math.max(0, col - 2); j <= Math.min(BOARD_SIZE - 1, col + 2); j++) {
+                    if (board[i][j] !== EMPTY) return true;
+                }
+            }
+            return false;
+        }
+        
+        function checkWinner(row, col) {
+            const player = board[row][col];
+            const directions = [[0,1], [1,0], [1,1], [1,-1]];
+            
+            for (const [dx, dy] of directions) {
+                const stones = [{row, col}];
+                
+                for (let dir of [-1, 1]) {
+                    for (let i = 1; i < 5; i++) {
+                        const newRow = row + dx * i * dir;
+                        const newCol = col + dy * i * dir;
+                        
+                        if (newRow < 0 || newRow >= BOARD_SIZE || newCol < 0 || newCol >= BOARD_SIZE) break;
+                        if (board[newRow][newCol] !== player) break;
+                        
+                        stones.push({row: newRow, col: newCol});
+                    }
+                }
+                
+                if (stones.length >= 5) {
+                    return {player, stones: stones.slice(0, 5)};
+                }
+            }
+            
+            return null;
+        }
+        
+        function highlightWinningStones(stones) {
+            stones.forEach(({row, col}) => {
+                const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                if (cell) cell.classList.add('winning');
+            });
+        }
+        
+        function isBoardFull() {
+            return board.every(row => row.every(cell => cell !== EMPTY));
+        }
+        
+        function updateStatus(winner) {
+            const statusEl = document.getElementById('status');
+            
+            if (winner === BLACK) {
+                statusEl.textContent = '🎉 당신이 이겼습니다! 축하합니다!';
+            } else if (winner === WHITE) {
+                statusEl.textContent = '😢 AI가 이겼습니다. 다시 도전해보세요!';
+            } else if (winner === 0) {
+                statusEl.textContent = '무승부입니다!';
+            } else {
+                statusEl.textContent = currentPlayer === BLACK ? '당신의 차례입니다 (흑)' : 'AI가 생각 중입니다... (백)';
+            }
+        }
+        
+        function newGame() {
+            initBoard();
+        }
+        
+        function undoMove() {
+            if (moveHistory.length >= 2 && !gameOver) {
+                // 플레이어와 AI의 수를 함께 무르기
+                for (let i = 0; i < 2; i++) {
+                    const lastMove = moveHistory.pop();
+                    if (lastMove) {
+                        board[lastMove.row][lastMove.col] = EMPTY;
+                    }
+                }
+                currentPlayer = BLACK;
+                renderBoard();
+                updateStatus();
+            }
+        }
+        
+        // 게임 시작
+        initBoard();
+    </script>
+</body>
+</html>

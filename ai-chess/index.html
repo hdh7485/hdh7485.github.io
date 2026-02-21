@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 체스 게임 - AI와 체스 대결</title>
+    <meta name="description" content="AI와 체스 게임을 플레이하세요. 전략적 사고력을 테스트해보세요!">
+    
+    <!-- Google AdSense -->
+    <meta name="google-adsense-account" content="ca-pub-9206874822169440">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9206874822169440" crossorigin="anonymous"></script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7CRKE11P9E"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-7CRKE11P9E');
+    </script>
+    
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            margin: 20px auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        #board {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 20px;
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .status {
+            text-align: center;
+            font-size: 18px;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            color: #333;
+        }
+        
+        .difficulty {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .difficulty label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        select {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+            font-size: 16px;
+        }
+        
+        .info {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .info h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .info p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            #board {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../index.html" class="home-btn">🏠 홈으로</a>
+    
+    <div class="container">
+        <h1>♟️ AI 체스 게임</h1>
+        <p class="subtitle">AI와 체스 대결을 펼쳐보세요!</p>
+        
+        <div class="difficulty">
+            <label for="difficulty-select">난이도:</label>
+            <select id="difficulty-select">
+                <option value="1">쉬움 (1단계)</option>
+                <option value="2" selected>보통 (2단계)</option>
+                <option value="3">어려움 (3단계)</option>
+                <option value="4">매우 어려움 (4단계)</option>
+            </select>
+        </div>
+        
+        <div id="board"></div>
+        
+        <div class="status" id="status">당신의 차례입니다 (백)</div>
+        
+        <div class="controls">
+            <button class="btn" onclick="newGame()">🔄 새 게임</button>
+            <button class="btn" onclick="undoMove()">↩️ 무르기</button>
+        </div>
+        
+        <div class="info">
+            <h3>게임 방법</h3>
+            <p>🎯 <strong>목표:</strong> AI를 이기고 체스마스터가 되어보세요!</p>
+            <p>🎮 <strong>조작:</strong> 말을 클릭한 후 이동할 위치를 클릭하세요</p>
+            <p>🤖 <strong>AI 난이도:</strong> 쉬움부터 매우 어려움까지 선택 가능</p>
+            <p>♔ <strong>규칙:</strong> 표준 체스 규칙을 따릅니다</p>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script>
+        var board = null;
+        var game = new Chess();
+        var moveHistory = [];
+        
+        function onDragStart(source, piece, position, orientation) {
+            if (game.game_over()) return false;
+            if (piece.search(/^b/) !== -1) return false;
+        }
+        
+        function makeAIMove() {
+            var possibleMoves = game.moves();
+            
+            if (game.game_over()) {
+                updateStatus();
+                return;
+            }
+            
+            var difficulty = parseInt(document.getElementById('difficulty-select').value);
+            var bestMove = getBestMove(difficulty);
+            
+            game.move(bestMove);
+            moveHistory.push(bestMove);
+            board.position(game.fen());
+            updateStatus();
+        }
+        
+        function getBestMove(depth) {
+            var possibleMoves = game.moves();
+            var bestMove = null;
+            var bestValue = -9999;
+            
+            for (var i = 0; i < possibleMoves.length; i++) {
+                var move = possibleMoves[i];
+                game.move(move);
+                var boardValue = -minimax(depth - 1, -10000, 10000, false);
+                game.undo();
+                
+                if (boardValue > bestValue) {
+                    bestValue = boardValue;
+                    bestMove = move;
+                }
+            }
+            
+            return bestMove;
+        }
+        
+        function minimax(depth, alpha, beta, isMaximisingPlayer) {
+            if (depth === 0) {
+                return evaluateBoard();
+            }
+            
+            var possibleMoves = game.moves();
+            
+            if (isMaximisingPlayer) {
+                var bestMove = -9999;
+                for (var i = 0; i < possibleMoves.length; i++) {
+                    game.move(possibleMoves[i]);
+                    bestMove = Math.max(bestMove, minimax(depth - 1, alpha, beta, !isMaximisingPlayer));
+                    game.undo();
+                    alpha = Math.max(alpha, bestMove);
+                    if (beta <= alpha) {
+                        return bestMove;
+                    }
+                }
+                return bestMove;
+            } else {
+                var bestMove = 9999;
+                for (var i = 0; i < possibleMoves.length; i++) {
+                    game.move(possibleMoves[i]);
+                    bestMove = Math.min(bestMove, minimax(depth - 1, alpha, beta, !isMaximisingPlayer));
+                    game.undo();
+                    beta = Math.min(beta, bestMove);
+                    if (beta <= alpha) {
+                        return bestMove;
+                    }
+                }
+                return bestMove;
+            }
+        }
+        
+        function evaluateBoard() {
+            var board = game.board();
+            var totalEvaluation = 0;
+            
+            for (var i = 0; i < 8; i++) {
+                for (var j = 0; j < 8; j++) {
+                    totalEvaluation += getPieceValue(board[i][j], i, j);
+                }
+            }
+            
+            return totalEvaluation;
+        }
+        
+        function getPieceValue(piece, x, y) {
+            if (piece === null) {
+                return 0;
+            }
+            
+            var getAbsoluteValue = function (piece, isWhite, x, y) {
+                if (piece.type === 'p') {
+                    return 10;
+                } else if (piece.type === 'r') {
+                    return 50;
+                } else if (piece.type === 'n') {
+                    return 30;
+                } else if (piece.type === 'b') {
+                    return 30;
+                } else if (piece.type === 'q') {
+                    return 90;
+                } else if (piece.type === 'k') {
+                    return 900;
+                }
+            };
+            
+            var absoluteValue = getAbsoluteValue(piece, piece.color === 'w', x, y);
+            return piece.color === 'w' ? absoluteValue : -absoluteValue;
+        }
+        
+        function onDrop(source, target) {
+            moveHistory = [];
+            
+            var move = game.move({
+                from: source,
+                to: target,
+                promotion: 'q'
+            });
+            
+            if (move === null) return 'snapback';
+            
+            moveHistory.push(move);
+            updateStatus();
+            
+            window.setTimeout(makeAIMove, 250);
+        }
+        
+        function onSnapEnd() {
+            board.position(game.fen());
+        }
+        
+        function updateStatus() {
+            var status = '';
+            
+            var moveColor = '백';
+            if (game.turn() === 'b') {
+                moveColor = '흑';
+            }
+            
+            if (game.in_checkmate()) {
+                status = '게임 종료, ' + moveColor + ' 체크메이트.';
+            } else if (game.in_draw()) {
+                status = '게임 종료, 무승부';
+            } else {
+                status = moveColor + '의 차례';
+                
+                if (game.in_check()) {
+                    status += ', ' + moveColor + ' 체크 상태!';
+                }
+            }
+            
+            document.getElementById('status').textContent = status;
+        }
+        
+        var config = {
+            draggable: true,
+            position: 'start',
+            onDragStart: onDragStart,
+            onDrop: onDrop,
+            onSnapEnd: onSnapEnd
+        };
+        
+        board = Chessboard('board', config);
+        
+        function newGame() {
+            game.reset();
+            moveHistory = [];
+            board.start();
+            updateStatus();
+        }
+        
+        function undoMove() {
+            if (moveHistory.length >= 2) {
+                game.undo();
+                game.undo();
+                moveHistory.pop();
+                moveHistory.pop();
+                board.position(game.fen());
+                updateStatus();
+            }
+        }
+        
+        updateStatus();
+    </script>
+</body>
+</html>
