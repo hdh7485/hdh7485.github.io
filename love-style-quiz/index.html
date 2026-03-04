@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 연애 스타일 테스트 💕 | 당신은 어떤 연애를 하나요?</title>
+    <meta name="description" content="12가지 질문으로 알아보는 나의 연애 스타일! 열정형, 안정형, 자유형, 헌신형, 이성형 중 나는 어떤 유형일까? 무료 연애 성격 테스트.">
+    <meta name="keywords" content="연애스타일테스트, 연애유형, 나의연애스타일, 연애성격테스트, 커플테스트, 연애퀴즈">
+    <meta property="og:title" content="나의 연애 스타일 테스트 💕">
+    <meta property="og:description" content="12가지 질문으로 알아보는 나의 연애 스타일! 당신은 열정형? 안정형? 자유형?">
+    <meta property="og:type" content="website">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5473168023476210"
+         crossorigin="anonymous"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 680px; margin: 0 auto; }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 40px 0 30px;
+        }
+
+        header h1 {
+            font-size: 2.4em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .subtitle { font-size: 1.15em; opacity: 0.9; }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            margin-bottom: 24px;
+        }
+
+        .intro-screen, .question-screen, .result-screen { display: none; }
+        .intro-screen.active, .question-screen.active, .result-screen.active { display: block; }
+
+        /* 인트로 */
+        .intro-emoji { font-size: 5em; text-align: center; margin-bottom: 20px; }
+        .intro-desc {
+            font-size: 1.1em;
+            line-height: 1.9;
+            color: #555;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .type-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .type-tag {
+            background: #fff0f5;
+            border: 2px solid #ffb3cc;
+            color: #c44569;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+
+        /* 진행바 */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #ffe0ec;
+            border-radius: 10px;
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b9d, #c44569);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .q-number {
+            color: #ff6b9d;
+            font-size: 0.95em;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+        .question-text {
+            font-size: 1.25em;
+            color: #222;
+            margin-bottom: 28px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .options { display: flex; flex-direction: column; gap: 12px; }
+        .option {
+            padding: 18px 22px;
+            background: #fafafa;
+            border: 2.5px solid #eee;
+            border-radius: 14px;
+            cursor: pointer;
+            font-size: 1.05em;
+            color: #444;
+            transition: all 0.2s;
+            line-height: 1.5;
+        }
+        .option:hover { border-color: #ff6b9d; background: #fff5f8; transform: translateX(4px); }
+        .option.selected { background: #ff6b9d; border-color: #ff6b9d; color: white; transform: translateX(4px); }
+
+        button.primary {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #ff6b9d, #c44569);
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            margin-top: 22px;
+            transition: all 0.25s;
+            letter-spacing: 0.02em;
+        }
+        button.primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(196,69,105,0.4); }
+        button.primary:disabled { background: #ddd; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        button.secondary {
+            width: 100%;
+            padding: 16px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #c44569;
+            background: white;
+            border: 2px solid #ff6b9d;
+            border-radius: 14px;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.25s;
+        }
+        button.secondary:hover { background: #fff0f5; transform: translateY(-2px); }
+
+        /* 결과 */
+        .result-emoji { font-size: 7em; text-align: center; margin: 10px 0 20px; }
+        .result-type-label {
+            text-align: center;
+            font-size: 0.95em;
+            color: #ff6b9d;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+        .result-title {
+            font-size: 2.2em;
+            font-weight: 800;
+            text-align: center;
+            color: #c44569;
+            margin-bottom: 8px;
+        }
+        .result-subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 1.05em;
+            margin-bottom: 28px;
+        }
+
+        .result-box {
+            background: #fff5f8;
+            border-left: 5px solid #ff6b9d;
+            border-radius: 12px;
+            padding: 24px 26px;
+            margin-bottom: 16px;
+        }
+        .result-box h4 { color: #c44569; font-size: 1.05em; margin-bottom: 12px; }
+        .result-box p { color: #555; line-height: 1.85; font-size: 1.02em; }
+
+        .similar-box {
+            background: #fffbf0;
+            border-left: 5px solid #ffc93c;
+            border-radius: 12px;
+            padding: 24px 26px;
+            margin-bottom: 16px;
+        }
+        .similar-box h4 { color: #e6a817; font-size: 1.05em; margin-bottom: 12px; }
+        .similar-box p { color: #555; line-height: 2; font-size: 1.02em; }
+
+        .traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 14px 0 4px;
+        }
+        .trait-tag {
+            background: white;
+            border: 2px solid #ff6b9d;
+            color: #c44569;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.88em;
+            font-weight: 600;
+        }
+
+        .compat-box {
+            background: #f0f7ff;
+            border-left: 5px solid #6ba3ff;
+            border-radius: 12px;
+            padding: 22px 26px;
+            margin-bottom: 16px;
+        }
+        .compat-box h4 { color: #3a72d6; margin-bottom: 10px; font-size: 1.05em; }
+        .compat-box p { color: #555; line-height: 1.8; font-size: 1.02em; }
+
+        .strength-box {
+            background: #f4fff4;
+            border-left: 5px solid #4caf50;
+            border-radius: 12px;
+            padding: 22px 26px;
+            margin-bottom: 16px;
+        }
+        .strength-box h4 { color: #2e7d32; margin-bottom: 10px; font-size: 1.05em; }
+        .strength-box p { color: #555; line-height: 1.8; font-size: 1.02em; }
+
+        .share-section { text-align: center; margin-top: 4px; }
+        .share-section p { color: #bbb; font-size: 0.9em; margin-top: 14px; }
+
+        @media (max-width: 480px) {
+            .card { padding: 28px 22px; }
+            header h1 { font-size: 1.9em; }
+            .question-text { font-size: 1.1em; }
+            .result-title { font-size: 1.8em; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>💕 나의 연애 스타일 테스트</h1>
+        <p class="subtitle">당신은 어떤 연애를 하는 사람인가요?</p>
+    </header>
+
+    <!-- 인트로 -->
+    <div class="card intro-screen active">
+        <div class="intro-emoji">💝</div>
+        <p class="intro-desc">
+            12가지 질문으로 알아보는<br>
+            나만의 연애 스타일!<br><br>
+            솔직하게 답할수록 정확해요 😊
+        </p>
+        <div class="type-preview">
+            <span class="type-tag">🔥 열정형</span>
+            <span class="type-tag">🌿 안정형</span>
+            <span class="type-tag">🦋 자유형</span>
+            <span class="type-tag">💖 헌신형</span>
+            <span class="type-tag">🧠 이성형</span>
+        </div>
+        <button class="primary" onclick="startTest()">테스트 시작하기</button>
+    </div>
+
+    <!-- 질문 -->
+    <div class="card question-screen">
+        <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+        <div class="q-number" id="qNumber">질문 1 / 12</div>
+        <div class="question-text" id="questionText"></div>
+        <div class="options" id="options"></div>
+        <button class="primary" id="nextBtn" onclick="nextQuestion()" disabled>다음 →</button>
+    </div>
+
+    <!-- 결과 -->
+    <div class="card result-screen">
+        <div class="result-emoji" id="resultEmoji">💝</div>
+        <div class="result-type-label">나의 연애 스타일</div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-subtitle" id="resultSubtitle"></div>
+        <div id="resultDesc"></div>
+        <div id="resultSimilar"></div>
+        <div id="resultStrength"></div>
+        <div id="resultCompat"></div>
+        <button class="primary" onclick="retryTest()">다시 테스트하기</button>
+        <button class="secondary" onclick="location.href='/'">홈으로</button>
+        <div class="share-section">
+            <p>결과를 친구에게 공유해보세요 💌</p>
+        </div>
+    </div>
+</div>
+
+<script>
+const types = {
+    passion: {
+        emoji: '🔥',
+        name: '열정형 연인',
+        subtitle: '"전력을 다해 사랑하는 타입"',
+        desc: `<div class="result-box">
+            <h4>🔥 열정형 — 불꽃처럼 사랑하는 당신</h4>
+            <p>감정이 풍부하고 사랑에 빠지면 온 마음을 다 쏟아붓는 타입입니다. 상대방을 향한 감정 표현이 솔직하고 강렬하며, 연애에서 설렘과 감동을 매우 중요하게 여깁니다. 권태기를 가장 힘들어하고, 항상 관계에 생기를 불어넣으려 노력합니다.</p>
+            <p style="margin-top:12px">✨ <strong>이런 사람이에요:</strong> 새벽에 갑자기 "보고 싶다"고 연락하는 사람, 기념일 깜짝 이벤트를 몇 달 전부터 준비하는 사람, 연인 이야기만 나오면 눈빛이 달라지는 사람.</p>
+            <div class="traits"><span class="trait-tag">감정 표현 풍부</span><span class="trait-tag">설렘 중시</span><span class="trait-tag">적극적 애정표현</span><span class="trait-tag">강한 몰입</span></div>
+        </div>`,
+        similar: `<div class="similar-box">
+            <h4>🎬 나와 비슷한 유명인 / 캐릭터</h4>
+            <p>💃 <strong>로미오 (로미오&줄리엣)</strong> — 만난 날 당일 고백, 감정을 숨길 줄 모르는 순수한 열정<br>
+            🎤 <strong>테일러 스위프트</strong> — 사랑에 빠지면 앨범 하나를 통째로 헌정하는 스타일<br>
+            🦁 <strong>심바 (라이온 킹)</strong> — 사랑하는 존재를 위해 모든 것을 건다<br>
+            🎭 <strong>드라마 속 "먼저 고백하는 주인공"</strong> — 당신이 바로 그 사람</p>
+        </div>`,
+        strength: `<div class="strength-box">
+            <h4>💪 강점 & 주의할 점</h4>
+            <p><strong>강점:</strong> 상대방이 사랑받는다는 걸 확실히 느끼게 해줍니다. 연애에 진심이고 설레는 순간들을 끊임없이 만들어냅니다.<br><br>
+            <strong>주의:</strong> 감정 기복이 클 수 있고, 상대방이 같은 열도로 반응하지 않으면 상처받을 수 있습니다. 상대방의 페이스를 존중하는 연습이 필요해요.</p>
+        </div>`,
+        compat: `<div class="compat-box">
+            <h4>💞 잘 맞는 유형</h4>
+            <p><strong>💚 베스트 매치 — 안정형:</strong> 열정형의 에너지를 묵묵히 받아주고 든든한 안정감을 줍니다. "나 보고 싶어!" "나도 기다리고 있었어" 최고의 조합.<br><br>
+            <strong>⚠️ 주의할 매치 — 자유형:</strong> 연락 횟수부터 연애 속도까지 맞지 않아 "왜 이렇게 쿨해?"와 "왜 이렇게 집착해?"가 반복될 수 있습니다.</p>
+        </div>`
+    },
+    stable: {
+        emoji: '🌿',
+        name: '안정형 연인',
+        subtitle: '"든든하고 편안한 사랑을 하는 타입"',
+        desc: `<div class="result-box">
+            <h4>🌿 안정형 — 오래 함께하고 싶은 당신</h4>
+            <p>연애에서 안정감과 신뢰를 가장 중요하게 생각합니다. 급격한 변화보다는 천천히 쌓아가는 관계를 선호하고, 상대방에게 믿음직한 존재가 되어주려 합니다. 겉으로는 차분해 보여도 파트너를 향한 마음은 변함없이 깊습니다.</p>
+            <p style="margin-top:12px">✨ <strong>이런 사람이에요:</strong> 연인의 사소한 취향을 기억해 챙겨주는 사람, 크게 표현은 못 해도 항상 옆에 있어주는 사람, "이 사람이랑 오래 가고 싶다"는 말을 자주 듣는 사람.</p>
+            <div class="traits"><span class="trait-tag">신뢰 중시</span><span class="trait-tag">일관된 애정</span><span class="trait-tag">차분한 리더십</span><span class="trait-tag">장기적 관계 지향</span></div>
+        </div>`,
+        similar: `<div class="similar-box">
+            <h4>🎬 나와 비슷한 유명인 / 캐릭터</h4>
+            <p>🤝 <strong>짐 & 팸 (더 오피스)</strong> — 화려하진 않지만 누가 봐도 서로에게 완벽한 오래가는 사랑<br>
+            🎸 <strong>존 레논</strong> — "사랑은 화려한 게 아니라 매일의 선택"이 딱 맞는 유형<br>
+            🐻 <strong>곰돌이 푸</strong> — 묵묵히 곁에 있어주고 항상 믿을 수 있는 존재<br>
+            🎥 <strong>노트북의 노아</strong> — 17년을 기다리는 변하지 않는 사랑</p>
+        </div>`,
+        strength: `<div class="strength-box">
+            <h4>💪 강점 & 주의할 점</h4>
+            <p><strong>강점:</strong> 상대방이 편안하고 안전하게 기댈 수 있는 존재입니다. 어떤 상황에서도 흔들리지 않는 믿음직함이 최고의 매력이에요.<br><br>
+            <strong>주의:</strong> 감정 표현이 부족하다고 느껴질 수 있습니다. 가끔은 먼저 설레는 순간을 만들어주는 노력이 필요해요.</p>
+        </div>`,
+        compat: `<div class="compat-box">
+            <h4>💞 잘 맞는 유형</h4>
+            <p><strong>💚 베스트 매치 — 헌신형:</strong> 서로를 깊이 아끼고 함께하는 것을 당연하게 여기는 조합. 오랜 시간이 지나도 변하지 않는 사랑을 합니다.<br><br>
+            <strong>⚠️ 주의할 매치 — 자유형:</strong> 자유형이 안정형의 일관성을 답답함으로 느낄 수 있습니다. 서로 충분한 대화가 필요해요.</p>
+        </div>`
+    },
+    free: {
+        emoji: '🦋',
+        name: '자유형 연인',
+        subtitle: '"나다움을 지키며 사랑하는 타입"',
+        desc: `<div class="result-box">
+            <h4>🦋 자유형 — 독립적이고 쿨한 당신</h4>
+            <p>연애를 하면서도 나만의 시간과 공간을 소중히 여깁니다. 구속이나 집착을 가장 힘들어하고, 서로의 개인적인 영역을 존중하는 관계를 원합니다. 쿨해 보이지만 마음을 연 상대에게는 누구보다 솔직하고 진한 애정을 보여줍니다.</p>
+            <p style="margin-top:12px">✨ <strong>이런 사람이에요:</strong> "연애해도 나는 나야"를 실천하는 사람, 연락이 뜸해도 만나면 언제 그랬냐는 듯 편한 사람, 상대방의 취미 생활을 진심으로 응원하는 사람.</p>
+            <div class="traits"><span class="trait-tag">독립심 강함</span><span class="trait-tag">개인 공간 중시</span><span class="trait-tag">쿨한 매력</span><span class="trait-tag">솔직한 관계</span></div>
+        </div>`,
+        similar: `<div class="similar-box">
+            <h4>🎬 나와 비슷한 유명인 / 캐릭터</h4>
+            <p>🎨 <strong>프리다 칼로</strong> — 강렬한 개성과 독립심으로 자신만의 방식으로 사랑한 예술가<br>
+            🐱 <strong>고양이 캐릭터 전반</strong> — 평소엔 쿨하지만 본인이 원할 때만 무한 애정표현<br>
+            🎬 <strong>500일의 섬머 — 섬머</strong> — "나는 나, 연애는 연애" 명확한 경계선의 소유자<br>
+            😎 <strong>현실의 "쿨해 보이는데 사실 다 알고 있는" 그 사람</strong> — 당신입니다</p>
+        </div>`,
+        strength: `<div class="strength-box">
+            <h4>💪 강점 & 주의할 점</h4>
+            <p><strong>강점:</strong> 서로 부담을 주지 않는 건강한 관계를 만들 수 있습니다. 집착하지 않기 때문에 상대방도 편안하게 느낄 수 있어요.<br><br>
+            <strong>주의:</strong> 무심하게 보일 수 있고, 상대방이 외로움을 느낄 수 있습니다. 의도적으로 감정을 표현해주는 노력이 필요해요.</p>
+        </div>`,
+        compat: `<div class="compat-box">
+            <h4>💞 잘 맞는 유형</h4>
+            <p><strong>💚 베스트 매치 — 이성형:</strong> 서로의 공간을 이해하고 감정보다 이성으로 접근하는 공통점이 있어요. "오늘 각자 시간 갖자"에 둘 다 "ㅇㅋ"인 커플.<br><br>
+            <strong>⚠️ 주의할 매치 — 헌신형:</strong> 헌신형은 더 많이 주고 싶어 하는데 자유형은 그게 부담스러울 수 있습니다. 솔직한 대화가 필요해요.</p>
+        </div>`
+    },
+    devoted: {
+        emoji: '💖',
+        name: '헌신형 연인',
+        subtitle: '"상대방을 위해 모든 걸 주는 타입"',
+        desc: `<div class="result-box">
+            <h4>💖 헌신형 — 사랑을 위해 온 힘을 다하는 당신</h4>
+            <p>사랑하는 사람을 위해서라면 무엇이든 해줄 수 있다는 마음가짐을 가진 타입입니다. 상대방의 기쁨이 곧 나의 기쁨이고, 힘들 때 옆에 있어주는 것을 가장 중요하게 생각합니다. 때로는 너무 많이 주다가 지치거나 상처받기도 합니다.</p>
+            <p style="margin-top:12px">✨ <strong>이런 사람이에요:</strong> 연인이 아프면 자기 일처럼 걱정하는 사람, 상대방이 좋아하는 거라면 내가 싫어도 맞춰주는 사람, "나는 괜찮아"를 입에 달고 사는 사람.</p>
+            <div class="traits"><span class="trait-tag">배려심 넘침</span><span class="trait-tag">헌신적 사랑</span><span class="trait-tag">공감 능력 높음</span><span class="trait-tag">관계 우선시</span></div>
+        </div>`,
+        similar: `<div class="similar-box">
+            <h4>🎬 나와 비슷한 유명인 / 캐릭터</h4>
+            <p>🌹 <strong>미녀와 야수의 벨</strong> — 겉모습이 아닌 존재 자체를 사랑하고 헌신하는 따뜻한 마음<br>
+            🎵 <strong>아델</strong> — 사랑에 모든 것을 다 바치는 진심 가득한 감성<br>
+            🤗 <strong>라브라도 강아지</strong> — 조건 없이 사랑을 쏟아붓는 순수한 헌신<br>
+            📺 <strong>사랑의 불시착 — 윤세리</strong> — 위험을 무릅쓰고도 사랑하는 사람 곁에 있고 싶은 마음</p>
+        </div>`,
+        strength: `<div class="strength-box">
+            <h4>💪 강점 & 주의할 점</h4>
+            <p><strong>강점:</strong> 상대방이 세상에서 가장 소중한 사람처럼 느낄 수 있게 해줍니다. 진심 어린 배려와 헌신이 관계를 깊게 만들어요.<br><br>
+            <strong>주의:</strong> 나 자신을 너무 희생하는 경향이 있습니다. 상대방에게 기대만큼 받지 못할 때 상처가 클 수 있으니, 자신도 소중히 여기는 연습이 필요해요.</p>
+        </div>`,
+        compat: `<div class="compat-box">
+            <h4>💞 잘 맞는 유형</h4>
+            <p><strong>💚 베스트 매치 — 안정형:</strong> 헌신형의 사랑을 흔들림 없이 받아주고, 묵묵하게 함께해주는 안정형이 최고의 파트너입니다.<br><br>
+            <strong>⚠️ 주의할 매치 — 자유형:</strong> 헌신형의 적극적인 사랑이 자유형에게는 부담으로 느껴질 수 있습니다. 상대의 공간을 존중하는 노력이 필요해요.</p>
+        </div>`
+    },
+    rational: {
+        emoji: '🧠',
+        name: '이성형 연인',
+        subtitle: '"머리로 생각하고 현명하게 사랑하는 타입"',
+        desc: `<div class="result-box">
+            <h4>🧠 이성형 — 침착하고 현명하게 사랑하는 당신</h4>
+            <p>감정보다 이성으로 접근하는 연애를 합니다. 충동적인 행동보다 상황을 차분히 파악하고 행동하며, 갈등이 생겼을 때도 감정적으로 폭발하기보다 대화로 해결하려 합니다. 감정 표현이 서툴러 보일 수 있지만, 상대방을 깊이 생각하고 있습니다.</p>
+            <p style="margin-top:12px">✨ <strong>이런 사람이에요:</strong> 싸워도 감정적으로 폭발하지 않고 차분히 이야기하는 사람, 연애 전에 충분히 알아가는 과정을 중요시하는 사람, 감정보다 행동으로 사랑을 표현하는 사람.</p>
+            <div class="traits"><span class="trait-tag">냉정하고 침착</span><span class="trait-tag">대화로 해결</span><span class="trait-tag">신중한 행동</span><span class="trait-tag">깊은 생각</span></div>
+        </div>`,
+        similar: `<div class="similar-box">
+            <h4>🎬 나와 비슷한 유명인 / 캐릭터</h4>
+            <p>🕵️ <strong>셜록 홈즈</strong> — 감정보다 논리, 하지만 왓슨에게만큼은 진심인 그 사람<br>
+            🖖 <strong>스팍 (스타트렉)</strong> — 이성의 상징이지만 사실 가장 섬세한 내면의 소유자<br>
+            🎬 <strong>Her의 테오도르</strong> — 감정을 이성적으로 분석하면서 깊이 사랑하는 인물<br>
+            📱 <strong>현실의 "연락은 적어도 믿을 수 있는 그 친구"</strong> — 당신이 바로 그 사람</p>
+        </div>`,
+        strength: `<div class="strength-box">
+            <h4>💪 강점 & 주의할 점</h4>
+            <p><strong>강점:</strong> 감정적 충돌 없이 성숙하게 관계를 이어갈 수 있습니다. 상대방 입장에서 생각하는 능력이 뛰어나 오해가 적어요.<br><br>
+            <strong>주의:</strong> 너무 이성적으로 행동하다 보면 냉정하게 보일 수 있습니다. 때로는 감정을 솔직하게 표현하는 것이 관계를 더 따뜻하게 만들어줘요.</p>
+        </div>`,
+        compat: `<div class="compat-box">
+            <h4>💞 잘 맞는 유형</h4>
+            <p><strong>💚 베스트 매치 — 자유형:</strong> 서로의 독립적인 공간을 이해하고 감정에 휘둘리지 않는 공통점이 있어요. 조용하지만 단단한 사랑을 합니다.<br><br>
+            <strong>⚠️ 주의할 매치 — 열정형:</strong> 열정형의 감정 기복과 강한 표현 욕구에 이성형이 지치거나 답답함을 느낄 수 있습니다.</p>
+        </div>`
+    }
+};
+
+const questions = [
+    {
+        text: "좋아하는 사람이 생겼을 때, 나는?",
+        options: [
+            { text: "먼저 연락하거나 고백한다. 기다리는 건 내 스타일이 아냐.", type: 'passion' },
+            { text: "자연스럽게 친해지면서 천천히 마음을 전한다.", type: 'stable' },
+            { text: "내 감정을 확인하면서 여유 있게 지켜본다.", type: 'free' },
+            { text: "상대가 좋아하는 걸 파악해서 맞춰가며 다가간다.", type: 'devoted' },
+            { text: "관계를 이성적으로 따져보고 접근 여부를 결정한다.", type: 'rational' }
+        ]
+    },
+    {
+        text: "연인과 하루에 연락을 얼마나 하는 편인가요?",
+        options: [
+            { text: "수시로 한다. 지금 뭐 해? 밥은 먹었어? 보고 싶다.", type: 'passion' },
+            { text: "아침, 점심, 저녁 정도 규칙적으로 한다.", type: 'stable' },
+            { text: "할 말 있을 때만 한다. 억지로 하진 않는다.", type: 'free' },
+            { text: "상대가 원하는 만큼 맞춰준다.", type: 'devoted' },
+            { text: "의미 있는 대화 위주로 한다. 의미 없는 연락은 부담스럽다.", type: 'rational' }
+        ]
+    },
+    {
+        text: "연인이 친구들과 약속이 많아 만남이 줄었을 때, 나는?",
+        options: [
+            { text: "솔직하게 보고 싶다고 말하고 만날 시간을 만든다.", type: 'passion' },
+            { text: "이해하면서도 우리만의 시간도 필요하다고 부드럽게 표현한다.", type: 'stable' },
+            { text: "나도 내 생활이 있으니 크게 신경 쓰지 않는다.", type: 'free' },
+            { text: "아쉽지만 상대의 생활을 응원하며 기다린다.", type: 'devoted' },
+            { text: "합리적인 이유가 있으니 이해하고 나도 내 일에 집중한다.", type: 'rational' }
+        ]
+    },
+    {
+        text: "연인과 싸웠을 때 나의 대처 방식은?",
+        options: [
+            { text: "감정이 폭발해서 그 자리에서 다 말한다.", type: 'passion' },
+            { text: "감정이 가라앉을 때까지 기다렸다가 차분히 이야기한다.", type: 'stable' },
+            { text: "혼자 시간을 갖고 나서 연락한다.", type: 'free' },
+            { text: "내가 먼저 사과하고 화해를 시도한다.", type: 'devoted' },
+            { text: "어디서 오해가 생겼는지 논리적으로 짚어가며 대화한다.", type: 'rational' }
+        ]
+    },
+    {
+        text: "연애에서 가장 중요한 가치는?",
+        options: [
+            { text: "설렘과 열정 — 두근거림이 없으면 연애가 아니지.", type: 'passion' },
+            { text: "신뢰와 안정 — 믿을 수 있는 사람이 최고야.", type: 'stable' },
+            { text: "자유와 존중 — 서로의 공간이 있어야 오래 간다.", type: 'free' },
+            { text: "배려와 헌신 — 진심으로 챙겨주는 게 사랑이지.", type: 'devoted' },
+            { text: "이해와 성장 — 함께 성장할 수 있는 관계가 좋다.", type: 'rational' }
+        ]
+    },
+    {
+        text: "연인의 생일, 나는?",
+        options: [
+            { text: "몇 달 전부터 계획해서 깜짝 이벤트를 준비한다.", type: 'passion' },
+            { text: "상대가 좋아하는 것을 꼼꼼히 챙겨 의미 있는 하루를 만든다.", type: 'stable' },
+            { text: "생일 당일 선물과 밥 정도면 충분하다.", type: 'free' },
+            { text: "상대가 원하는 걸 최대한 맞춰서 최고의 하루를 만들어준다.", type: 'devoted' },
+            { text: "실용적인 선물과 좋은 레스토랑 예약이면 충분하다.", type: 'rational' }
+        ]
+    },
+    {
+        text: "연인이 힘든 일이 생겼을 때, 나는?",
+        options: [
+            { text: "바로 달려가거나 전화해서 함께 있어준다.", type: 'passion' },
+            { text: "옆에서 조용히 들어주고 필요한 게 있으면 챙겨준다.", type: 'stable' },
+            { text: "상대가 원하는 방식으로 도움을 준다. 먼저 물어본다.", type: 'free' },
+            { text: "내 일을 제쳐두고 상대방 문제를 함께 해결하려 한다.", type: 'devoted' },
+            { text: "감정보다 실질적인 해결책을 같이 찾아준다.", type: 'rational' }
+        ]
+    },
+    {
+        text: "권태기가 왔을 때 나의 반응은?",
+        options: [
+            { text: "새로운 데이트 코스나 이벤트로 다시 불씨를 피운다.", type: 'passion' },
+            { text: "원래 연애가 이런 것이라고 생각하고 묵묵히 함께한다.", type: 'stable' },
+            { text: "각자 시간을 갖다 보면 다시 좋아질 거라 생각한다.", type: 'free' },
+            { text: "상대방이 다시 설렐 수 있도록 더 노력한다.", type: 'devoted' },
+            { text: "관계를 냉정하게 돌아보고 앞으로를 함께 이야기한다.", type: 'rational' }
+        ]
+    },
+    {
+        text: "나의 이상적인 주말 데이트는?",
+        options: [
+            { text: "새로운 곳 탐방, 놀이공원, 드라이브 — 항상 신나는 것!", type: 'passion' },
+            { text: "좋아하는 카페에서 수다 떨거나 조용한 산책.", type: 'stable' },
+            { text: "각자 하고 싶은 걸 하다가 저녁에 만나는 것.", type: 'free' },
+            { text: "상대방이 가고 싶은 곳이라면 어디든.", type: 'devoted' },
+            { text: "미리 계획 세운 맛있는 레스토랑과 영화.", type: 'rational' }
+        ]
+    },
+    {
+        text: "연인에게 연락이 갑자기 안 될 때 드는 생각은?",
+        options: [
+            { text: "걱정이 폭발한다. 계속 전화하거나 문자를 보낸다.", type: 'passion' },
+            { text: "이유가 있을 것 같아 잠시 기다려본다.", type: 'stable' },
+            { text: "별일 없겠지, 나도 내 일 한다.", type: 'free' },
+            { text: "혹시 내가 뭘 잘못한 건지 돌아보며 걱정한다.", type: 'devoted' },
+            { text: "바쁜 상황이겠거니 이성적으로 생각하고 기다린다.", type: 'rational' }
+        ]
+    },
+    {
+        text: "연애를 시작하는 나의 방식은?",
+        options: [
+            { text: "감정에 솔직하게, 좋으면 바로 표현한다.", type: 'passion' },
+            { text: "천천히 신뢰를 쌓은 후에 시작한다.", type: 'stable' },
+            { text: "자연스럽게 흘러가는 대로 따른다.", type: 'free' },
+            { text: "상대가 편안하게 느낄 수 있도록 배려하며 다가간다.", type: 'devoted' },
+            { text: "서로 잘 맞는지 충분히 파악한 후에 결정한다.", type: 'rational' }
+        ]
+    },
+    {
+        text: "솔직히, 내가 연애할 때 가장 힘든 순간은?",
+        options: [
+            { text: "상대방이 나만큼 열심히 하지 않는 것 같을 때", type: 'passion' },
+            { text: "관계가 불안정하게 흔들릴 때", type: 'stable' },
+            { text: "나만의 시간이 사라지는 것 같을 때", type: 'free' },
+            { text: "내가 아무리 노력해도 상대가 행복해 보이지 않을 때", type: 'devoted' },
+            { text: "감정적인 문제로 대화가 안 될 때", type: 'rational' }
+        ]
+    }
+];
+
+let current = 0;
+let scores = { passion: 0, stable: 0, free: 0, devoted: 0, rational: 0 };
+let selected = null;
+
+function startTest() {
+    document.querySelector('.intro-screen').classList.remove('active');
+    document.querySelector('.question-screen').classList.add('active');
+    renderQuestion();
+}
+
+function renderQuestion() {
+    const q = questions[current];
+    document.getElementById('qNumber').textContent = `질문 ${current + 1} / ${questions.length}`;
+    document.getElementById('questionText').textContent = q.text;
+    document.getElementById('progress').style.width = `${(current / questions.length) * 100}%`;
+
+    const optionsEl = document.getElementById('options');
+    optionsEl.innerHTML = '';
+    q.options.forEach((opt, i) => {
+        const div = document.createElement('div');
+        div.className = 'option';
+        div.textContent = opt.text;
+        div.onclick = () => selectOption(i, opt.type);
+        optionsEl.appendChild(div);
+    });
+
+    selected = null;
+    document.getElementById('nextBtn').disabled = true;
+}
+
+function selectOption(index, type) {
+    document.querySelectorAll('.option').forEach((el, i) => {
+        el.classList.toggle('selected', i === index);
+    });
+    selected = type;
+    document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+    if (selected === null) return;
+    scores[selected]++;
+    current++;
+
+    if (current >= questions.length) {
+        showResult();
+    } else {
+        renderQuestion();
+    }
+}
+
+function showResult() {
+    const topType = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+    const result = types[topType];
+
+    document.getElementById('resultEmoji').textContent = result.emoji;
+    document.getElementById('resultTitle').textContent = result.name;
+    document.getElementById('resultSubtitle').textContent = result.subtitle;
+    document.getElementById('resultDesc').innerHTML = result.desc;
+    document.getElementById('resultSimilar').innerHTML = result.similar;
+    document.getElementById('resultStrength').innerHTML = result.strength;
+    document.getElementById('resultCompat').innerHTML = result.compat;
+
+    document.querySelector('.question-screen').classList.remove('active');
+    document.querySelector('.result-screen').classList.add('active');
+    document.getElementById('progress').style.width = '100%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function retryTest() {
+    current = 0;
+    scores = { passion: 0, stable: 0, free: 0, devoted: 0, rational: 0 };
+    selected = null;
+    document.querySelector('.result-screen').classList.remove('active');
+    document.querySelector('.intro-screen').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
