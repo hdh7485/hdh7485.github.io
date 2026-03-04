@@ -234,6 +234,26 @@
         .strength-box h4 { color: #2e7d32; margin-bottom: 10px; font-size: 1.05em; }
         .strength-box p { color: #555; line-height: 1.8; font-size: 1.02em; }
 
+        .mbti-box {
+            background: #f8f0ff;
+            border-left: 5px solid #a855f7;
+            border-radius: 12px;
+            padding: 22px 26px;
+            margin-bottom: 16px;
+        }
+        .mbti-box h4 { color: #7c3aed; margin-bottom: 12px; font-size: 1.05em; }
+        .mbti-box p { color: #555; line-height: 1.8; font-size: 1.02em; }
+        .mbti-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+        .mbti-tag {
+            background: #7c3aed;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
         .share-section { text-align: center; margin-top: 4px; }
         .share-section p { color: #bbb; font-size: 0.9em; margin-top: 14px; }
 
@@ -289,6 +309,7 @@
         <div id="resultSimilar"></div>
         <div id="resultStrength"></div>
         <div id="resultCompat"></div>
+        <div id="resultMbti"></div>
         <button class="primary" onclick="retryTest()">다시 테스트하기</button>
         <button class="secondary" onclick="location.href='/'">홈으로</button>
         <div class="share-section">
@@ -325,7 +346,11 @@ const types = {
             <h4>💞 잘 맞는 유형</h4>
             <p><strong>💚 베스트 매치 — 안정형:</strong> 열정형의 에너지를 묵묵히 받아주고 든든한 안정감을 줍니다. "나 보고 싶어!" "나도 기다리고 있었어" 최고의 조합.<br><br>
             <strong>⚠️ 주의할 매치 — 자유형:</strong> 연락 횟수부터 연애 속도까지 맞지 않아 "왜 이렇게 쿨해?"와 "왜 이렇게 집착해?"가 반복될 수 있습니다.</p>
-        </div>`
+        </div>`,
+        mbti: {
+            types: ['ENFP', 'ESFP', 'ENFJ'],
+            reason: '감정 표현이 풍부하고 에너지 넘치는 열정형은 외향(E)에 감정(F)을 중시하는 유형과 가장 닮아 있어요. 특히 <strong>ENFP</strong>는 사랑에 빠지면 온 세상이 그 사람으로 가득 차는 타입이라 열정형과 딱 맞습니다.'
+        }
     },
     stable: {
         emoji: '🌿',
@@ -353,7 +378,11 @@ const types = {
             <h4>💞 잘 맞는 유형</h4>
             <p><strong>💚 베스트 매치 — 헌신형:</strong> 서로를 깊이 아끼고 함께하는 것을 당연하게 여기는 조합. 오랜 시간이 지나도 변하지 않는 사랑을 합니다.<br><br>
             <strong>⚠️ 주의할 매치 — 자유형:</strong> 자유형이 안정형의 일관성을 답답함으로 느낄 수 있습니다. 서로 충분한 대화가 필요해요.</p>
-        </div>`
+        </div>`,
+        mbti: {
+            types: ['ISFJ', 'ESFJ', 'INFJ'],
+            reason: '변함없는 신뢰와 꾸준한 애정을 중시하는 안정형은 배려심 깊고 관계를 소중히 여기는 F(감정)와 J(계획)형 유형과 가장 가까워요. 특히 <strong>ISFJ</strong>는 말없이 옆에서 챙겨주는 "국민 연인" 유형으로 안정형과 딱 어울립니다.'
+        }
     },
     free: {
         emoji: '🦋',
@@ -381,7 +410,11 @@ const types = {
             <h4>💞 잘 맞는 유형</h4>
             <p><strong>💚 베스트 매치 — 이성형:</strong> 서로의 공간을 이해하고 감정보다 이성으로 접근하는 공통점이 있어요. "오늘 각자 시간 갖자"에 둘 다 "ㅇㅋ"인 커플.<br><br>
             <strong>⚠️ 주의할 매치 — 헌신형:</strong> 헌신형은 더 많이 주고 싶어 하는데 자유형은 그게 부담스러울 수 있습니다. 솔직한 대화가 필요해요.</p>
-        </div>`
+        </div>`,
+        mbti: {
+            types: ['INFP', 'ISTP', 'ENTP'],
+            reason: '나만의 공간과 자유를 소중히 여기는 자유형은 독립적이고 자기 기준이 뚜렷한 P(즉흥)형과 잘 맞아요. 특히 <strong>INFP</strong>는 "내가 좋아하는 사람에게만 진심"인 타입으로 자유형의 쿨한 겉모습 안에 깊은 감정을 가진 모습과 닮았습니다.'
+        }
     },
     devoted: {
         emoji: '💖',
@@ -409,7 +442,11 @@ const types = {
             <h4>💞 잘 맞는 유형</h4>
             <p><strong>💚 베스트 매치 — 안정형:</strong> 헌신형의 사랑을 흔들림 없이 받아주고, 묵묵하게 함께해주는 안정형이 최고의 파트너입니다.<br><br>
             <strong>⚠️ 주의할 매치 — 자유형:</strong> 헌신형의 적극적인 사랑이 자유형에게는 부담으로 느껴질 수 있습니다. 상대의 공간을 존중하는 노력이 필요해요.</p>
-        </div>`
+        </div>`,
+        mbti: {
+            types: ['INFJ', 'ESFJ', 'ISFP'],
+            reason: '상대방을 위해 모든 것을 주는 헌신형은 공감 능력이 뛰어나고 타인을 배려하는 F(감정)형 유형과 가장 가까워요. 특히 <strong>INFJ</strong>는 사랑하는 사람을 위해 자신을 희생하면서도 깊은 이상을 품고 있는 타입이라 헌신형과 잘 맞습니다.'
+        }
     },
     rational: {
         emoji: '🧠',
@@ -437,7 +474,11 @@ const types = {
             <h4>💞 잘 맞는 유형</h4>
             <p><strong>💚 베스트 매치 — 자유형:</strong> 서로의 독립적인 공간을 이해하고 감정에 휘둘리지 않는 공통점이 있어요. 조용하지만 단단한 사랑을 합니다.<br><br>
             <strong>⚠️ 주의할 매치 — 열정형:</strong> 열정형의 감정 기복과 강한 표현 욕구에 이성형이 지치거나 답답함을 느낄 수 있습니다.</p>
-        </div>`
+        </div>`,
+        mbti: {
+            types: ['INTJ', 'INTP', 'ENTJ'],
+            reason: '감정보다 논리와 이성으로 연애하는 이성형은 분석적이고 차분한 T(사고)형 유형과 가장 잘 맞아요. 특히 <strong>INTJ</strong>는 감정 표현은 서툴러도 상대방을 위해 치밀하게 생각하고 행동하는 타입으로 이성형의 깊은 내면과 닮아 있습니다.'
+        }
     }
 };
 
@@ -601,6 +642,11 @@ function showResult() {
     document.getElementById('resultSimilar').innerHTML = result.similar;
     document.getElementById('resultStrength').innerHTML = result.strength;
     document.getElementById('resultCompat').innerHTML = result.compat;
+    document.getElementById('resultMbti').innerHTML = `<div class="mbti-box">
+        <h4>🔮 예상 MBTI</h4>
+        <p>${result.mbti.reason}</p>
+        <div class="mbti-tags">${result.mbti.types.map(t => `<span class="mbti-tag">${t}</span>`).join('')}</div>
+    </div>`;
 
     document.querySelector('.question-screen').classList.remove('active');
     document.querySelector('.result-screen').classList.add('active');
