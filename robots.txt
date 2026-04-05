@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# 운영/보조 경로는 검색 결과에서 제외합니다.
+Disallow: /docs/
+Disallow: /film-camera/404.html
+Disallow: /film-camera/404/
+Disallow: /film-camera/_not-found/
+Disallow: /hope-hands/404.html
+Disallow: /hope-hands/_not-found.html
+
+Sitemap: https://hdh7485.github.io/sitemap.xml
