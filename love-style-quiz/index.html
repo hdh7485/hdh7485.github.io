@@ -23,6 +23,10 @@
             background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
             min-height: 100vh;
             padding: 20px;
+            --shared-accent: #c44569;
+            --shared-accent-strong: #a63b59;
+            --shared-accent-soft: rgba(255, 107, 157, 0.12);
+            --shared-accent-border: rgba(196, 69, 105, 0.18);
         }
 
         .container { max-width: 680px; margin: 0 auto; }
@@ -307,15 +311,42 @@
         <div class="result-title" id="resultTitle"></div>
         <div class="result-subtitle" id="resultSubtitle"></div>
         <div id="resultDesc"></div>
-        <div id="resultSimilar"></div>
         <div id="resultStrength"></div>
+        <div class="shared-result-cta" data-quiz-result-actions>
+            <h3>다음 행동</h3>
+            <p>결과를 바로 공유하고, 비슷한 결의 테스트로 이어서 비교해보세요. 다시 하기는 마지막 선택지로 내려 버튼 우선순위를 맞췄습니다.</p>
+            <div class="shared-result-button-row">
+                <button class="shared-result-button" type="button" onclick="shareResult()">결과 공유</button>
+                <a class="shared-result-link" href="../mbti-pokemon-quiz/">비슷한 테스트 보기</a>
+                <button class="shared-result-link shared-result-link--ghost" type="button" onclick="retryTest()">다시 하기</button>
+            </div>
+        </div>
+        <div class="shared-result-related" data-quiz-result-related>
+            <h3>이어서 해보기</h3>
+            <div class="shared-result-related-grid">
+                <a class="shared-result-related-card" href="../mbti-pokemon-quiz/">
+                    <strong>MBTI 포켓몬 테스트</strong>
+                    <p>연애 성향을 캐릭터형 결과와 나란히 비교해보기 좋습니다.</p>
+                </a>
+                <a class="shared-result-related-card" href="../beer-recommendation-quiz/">
+                    <strong>맥주 추천 퀴즈</strong>
+                    <p>감정 톤에서 취향형 선택으로 자연스럽게 넘어갈 수 있습니다.</p>
+                </a>
+                <a class="shared-result-related-card" href="../travel-destination-quiz/">
+                    <strong>여행지 추천 테스트</strong>
+                    <p>지금 분위기에 맞는 다음 선택을 추천형 결과로 이어볼 수 있습니다.</p>
+                </a>
+            </div>
+            <div class="shared-trust-strip" aria-label="신뢰 정보">
+                <span class="shared-trust-chip">익명 진행</span>
+                <span class="shared-trust-chip">회원가입 없음</span>
+                <span class="shared-trust-chip">결과 비저장</span>
+            </div>
+        </div>
+        <div id="resultSimilar"></div>
         <div id="resultCompat"></div>
         <div id="resultMbti"></div>
-        <button class="primary" onclick="retryTest()">다시 테스트하기</button>
-        <button class="secondary" onclick="location.href='/'">홈으로</button>
-        <div class="share-section">
-            <p>결과를 친구에게 공유해보세요 💌</p>
-        </div>
+        <div data-quiz-result-anchor></div>
     </div>
 </div>
 
@@ -719,6 +750,20 @@ function retryTest() {
     document.querySelector('.result-screen').classList.remove('active');
     document.querySelector('.intro-screen').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function shareResult() {
+    const resultTitle = document.getElementById('resultTitle').textContent || '연애 스타일 결과';
+
+    if (!window.quizCollectionBootstrap || typeof window.quizCollectionBootstrap.sharePage !== 'function') {
+        return;
+    }
+
+    window.quizCollectionBootstrap.sharePage({
+        title: '나의 연애 스타일 테스트 결과',
+        text: '내 결과는 "' + resultTitle + '"입니다. 너도 바로 해봐!',
+        copyMessage: '연애 스타일 테스트 링크를 복사했습니다.'
+    });
 }
 </script>
 </body>

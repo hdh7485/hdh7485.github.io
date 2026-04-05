@@ -154,3 +154,17 @@ function retryTest() {
     document.querySelector('.intro-screen').classList.add('active');
     window.scrollTo(0, 0);
 }
+
+function shareResult() {
+    const resultTitle = document.getElementById('resultTitle').textContent || '롤 포지션 결과';
+
+    if (!window.quizCollectionBootstrap || typeof window.quizCollectionBootstrap.sharePage !== 'function') {
+        return;
+    }
+
+    window.quizCollectionBootstrap.sharePage({
+        title: '롤 포지션 테스트 결과',
+        text: '내 결과는 "' + resultTitle + '"입니다. 너도 바로 해봐!',
+        copyMessage: '롤 포지션 테스트 링크를 복사했습니다.'
+    });
+}

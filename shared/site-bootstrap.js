@@ -270,6 +270,14 @@
             return '게임 이용 전 광고 및 서비스 정책을 아래 링크에서 확인하세요.';
         }
 
+        if (pageKind === 'legal') {
+            return '정책, 문의 경로, 운영 방식을 이 허브에서 빠르게 확인할 수 있습니다.';
+        }
+
+        if (pageKind === 'quiz') {
+            return '결과는 브라우저 안에서 계산되며 정책과 문의 경로는 아래 링크에서 확인할 수 있습니다.';
+        }
+
         return '서비스 정책과 문의 경로는 아래 링크에서 확인할 수 있습니다.';
     }
 
@@ -357,6 +365,40 @@
         } catch (error) {
             console.warn('AdSense mount failed for slot', unit.dataset.adSlot, error);
         }
+    }
+
+    function sharePage(options) {
+        var payload = options || {};
+        var shareData = {
+            title: payload.title || document.title,
+            text: payload.text || '',
+            url: payload.url || window.location.href
+        };
+
+        if (navigator.share) {
+            return navigator.share(shareData).catch(function (error) {
+                if (error && error.name === 'AbortError') {
+                    return;
+                }
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    return navigator.clipboard.writeText(shareData.url).then(function () {
+                        window.alert(payload.copyMessage || '링크를 복사했습니다.');
+                    });
+                }
+
+                window.prompt('링크를 복사해 공유하세요.', shareData.url);
+            });
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(shareData.url).then(function () {
+                window.alert(payload.copyMessage || '링크를 복사했습니다.');
+            });
+        }
+
+        window.prompt('링크를 복사해 공유하세요.', shareData.url);
+        return Promise.resolve();
     }
 
     function createPlacementSection(placement, slotId) {
@@ -616,6 +658,18 @@
             });
         }
 
+        if (hasPathSegment('personality-food-quiz')) {
+            pushQuizResultPlacement(placements, slotMap, {
+                title: '음식 결과 다음으로 가볍게 이어보기',
+                description: '공유와 다시 하기 흐름을 먼저 본 뒤, 비슷한 취향형 테스트로 이어질 수 있게 결과 카드 바깥에만 배치합니다.',
+                fallbackLinks: [
+                    { href: 'love-style-quiz/', label: '연애 스타일 테스트', meta: '감정 성향을 다른 주제로 비교하기' },
+                    { href: 'beer-recommendation-quiz/', label: '맥주 추천 퀴즈', meta: '입맛 취향을 더 구체적으로 확인하기' },
+                    { href: 'travel-destination-quiz/', label: '여행지 추천 테스트', meta: '오늘의 분위기를 다른 선택형으로 이어보기' }
+                ]
+            });
+        }
+
         return placements;
     }
 
@@ -632,7 +686,8 @@
                 '.question-screen .quiz-shell-progress-track',
                 '.question-screen .quiz-shell-progress-fill',
                 '[data-quiz-result-actions]',
-                '[data-quiz-result-related]'
+                '[data-quiz-result-related]',
+                '[data-quiz-result-trust]'
             ]);
         }
 
@@ -661,7 +716,8 @@
             'mbti-pokemon-quiz',
             'love-style-quiz',
             'beer-recommendation-quiz',
-            'lol-position-quiz'
+            'lol-position-quiz',
+            'personality-food-quiz'
         ])) {
             selectors = selectors.concat(['#quiz-container', '#quiz-container .progress-bar', '#quiz-container .options']);
         }
@@ -730,7 +786,8 @@
         loadAnalytics: loadAnalytics,
         track: track,
         trackOnce: trackOnce,
-        resetTrackedKey: resetTrackedKey
+        resetTrackedKey: resetTrackedKey,
+        sharePage: sharePage
     };
 
     ensureAdsMeta();

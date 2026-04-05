@@ -448,3 +448,17 @@ function showResults() {
 function retryTest() {
     startTest();
 }
+
+function shareResult() {
+    var beerName = document.getElementById('beerName').textContent || '맥주 취향 결과';
+
+    if (!window.quizCollectionBootstrap || typeof window.quizCollectionBootstrap.sharePage !== 'function') {
+        return;
+    }
+
+    window.quizCollectionBootstrap.sharePage({
+        title: '맥주 추천 테스트 결과',
+        text: '내 취향 결과는 "' + beerName + '"입니다. 너도 바로 해봐!',
+        copyMessage: '맥주 추천 테스트 링크를 복사했습니다.'
+    });
+}

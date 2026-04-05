@@ -21,6 +21,10 @@
             background: linear-gradient(135deg, #f7b733 0%, #fc4a1a 100%);
             min-height: 100vh;
             padding: 20px;
+            --shared-accent: #ea580c;
+            --shared-accent-strong: #c2410c;
+            --shared-accent-soft: rgba(249, 115, 22, 0.12);
+            --shared-accent-border: rgba(234, 88, 12, 0.18);
         }
 
         .container {
@@ -478,6 +482,39 @@
                 <!-- 맥주 설명이 여기 추가됨 -->
             </div>
 
+            <div class="shared-result-cta" data-quiz-result-actions>
+                <h3>다음 행동</h3>
+                <p>추천 결과를 바로 공유하고, 비슷한 취향형 테스트로 이어보세요. 다시 하기는 마지막 선택지로 정리해 다음 행동 우선순위를 맞췄습니다.</p>
+                <div class="shared-result-button-row">
+                    <button class="shared-result-button" type="button" onclick="shareResult()">결과 공유</button>
+                    <a class="shared-result-link" href="../travel-destination-quiz/">비슷한 테스트 보기</a>
+                    <button class="shared-result-link shared-result-link--ghost" type="button" onclick="retryTest()">다시 하기</button>
+                </div>
+            </div>
+
+            <div class="shared-result-related" data-quiz-result-related>
+                <h3>이어서 해보기</h3>
+                <div class="shared-result-related-grid">
+                    <a class="shared-result-related-card" href="../travel-destination-quiz/">
+                        <strong>여행지 추천 테스트</strong>
+                        <p>지금의 분위기와 취향을 장소 선택형 결과로 바꿔볼 수 있습니다.</p>
+                    </a>
+                    <a class="shared-result-related-card" href="../love-style-quiz/">
+                        <strong>연애 스타일 테스트</strong>
+                        <p>입맛 취향 뒤에 감정 성향 결과를 이어서 비교하기 좋습니다.</p>
+                    </a>
+                    <a class="shared-result-related-card" href="../lunch-roulette/">
+                        <strong>점심 메뉴 룰렛</strong>
+                        <p>바로 선택이 필요한 순간에 가볍게 이어쓰기 좋은 도구입니다.</p>
+                    </a>
+                </div>
+                <div class="shared-trust-strip" aria-label="신뢰 정보">
+                    <span class="shared-trust-chip">익명 진행</span>
+                    <span class="shared-trust-chip">회원가입 없음</span>
+                    <span class="shared-trust-chip">결과 비저장</span>
+                </div>
+            </div>
+
             <div class="recommendations" id="recommendations">
                 <h4>🍺 추천 맥주</h4>
                 <ul class="beer-list" id="beerList">
@@ -485,10 +522,7 @@
                 </ul>
             </div>
 
-            <div class="share-section">
-                <h4>다른 맥주도 궁금하신가요?</h4>
-                <button class="primary retry-button" onclick="retryTest()">다시 테스트하기</button>
-            </div>
+            <div data-quiz-result-anchor></div>
         </div>
 
         <section class="content-section">

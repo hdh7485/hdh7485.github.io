@@ -21,6 +21,10 @@
             background: linear-gradient(135deg, #0a1428 0%, #1e3a5f 100%);
             min-height: 100vh;
             padding: 20px;
+            --shared-accent: #0ac8b9;
+            --shared-accent-strong: #0f7c86;
+            --shared-accent-soft: rgba(10, 200, 185, 0.12);
+            --shared-accent-border: rgba(10, 200, 185, 0.18);
         }
 
         .container {
@@ -293,7 +297,38 @@
             <div class="result-icon" id="resultIcon">⚔️</div>
             <div class="result-title" id="resultTitle">탑</div>
             <div class="description" id="resultDescription"></div>
-            <button class="primary" style="background: #6c757d;" onclick="retryTest()">다시 하기</button>
+            <div class="shared-result-cta" data-quiz-result-actions>
+                <h3>다음 행동</h3>
+                <p>결과를 바로 공유하고, 비슷한 게임 성향 테스트로 이어서 비교해보세요. 다시 하기는 마지막 선택지로 정리했습니다.</p>
+                <div class="shared-result-button-row">
+                    <button class="shared-result-button" type="button" onclick="shareResult()">결과 공유</button>
+                    <a class="shared-result-link" href="../f1-driver-quiz/">비슷한 테스트 보기</a>
+                    <button class="shared-result-link shared-result-link--ghost" type="button" onclick="retryTest()">다시 하기</button>
+                </div>
+            </div>
+            <div class="shared-result-related" data-quiz-result-related>
+                <h3>이어서 해보기</h3>
+                <div class="shared-result-related-grid">
+                    <a class="shared-result-related-card" href="../f1-driver-quiz/">
+                        <strong>F1 드라이버 테스트</strong>
+                        <p>경쟁 스타일을 다른 스포츠 역할 결과로 비교하기 좋습니다.</p>
+                    </a>
+                    <a class="shared-result-related-card" href="../mbti-pokemon-quiz/">
+                        <strong>MBTI 포켓몬 테스트</strong>
+                        <p>게임 성향 뒤에 캐릭터형 결과를 가볍게 이어볼 수 있습니다.</p>
+                    </a>
+                    <a class="shared-result-related-card" href="../beer-recommendation-quiz/">
+                        <strong>맥주 추천 퀴즈</strong>
+                        <p>전투형 결과에서 취향형 선택 테스트로 분위기를 바꿔줍니다.</p>
+                    </a>
+                </div>
+                <div class="shared-trust-strip" aria-label="신뢰 정보">
+                    <span class="shared-trust-chip">익명 진행</span>
+                    <span class="shared-trust-chip">회원가입 없음</span>
+                    <span class="shared-trust-chip">결과 비저장</span>
+                </div>
+            </div>
+            <div data-quiz-result-anchor></div>
         </div>
 
         <section class="content-section">
