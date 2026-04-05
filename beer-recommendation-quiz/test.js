@@ -281,6 +281,17 @@ let scores = {
     pilsner: 0
 };
 
+function trackQuizMetric(eventName, params) {
+    if (!window.quizCollectionBootstrap || typeof window.quizCollectionBootstrap.track !== 'function') {
+        return;
+    }
+
+    window.quizCollectionBootstrap.track(eventName, Object.assign({
+        content_type: 'quiz',
+        content_slug: 'beer-recommendation-quiz'
+    }, params || {}));
+}
+
 // 화면 전환
 function showScreen(screenName) {
     document.querySelectorAll('.intro-screen, .question-screen, .result-screen').forEach(screen => {
@@ -293,6 +304,9 @@ function showScreen(screenName) {
 function startTest() {
     currentQuestion = 0;
     scores = { lager: 0, paleAle: 0, ipa: 0, stout: 0, wheat: 0, pilsner: 0 };
+    trackQuizMetric('engagement_start', {
+        question_count: questions.length
+    });
     showScreen('question-screen');
     showQuestion();
 }
@@ -372,8 +386,13 @@ function showResults() {
             resultStyle = style;
         }
     }
-    
+
     const result = beerStyles[resultStyle];
+    trackQuizMetric('engagement_complete', {
+        question_count: questions.length,
+        result_id: resultStyle,
+        result_label: result.name
+    });
     
     // 결과 표시
     document.getElementById('beerIcon').textContent = result.icon;

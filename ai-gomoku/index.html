@@ -7,17 +7,9 @@
     <meta name="description" content="AI와 오목 게임을 플레이하세요. 5개를 먼저 연결하는 사람이 승리!">
     
     <!-- Google AdSense -->
-    <meta name="google-adsense-account" content="ca-pub-9206874822169440">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9206874822169440" crossorigin="anonymous"></script>
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7CRKE11P9E"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-7CRKE11P9E');
-    </script>
+    <meta name="google-adsense-account" content="ca-pub-5473168023476210">
+    <link rel="stylesheet" href="../shared/site-bootstrap.css">
+    <script defer src="../shared/site-bootstrap.js" data-site-root=".." data-page-kind="game"></script>
     
     <style>
         * {
@@ -269,12 +261,27 @@
         let currentPlayer = BLACK;
         let gameOver = false;
         let moveHistory = [];
+        let hasTrackedGomokuStart = false;
+        let hasTrackedGomokuComplete = false;
+
+        function trackGomokuMetric(eventName, params) {
+            if (!window.quizCollectionBootstrap || typeof window.quizCollectionBootstrap.track !== 'function') {
+                return;
+            }
+
+            window.quizCollectionBootstrap.track(eventName, Object.assign({
+                content_type: 'game',
+                content_slug: 'ai-gomoku'
+            }, params || {}));
+        }
         
         function initBoard() {
             board = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(EMPTY));
             currentPlayer = BLACK;
             gameOver = false;
             moveHistory = [];
+            hasTrackedGomokuStart = false;
+            hasTrackedGomokuComplete = false;
             renderBoard();
             updateStatus();
         }
@@ -309,6 +316,13 @@
             const col = parseInt(e.target.dataset.col);
             
             if (board[row][col] !== EMPTY) return;
+
+            if (!hasTrackedGomokuStart) {
+                hasTrackedGomokuStart = true;
+                trackGomokuMetric('engagement_start', {
+                    interaction_type: 'match_start'
+                });
+            }
             
             makeMove(row, col, BLACK);
             
@@ -327,6 +341,13 @@
             const winner = checkWinner(row, col);
             if (winner) {
                 gameOver = true;
+                if (!hasTrackedGomokuComplete) {
+                    hasTrackedGomokuComplete = true;
+                    trackGomokuMetric('engagement_complete', {
+                        interaction_type: 'match_start',
+                        outcome: winner.player === BLACK ? 'player_win' : 'ai_win'
+                    });
+                }
                 highlightWinningStones(winner.stones);
                 updateStatus(winner.player);
                 return;
@@ -334,6 +355,13 @@
             
             if (isBoardFull()) {
                 gameOver = true;
+                if (!hasTrackedGomokuComplete) {
+                    hasTrackedGomokuComplete = true;
+                    trackGomokuMetric('engagement_complete', {
+                        interaction_type: 'match_start',
+                        outcome: 'draw'
+                    });
+                }
                 updateStatus(0);
                 return;
             }

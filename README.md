@@ -51,6 +51,15 @@
 - **배포**: GitHub Pages (`.nojekyll` 포함)
 - **광고**: Google AdSense (`ads.txt`)
 
+## 공통 수익화 레이어
+
+광고 및 정책 링크 초기화는 `shared/site-bootstrap.js`와 `shared/site-bootstrap.css`를 통해 공통 처리합니다.
+
+- 적용/확장 방법: `docs/monetization-bootstrap.md`
+- 측정 기준선: `docs/measurement-baseline.md`
+- 현재 표준 퍼블리셔 ID: `ca-pub-5473168023476210`
+- GA 측정 ID는 부트스트랩 설정에만 보관하고 기본 비활성 상태로 유지
+
 ## 구조
 
 각 콘텐츠는 독립된 디렉토리 안에 `index.html`로 존재합니다. 공통 빌드 시스템은 없으며, 각 디렉토리가 독립적인 단위입니다.

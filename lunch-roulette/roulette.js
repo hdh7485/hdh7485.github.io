@@ -222,6 +222,17 @@ const menus = [
 let spinCount = 0;
 let isSpinning = false;
 
+function trackRouletteMetric(eventName, params) {
+    if (!window.quizCollectionBootstrap || typeof window.quizCollectionBootstrap.track !== 'function') {
+        return;
+    }
+
+    window.quizCollectionBootstrap.track(eventName, Object.assign({
+        content_type: 'tool',
+        content_slug: 'lunch-roulette'
+    }, params || {}));
+}
+
 // 페이지 로드시 메뉴 그리드 생성
 document.addEventListener('DOMContentLoaded', () => {
     const menuGrid = document.getElementById('menuGrid');
@@ -271,6 +282,10 @@ function spinRoulette() {
     if (isSpinning) return;
     
     isSpinning = true;
+    trackRouletteMetric('engagement_start', {
+        interaction_type: 'roulette_spin',
+        next_spin_count: spinCount + 1
+    });
     const button = document.getElementById('spinButton');
     const display = document.getElementById('resultDisplay');
     
@@ -316,6 +331,12 @@ function showFinalResult() {
     // 카운트 증가
     spinCount++;
     saveTodayCount();
+    trackRouletteMetric('engagement_complete', {
+        interaction_type: 'roulette_spin',
+        result_label: finalMenu.name,
+        result_category: finalMenu.category,
+        spin_count: spinCount
+    });
     
     // 버튼 다시 활성화
     button.disabled = false;

@@ -1,0 +1,161 @@
+.site-shell-footer {
+    width: min(960px, calc(100% - 40px));
+    margin: 32px auto 24px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.site-shell-note {
+    margin: 0 0 14px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.site-shell-legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.site-shell-legal a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border-radius: 999px;
+    color: inherit;
+    text-decoration: none;
+    font-size: 0.92rem;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.site-shell-legal a:hover,
+.site-shell-legal a:focus-visible {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-1px);
+}
+
+.site-shell-has-monetization {
+    padding-bottom: 32px;
+}
+
+.site-shell-stack-content {
+    justify-content: flex-start !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+}
+
+.site-monetization-slot {
+    margin: 24px 0;
+    padding: 24px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #1f2937;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+}
+
+.site-monetization-slot__eyebrow {
+    margin: 0 0 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6366f1;
+}
+
+.site-monetization-slot__title {
+    margin: 0;
+    font-size: 1.4rem;
+    line-height: 1.35;
+    color: #111827;
+}
+
+.site-monetization-slot__description {
+    margin: 10px 0 0;
+    line-height: 1.7;
+    color: #4b5563;
+}
+
+.site-monetization-slot__body {
+    margin-top: 18px;
+}
+
+.site-monetization-slot__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+}
+
+.site-monetization-slot__card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 112px;
+    padding: 16px 18px;
+    border-radius: 18px;
+    text-decoration: none;
+    color: inherit;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(56, 189, 248, 0.14));
+    border: 1px solid rgba(99, 102, 241, 0.16);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.site-monetization-slot__card:hover,
+.site-monetization-slot__card:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(99, 102, 241, 0.12);
+    border-color: rgba(99, 102, 241, 0.32);
+}
+
+.site-monetization-slot__card-title {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #111827;
+}
+
+.site-monetization-slot__card-meta {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: #4b5563;
+}
+
+.site-monetization-slot__ad-frame {
+    min-height: 140px;
+    padding: 16px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(243, 244, 246, 0.9), rgba(229, 231, 235, 0.9));
+    border: 1px dashed rgba(107, 114, 128, 0.4);
+}
+
+.site-monetization-slot__ad-unit {
+    width: 100%;
+    min-height: 108px;
+}
+
+.site-ad-protected {
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .site-monetization-slot {
+        padding: 20px;
+        border-radius: 20px;
+    }
+
+    .site-monetization-slot__title {
+        font-size: 1.2rem;
+    }
+
+    .site-monetization-slot__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .site-monetization-slot__card {
+        min-height: 96px;
+    }
+}

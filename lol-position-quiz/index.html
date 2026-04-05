@@ -1,1 +1,365 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>LOL 포지션 테스트</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Malgun Gothic',sans-serif;background:linear-gradient(135deg,#0a1428 0%,#1e3a5f 100%);min-height:100vh;padding:20px}.container{max-width:900px;margin:0 auto}header{text-align:center;color:#fff;padding:40px 0}h1{font-size:2.8em;margin-bottom:10px;text-shadow:2px 2px 4px rgba(0,0,0,.5)}.subtitle{font-size:1.3em;opacity:.95}.card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 20px 60px rgba(0,0,0,.4);margin-bottom:30px}.intro-screen,.question-screen,.result-screen{display:none}.intro-screen.active,.question-screen.active,.result-screen.active{display:block}.progress-bar{width:100%;height:8px;background:#e0e0e0;border-radius:10px;margin-bottom:30px;overflow:hidden}.progress-fill{height:100%;background:linear-gradient(90deg,#0ac8b9,#1e3a5f);width:0%;transition:width .3s ease}.question-text{font-size:1.3em;color:#222;margin-bottom:30px;line-height:1.6}.options{display:flex;flex-direction:column;gap:15px}.option{padding:20px;background:#f8f9fa;border:3px solid #e0e0e0;border-radius:12px;cursor:pointer;transition:all .3s;font-size:1.1em}.option:hover{transform:translateX(5px)}.option.selected{color:#fff;background:#0ac8b9;border-color:#0ac8b9;transform:translateX(5px)}button.primary{width:100%;padding:18px;font-size:1.3em;font-weight:700;color:#fff;background:linear-gradient(135deg,#0ac8b9,#1e3a5f);border:none;border-radius:12px;cursor:pointer;transition:all .3s;margin-top:20px}button.primary:hover{transform:translateY(-3px);box-shadow:0 10px 25px rgba(0,0,0,.3)}.result-icon{font-size:8em;text-align:center;margin:20px 0}.result-title{font-size:2.5em;font-weight:700;margin-bottom:10px;text-align:center;color:#0ac8b9}.description{background:#f8f9fa;padding:25px;border-radius:12px;margin:30px 0;border-left:5px solid #0ac8b9}.description h4{color:#0ac8b9;margin-bottom:15px;font-size:1.3em}.description p{line-height:1.8;color:#555;font-size:1.05em}</style></head><body><div class="container"><header><h1>🎮 LOL 포지션 테스트</h1><p class="subtitle">당신에게 맞는 롤 포지션은?</p></header><div class="card intro-screen active"><div style="text-align:center"><h2 style="margin-bottom:30px;color:#333">⚔️ 소환사의 협곡으로!</h2><p style="font-size:1.2em;line-height:1.8;color:#555;margin-bottom:15px">탑, 정글, 미드, 원딜, 서폿<br>어떤 포지션이 나와 맞을까요?</p><button class="primary" onclick="startTest()">테스트 시작</button></div></div><div class="card question-screen"><div class="progress-bar"><div class="progress-fill" id="progress"></div></div><div class="question-content"><div style="color:#0ac8b9;font-size:1.1em;margin-bottom:20px" id="questionNumber">질문 1/10</div><div class="question-text" id="questionText"></div><div class="options" id="options"></div><button class="primary" id="nextButton" onclick="nextQuestion()" disabled>다음</button></div></div><div class="card result-screen"><div class="result-icon" id="resultIcon">⚔️</div><div class="result-title" id="resultTitle">탑</div><div class="description" id="resultDescription"></div><button class="primary" style="background:#6c757d" onclick="retryTest()">다시 하기</button></div></div><script src="quiz.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>롤 포지션 테스트 | 나에게 맞는 리그오브레전드 포지션 찾기</title>
+    <meta name="description" content="탑, 정글, 미드, 원딜, 서폿 중 어떤 포지션이 나와 잘 맞을까요? 플레이 성향으로 알아보는 무료 롤 포지션 테스트.">
+    <link rel="canonical" href="https://hdh7485.github.io/lol-position-quiz/">
+    <meta name="google-adsense-account" content="ca-pub-5473168023476210">
+    <link rel="stylesheet" href="../shared/site-bootstrap.css">
+    <script defer src="../shared/site-bootstrap.js" data-site-root=".." data-page-kind="quiz"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background: linear-gradient(135deg, #0a1428 0%, #1e3a5f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: #fff;
+            padding: 40px 0;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            margin-bottom: 30px;
+        }
+
+        .intro-screen,
+        .question-screen,
+        .result-screen {
+            display: none;
+        }
+
+        .intro-screen.active,
+        .question-screen.active,
+        .result-screen.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0ac8b9, #1e3a5f);
+            width: 0;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            color: #222;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 20px;
+            background: #f8f9fa;
+            border: 3px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1em;
+        }
+
+        .option:hover {
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            color: #fff;
+            background: #0ac8b9;
+            border-color: #0ac8b9;
+            transform: translateX(5px);
+        }
+
+        button.primary {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, #0ac8b9, #1e3a5f);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        button.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .result-icon {
+            font-size: 8em;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .result-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #0ac8b9;
+        }
+
+        .description {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border-left: 5px solid #0ac8b9;
+        }
+
+        .description h4 {
+            color: #0ac8b9;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .description p {
+            line-height: 1.8;
+            color: #555;
+            font-size: 1.05em;
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+        }
+
+        .content-section h2 {
+            color: #0ac8b9;
+            margin-bottom: 18px;
+            font-size: 1.8em;
+        }
+
+        .content-section h3 {
+            color: #1f2937;
+            margin: 20px 0 10px;
+            font-size: 1.1em;
+        }
+
+        .content-section p,
+        .content-section li {
+            color: #4b5563;
+            line-height: 1.8;
+        }
+
+        .content-section ul {
+            padding-left: 20px;
+        }
+
+        .position-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-top: 22px;
+        }
+
+        .position-card {
+            background: #f8fbff;
+            border: 1px solid #cfeff1;
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .position-card strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .faq-item {
+            border-top: 1px solid #e5e7eb;
+            margin-top: 18px;
+            padding-top: 18px;
+        }
+
+        .faq-item:first-of-type {
+            border-top: none;
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .link-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .link-list a {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: #e6fffb;
+            color: #0f172a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .card,
+            .content-section {
+                padding: 26px;
+            }
+
+            .result-icon {
+                font-size: 5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>롤 포지션 테스트</h1>
+            <p class="subtitle">탑, 정글, 미드, 원딜, 서폿 중 나와 잘 맞는 포지션을 성향으로 찾아보세요.</p>
+        </header>
+
+        <div class="card intro-screen active">
+            <div style="text-align: center;">
+                <h2 style="margin-bottom: 30px; color: #333;">소환사의 협곡으로!</h2>
+                <p style="font-size: 1.2em; line-height: 1.8; color: #555; margin-bottom: 15px;">탑, 정글, 미드, 원딜, 서폿 중<br>어떤 포지션이 지금의 플레이 성향과 가장 잘 맞는지 확인해보세요.</p>
+                <button class="primary" onclick="startTest()">테스트 시작</button>
+            </div>
+        </div>
+
+        <div class="card question-screen">
+            <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+            <div class="question-content">
+                <div style="color: #0ac8b9; font-size: 1.1em; margin-bottom: 20px;" id="questionNumber">질문 1/10</div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="options"></div>
+                <button class="primary" id="nextButton" onclick="nextQuestion()" disabled>다음</button>
+            </div>
+        </div>
+
+        <div class="card result-screen">
+            <div class="result-icon" id="resultIcon">⚔️</div>
+            <div class="result-title" id="resultTitle">탑</div>
+            <div class="description" id="resultDescription"></div>
+            <button class="primary" style="background: #6c757d;" onclick="retryTest()">다시 하기</button>
+        </div>
+
+        <section class="content-section">
+            <h2>포지션별 성향 차이</h2>
+            <p>리그오브레전드 포지션은 단순히 라인 위치가 아니라 의사결정 방식의 차이이기도 합니다. 직접 싸움을 열고 싶은지, 맵 전체를 읽고 흐름을 설계하고 싶은지, 팀원을 살리며 판을 굴리고 싶은지에 따라 잘 맞는 포지션이 달라집니다.</p>
+            <p>이 테스트는 공격성, 주도성, 안정성, 리스크 감수 성향을 기반으로 현재 플레이 스타일과 어울리는 역할을 추천합니다.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>탑·정글·미드·원딜·서폿 특징</h2>
+            <div class="position-grid">
+                <article class="position-card">
+                    <strong>탑</strong>
+                    <p>독립적인 라인 운영과 교전 타이밍 계산을 좋아할 때 적합합니다.</p>
+                </article>
+                <article class="position-card">
+                    <strong>정글</strong>
+                    <p>맵 전체 흐름을 읽고 주도적으로 게임을 풀어가는 스타일에 잘 맞습니다.</p>
+                </article>
+                <article class="position-card">
+                    <strong>미드</strong>
+                    <p>라인전, 합류, 변수 창출을 모두 해보고 싶은 중심형 플레이어에게 어울립니다.</p>
+                </article>
+                <article class="position-card">
+                    <strong>원딜</strong>
+                    <p>후반 캐리와 포지셔닝, 꾸준한 딜링에 자신이 있다면 만족도가 높습니다.</p>
+                </article>
+                <article class="position-card">
+                    <strong>서폿</strong>
+                    <p>시야 장악, 이니시, 아군 보호처럼 팀 전체를 보며 움직이는 성향에 잘 맞습니다.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>롤 성향 테스트 해석</h2>
+            <h3>승부욕과 안정성의 균형</h3>
+            <p>공격적으로 교전을 여는 편인지, 안정적으로 성장 구간을 관리하는 편인지에 따라 추천 포지션이 갈립니다.</p>
+            <h3>개인 캐리 vs 팀 기여</h3>
+            <p>스스로 한타를 끝내는 역할을 선호하는지, 팀원에게 판을 만들어주는 역할을 즐기는지에 따라 결과를 다르게 해석하면 좋습니다.</p>
+            <h3>현재 메타보다 내 손에 맞는지</h3>
+            <p>이 테스트는 순간 메타보다 플레이 감각을 중심으로 보기 때문에, 현재 티어와 상관없이 장기적으로 재미를 느끼는 포지션을 찾는 데 유용합니다.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>자주 묻는 질문</h2>
+            <div class="faq-item">
+                <h3>원래 하던 포지션과 다른 결과가 나오면 바꿔야 하나요?</h3>
+                <p>반드시 바꿔야 하는 것은 아닙니다. 다만 서브 포지션이나 듀오 플레이에서 더 잘 맞는 역할을 발견하는 힌트로는 충분히 쓸 수 있습니다.</p>
+            </div>
+            <div class="faq-item">
+                <h3>한 챔피언만 오래 해도 결과가 달라질 수 있나요?</h3>
+                <p>네. 특정 챔피언 숙련도와 전체적인 포지션 적성은 다를 수 있습니다. 즐기는 챔피언 풀을 넓히고 싶을 때 참고하기 좋습니다.</p>
+            </div>
+            <div class="faq-item">
+                <h3>다른 게임 성향 테스트도 있나요?</h3>
+                <p>롤 외에도 F1 드라이버 테스트, 닌텐도 캐릭터 테스트처럼 팬덤과 게임 성향을 함께 즐길 수 있는 콘텐츠가 있습니다.</p>
+            </div>
+            <div class="link-list">
+                <a href="../f1-driver-quiz/">F1 드라이버 테스트</a>
+                <a href="../nintendo-character-quiz/">닌텐도 캐릭터 테스트</a>
+                <a href="../index.html">게임/팬덤 허브</a>
+            </div>
+        </section>
+    </div>
+
+    <script src="quiz.js"></script>
+</body>
+</html>

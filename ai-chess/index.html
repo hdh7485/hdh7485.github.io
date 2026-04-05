@@ -6,18 +6,9 @@
     <title>AI 체스 게임 - AI와 체스 대결</title>
     <meta name="description" content="AI와 체스 게임을 플레이하세요. 전략적 사고력을 테스트해보세요!">
     
-    <!-- Google AdSense -->
-    <meta name="google-adsense-account" content="ca-pub-9206874822169440">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9206874822169440" crossorigin="anonymous"></script>
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7CRKE11P9E"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-7CRKE11P9E');
-    </script>
+    <meta name="google-adsense-account" content="ca-pub-5473168023476210">
+    <link rel="stylesheet" href="../shared/site-bootstrap.css">
+    <script defer src="../shared/site-bootstrap.js" data-site-root=".." data-page-kind="game"></script>
     
     <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
     <style>
@@ -213,6 +204,19 @@
         var board = null;
         var game = new Chess();
         var moveHistory = [];
+        var hasTrackedChessStart = false;
+        var hasTrackedChessComplete = false;
+
+        function trackChessMetric(eventName, params) {
+            if (!window.quizCollectionBootstrap || typeof window.quizCollectionBootstrap.track !== 'function') {
+                return;
+            }
+
+            window.quizCollectionBootstrap.track(eventName, Object.assign({
+                content_type: 'game',
+                content_slug: 'ai-chess'
+            }, params || {}));
+        }
         
         function onDragStart(source, piece, position, orientation) {
             if (game.game_over()) return false;
@@ -340,6 +344,14 @@
             if (move === null) return 'snapback';
             
             moveHistory.push(move);
+
+            if (!hasTrackedChessStart) {
+                hasTrackedChessStart = true;
+                trackChessMetric('engagement_start', {
+                    interaction_type: 'match_start'
+                });
+            }
+
             updateStatus();
             
             window.setTimeout(makeAIMove, 250);
@@ -359,8 +371,22 @@
             
             if (game.in_checkmate()) {
                 status = '게임 종료, ' + moveColor + ' 체크메이트.';
+                if (!hasTrackedChessComplete) {
+                    hasTrackedChessComplete = true;
+                    trackChessMetric('engagement_complete', {
+                        interaction_type: 'match_start',
+                        outcome: game.turn() === 'b' ? 'player_win' : 'ai_win'
+                    });
+                }
             } else if (game.in_draw()) {
                 status = '게임 종료, 무승부';
+                if (!hasTrackedChessComplete) {
+                    hasTrackedChessComplete = true;
+                    trackChessMetric('engagement_complete', {
+                        interaction_type: 'match_start',
+                        outcome: 'draw'
+                    });
+                }
             } else {
                 status = moveColor + '의 차례';
                 
@@ -385,6 +411,8 @@
         function newGame() {
             game.reset();
             moveHistory = [];
+            hasTrackedChessStart = false;
+            hasTrackedChessComplete = false;
             board.start();
             updateStatus();
         }

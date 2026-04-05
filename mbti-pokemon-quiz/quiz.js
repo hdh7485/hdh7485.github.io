@@ -70,37 +70,82 @@ const questions = [
 
 let currentQuestion = 0;
 let mbti = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+let selectedType = null;
+
+function trackQuizMetric(eventName, params) {
+    if (!window.quizCollectionBootstrap || typeof window.quizCollectionBootstrap.track !== 'function') {
+        return;
+    }
+
+    window.quizCollectionBootstrap.track(eventName, Object.assign({
+        content_type: 'quiz',
+        content_slug: 'mbti-pokemon-quiz'
+    }, params || {}));
+}
+
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildResultReason(result, pokemonName) {
+    const energy = mbti.E >= mbti.I ? '사람과 상호작용할 때 에너지가 차는 답변' : '혼자 몰입하며 에너지를 회복하는 답변';
+    const info = mbti.S >= mbti.N ? '구체적인 경험을 중시하는 선택' : '가능성과 분위기를 먼저 보는 선택';
+    const decision = mbti.T >= mbti.F ? '논리적으로 정리하는 판단' : '관계와 감정을 먼저 보는 판단';
+    const style = mbti.J >= mbti.P ? '계획과 정리를 선호하는 패턴' : '유연하고 즉흥적인 패턴';
+
+    return `${energy}, ${info}, ${decision}, ${style}이 더 많이 나와서 ${result} 유형의 ${pokemonName} 결과가 나왔어요.`;
+}
 
 function startTest() {
+    trackQuizMetric('engagement_start', {
+        question_count: questions.length
+    });
     document.querySelector('.intro-screen').classList.remove('active');
     document.querySelector('.question-screen').classList.add('active');
+    document.querySelector('.result-screen').classList.remove('active');
     currentQuestion = 0;
     mbti = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+    selectedType = null;
     showQuestion();
+    scrollToTop();
 }
 
 function showQuestion() {
     const q = questions[currentQuestion];
     document.getElementById('progress').style.width = ((currentQuestion + 1) / questions.length * 100) + '%';
-    document.getElementById('questionNumber').textContent = `질문 ${currentQuestion + 1}/${questions.length}`;
+    document.getElementById('questionNumber').textContent = `질문 ${currentQuestion + 1} / ${questions.length}`;
     document.getElementById('questionText').textContent = q.text;
-    
+
     const opts = document.getElementById('options');
     opts.innerHTML = '';
+    selectedType = null;
+
     q.options.forEach((opt, i) => {
-        const div = document.createElement('div');
-        div.className = 'option';
-        div.textContent = opt.text;
-        div.onclick = () => selectOption(i);
-        opts.appendChild(div);
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'quiz-shell-option';
+        button.textContent = opt.text;
+        button.onclick = () => selectOption(i);
+        opts.appendChild(button);
     });
+
     document.getElementById('nextButton').disabled = true;
+    document.getElementById('nextButton').textContent = currentQuestion === questions.length - 1 ? '결과 보기' : '다음 질문';
 }
 
 function selectOption(index) {
-    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-    document.querySelectorAll('.option')[index].classList.add('selected');
-    mbti[questions[currentQuestion].options[index].type]++;
+    const options = document.querySelectorAll('.quiz-shell-option');
+    const nextType = questions[currentQuestion].options[index].type;
+
+    options.forEach(option => option.classList.remove('selected'));
+    options[index].classList.add('selected');
+
+    if (selectedType) {
+        mbti[selectedType]--;
+    }
+
+    selectedType = nextType;
+    mbti[nextType]++;
     document.getElementById('nextButton').disabled = false;
 }
 
@@ -121,15 +166,54 @@ function showResult() {
     document.getElementById('resultIcon').textContent = pokemon.emoji;
     document.getElementById('resultTitle').textContent = pokemon.name;
     document.getElementById('mbtiType').textContent = result;
-    document.getElementById('resultDescription').innerHTML = `<h4>${pokemon.name}</h4><p>${pokemon.desc}</p>`;
-    
+    document.getElementById('resultDescription').innerHTML = `<p>${pokemon.desc}</p>`;
+    document.getElementById('resultReason').textContent = buildResultReason(result, pokemon.name);
+    trackQuizMetric('engagement_complete', {
+        question_count: questions.length,
+        result_id: result,
+        result_label: pokemon.name
+    });
+
     document.querySelector('.question-screen').classList.remove('active');
     document.querySelector('.result-screen').classList.add('active');
-    window.scrollTo(0, 0);
+    scrollToTop();
 }
 
 function retryTest() {
     document.querySelector('.result-screen').classList.remove('active');
     document.querySelector('.intro-screen').classList.add('active');
-    window.scrollTo(0, 0);
+    scrollToTop();
+}
+
+function shareResult() {
+    const result = document.getElementById('mbtiType').textContent;
+    const pokemon = document.getElementById('resultTitle').textContent;
+    const text = `내 MBTI 포켓몬 결과는 ${pokemon} (${result})! 나와 닮은 포켓몬을 바로 확인해보세요.`;
+
+    trackQuizMetric('share_result', {
+        result_id: result,
+        result_label: pokemon
+    });
+
+    if (navigator.share) {
+        navigator.share({
+            title: 'MBTI 포켓몬 테스트',
+            text: text,
+            url: window.location.href
+        }).catch(function () {});
+        return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(`${text} ${window.location.href}`)
+            .then(function () {
+                alert('결과 링크를 클립보드에 복사했습니다.');
+            })
+            .catch(function () {
+                alert('이 브라우저에서는 공유를 지원하지 않습니다.');
+            });
+        return;
+    }
+
+    alert('이 브라우저에서는 공유를 지원하지 않습니다.');
 }

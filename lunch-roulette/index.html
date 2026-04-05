@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>점심 메뉴 룰렛 🍽️</title>
+    <title>점심 메뉴 추천 룰렛 | 오늘 점심 뭐 먹지 고민 해결</title>
+    <meta name="description" content="한식, 중식, 일식, 패스트푸드까지 점심 메뉴를 랜덤으로 추천해주는 무료 점심 룰렛. 오늘 점심 뭐 먹지 고민될 때 바로 사용하세요.">
+    <link rel="canonical" href="https://hdh7485.github.io/lunch-roulette/">
+    <meta name="google-adsense-account" content="ca-pub-5473168023476210">
+    <link rel="stylesheet" href="../shared/site-bootstrap.css">
+    <script defer src="../shared/site-bootstrap.js" data-site-root=".." data-page-kind="game"></script>
     <style>
         * {
             margin: 0;
@@ -15,9 +20,6 @@
             font-family: 'Malgun Gothic', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
 
@@ -185,6 +187,85 @@
             margin-top: 5px;
         }
 
+        .content-section {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 20px;
+            padding: 32px;
+            margin-top: 24px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+        }
+
+        .content-section h2 {
+            color: #667eea;
+            margin-bottom: 18px;
+            font-size: 1.8em;
+        }
+
+        .content-section h3 {
+            color: #1f2937;
+            margin: 20px 0 10px;
+        }
+
+        .content-section p,
+        .content-section li {
+            color: #4b5563;
+            line-height: 1.8;
+        }
+
+        .content-section ul {
+            padding-left: 20px;
+        }
+
+        .idea-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .idea-card {
+            background: #f8faff;
+            border: 1px solid #dbe4ff;
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .idea-card strong {
+            display: block;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+
+        .faq-item {
+            border-top: 1px solid #e5e7eb;
+            margin-top: 18px;
+            padding-top: 18px;
+        }
+
+        .faq-item:first-of-type {
+            border-top: none;
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .link-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .link-list a {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #374151;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2em;
@@ -211,8 +292,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>🍽️ 점심 메뉴 룰렛</h1>
-            <p class="subtitle">오늘 뭐 먹지? 고민 끝!</p>
+            <h1>점심 메뉴 추천 룰렛</h1>
+            <p class="subtitle">오늘 점심 뭐 먹지 고민될 때 바로 돌려보는 무료 메뉴 추천 도구입니다.</p>
         </header>
 
         <div class="card">
@@ -244,6 +325,65 @@
                 </div>
             </div>
         </div>
+
+        <section class="content-section">
+            <h2>점심 메뉴 룰렛 사용법</h2>
+            <p>버튼을 누르면 200개 메뉴 중 하나가 랜덤으로 추천됩니다. 빠르게 결정하고 싶을 때는 바로 한 번만 돌리고, 회식이나 팀 점심처럼 조건이 많을 때는 몇 번 더 돌려서 후보를 좁히는 방식이 가장 편합니다.</p>
+            <p>메뉴를 정한 뒤에는 가게 위치, 배달 가능 여부, 예산만 확인하면 되기 때문에 "오늘 뭐 먹지" 같은 반복 고민을 줄이는 데 도움이 됩니다.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>혼밥용 메뉴 추천</h2>
+            <div class="idea-grid">
+                <article class="idea-card">
+                    <strong>빠르게 먹고 복귀하기</strong>
+                    <p>김밥, 덮밥, 국밥처럼 회전이 빠른 메뉴가 적합합니다.</p>
+                </article>
+                <article class="idea-card">
+                    <strong>부담 없이 혼자 먹기</strong>
+                    <p>라면, 우동, 샐러드, 샌드위치처럼 1인 주문이 자연스러운 메뉴가 편합니다.</p>
+                </article>
+                <article class="idea-card">
+                    <strong>가성비 챙기기</strong>
+                    <p>학생식당, 분식, 도시락류는 예산이 빡빡한 날 선택하기 좋습니다.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>직장인 점심 추천 아이디어</h2>
+            <h3>회의 전후에는 깔끔한 메뉴</h3>
+            <p>냄새가 강하지 않고 먹는 속도가 일정한 메뉴를 우선하면 오후 일정에 부담이 적습니다.</p>
+            <h3>팀 점심은 선택지를 먼저 좁히기</h3>
+            <p>한식, 중식, 일식처럼 범주를 먼저 정한 뒤 룰렛을 돌리면 합의가 훨씬 빨라집니다.</p>
+            <h3>반복 선택을 줄이고 싶을 때</h3>
+            <p>이번 주에 이미 먹은 메뉴는 제외하고 돌리는 식으로 사용하면 체감 다양성이 크게 올라갑니다.</p>
+        </section>
+
+        <section class="content-section">
+            <h2>자주 묻는 질문</h2>
+            <div class="faq-item">
+                <h3>메뉴는 완전히 랜덤인가요?</h3>
+                <p>네. 현재는 메뉴 목록에서 랜덤으로 하나를 뽑는 방식입니다. 특정 카테고리를 우선하는 가중치는 적용하지 않았습니다.</p>
+            </div>
+            <div class="faq-item">
+                <h3>배달용으로도 사용할 수 있나요?</h3>
+                <p>가능합니다. 룰렛으로 큰 방향을 정한 뒤 배달 앱에서 해당 카테고리만 보면 선택 속도가 빨라집니다.</p>
+            </div>
+            <div class="faq-item">
+                <h3>친구들과 같이 써도 되나요?</h3>
+                <p>단체 점심에서도 유용합니다. 한 번 돌려 바로 결정하거나, 세 번 돌려 최종 후보군을 만드는 식으로 쓰면 편합니다.</p>
+            </div>
+            <div class="faq-item">
+                <h3>다른 추천형 콘텐츠도 있나요?</h3>
+                <p>점심 메뉴 외에도 여행지 추천, 맥주 추천, 연애 스타일 테스트처럼 선택을 도와주는 콘텐츠가 준비되어 있습니다.</p>
+            </div>
+            <div class="link-list">
+                <a href="../beer-recommendation-quiz/">맥주 추천 테스트</a>
+                <a href="../travel-destination-quiz/">여행지 추천 테스트</a>
+                <a href="../index.html">홈으로 돌아가기</a>
+            </div>
+        </section>
     </div>
 
     <script src="roulette.js"></script>

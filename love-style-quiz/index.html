@@ -9,10 +9,11 @@
     <meta property="og:title" content="나의 연애 스타일 테스트 💕">
     <meta property="og:description" content="12가지 질문으로 알아보는 나의 연애 스타일! 당신은 열정형? 안정형? 자유형?">
     <meta property="og:type" content="website">
+    <link rel="canonical" href="https://hdh7485.github.io/love-style-quiz/">
 
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5473168023476210"
-         crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-5473168023476210">
+    <link rel="stylesheet" href="../shared/site-bootstrap.css">
+    <script defer src="../shared/site-bootstrap.js" data-site-root=".." data-page-kind="quiz"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -600,7 +601,21 @@ let scores = { passion: 0, stable: 0, free: 0, devoted: 0, rational: 0 };
 let mbtiScores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
 let selected = null;
 
+function trackQuizMetric(eventName, params) {
+    if (!window.quizCollectionBootstrap || typeof window.quizCollectionBootstrap.track !== 'function') {
+        return;
+    }
+
+    window.quizCollectionBootstrap.track(eventName, Object.assign({
+        content_type: 'quiz',
+        content_slug: 'love-style-quiz'
+    }, params || {}));
+}
+
 function startTest() {
+    trackQuizMetric('engagement_start', {
+        question_count: questions.length
+    });
     document.querySelector('.intro-screen').classList.remove('active');
     document.querySelector('.question-screen').classList.add('active');
     renderQuestion();
@@ -667,6 +682,12 @@ function showResult() {
     const tf = mbtiScores.T >= mbtiScores.F ? 'T' : 'F';
     const jp = mbtiScores.J >= mbtiScores.P ? 'J' : 'P';
     const mbti = ei + sn + tf + jp;
+    trackQuizMetric('engagement_complete', {
+        question_count: questions.length,
+        result_id: topType,
+        result_label: result.name,
+        secondary_result_id: mbti
+    });
 
     document.getElementById('resultEmoji').textContent = result.emoji;
     document.getElementById('resultTitle').textContent = result.name;

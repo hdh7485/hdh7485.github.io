@@ -80,7 +80,20 @@ const questions = [
 ];
 let currentQuestion = 0;
 let scores = { top: 0, jungle: 0, mid: 0, adc: 0, support: 0 };
+function trackQuizMetric(eventName, params) {
+    if (!window.quizCollectionBootstrap || typeof window.quizCollectionBootstrap.track !== 'function') {
+        return;
+    }
+
+    window.quizCollectionBootstrap.track(eventName, Object.assign({
+        content_type: 'quiz',
+        content_slug: 'lol-position-quiz'
+    }, params || {}));
+}
 function startTest() {
+    trackQuizMetric('engagement_start', {
+        question_count: questions.length
+    });
     document.querySelector('.intro-screen').classList.remove('active');
     document.querySelector('.question-screen').classList.add('active');
     currentQuestion = 0;
@@ -124,6 +137,11 @@ function showResult() {
         }
     }
     const data = positions[result];
+    trackQuizMetric('engagement_complete', {
+        question_count: questions.length,
+        result_id: result,
+        result_label: data.name
+    });
     document.getElementById('resultIcon').textContent = data.emoji;
     document.getElementById('resultTitle').textContent = data.name;
     document.getElementById('resultDescription').innerHTML = `<h4>${data.name}</h4><p>${data.desc}</p>`;
