@@ -57,7 +57,7 @@
 - slot-ready 즉시 실행: `/`, `/2048-game/`, `/ai-chess/`, `/ai-gomoku/`, `/lunch-roulette/`, `/travel-destination-quiz/`
 - first-wave 준비만 먼저: `/mbti-pokemon-quiz/`, `/love-style-quiz/`, `/beer-recommendation-quiz/`, `/lol-position-quiz/`
 
-뒤 4개 페이지는 부트스트랩 정렬 우선 대상이지만, 현재 `shared/site-bootstrap.js`에는 공통 quiz-result 슬롯 정의가 없습니다. 따라서 live ad on은 [CMP-40](/CMP/issues/CMP-40)에서 generic quiz placement를 추가한 뒤 진행합니다.
+뒤 4개 페이지는 부트스트랩 정렬 우선 대상이지만, live ad on을 위해서는 결과 화면용 공통 slot key가 먼저 필요합니다. [CMP-40](/CMP/issues/CMP-40) 이후에는 4개 페이지가 모두 `quiz-result-banner` key로 수렴하고, 실제 live ad on은 이 key에 대한 slot ID만 연결하면 됩니다.
 
 ## CMP-15 기준 첫 배치 구조
 
@@ -67,6 +67,7 @@
 - 게임 `/ai-gomoku/`: 규칙 박스 아래 `ai-gomoku-banner`
 - 도구 `/lunch-roulette/`: 메뉴 목록 섹션 아래 `lunch-roulette-banner`
 - 퀴즈 `/travel-destination-quiz/`: 결과 카드 내부 하단 `travel-result-banner`
+- 퀴즈 `/mbti-pokemon-quiz/`, `/love-style-quiz/`, `/beer-recommendation-quiz/`, `/lol-position-quiz/`: 결과 CTA/추천 블록 뒤 `quiz-result-banner`
 
 모든 배치는 `shared/site-bootstrap.js`가 공통으로 삽입합니다. 현재 실제 AdSense ad slot ID는 아직 연결하지 않았기 때문에, 기본 렌더링은 내부 추천 카드 fallback입니다. 슬롯 ID가 준비되면 같은 배치 키를 사용해 광고 단위로 전환할 수 있습니다.
 
@@ -90,7 +91,7 @@ Ads Ops는 AdSense 미리보기에서 위 셀렉터를 기준으로 제외 영�
 
 - 모든 first-wave 페이지에서 page-local AdSense 스크립트와 인라인 광고 블록을 제거하고 공통 부트스트랩만 남깁니다.
 - `ca-pub-9206874822169440`가 남아 있는 라이브 경로는 `ca-pub-5473168023476210`로 교체합니다.
-- [CMP-40](/CMP/issues/CMP-40)에서는 기존 6개 placement key를 live slot으로 연결하고, 필요 시 quiz 공통 placement를 추가해 나머지 4개 first-wave 페이지를 수용합니다.
+- [CMP-40](/CMP/issues/CMP-40)에서는 기존 6개 placement key를 live slot으로 연결하고, `quiz-result-banner` 공통 placement로 나머지 4개 first-wave 퀴즈를 수용합니다.
 - [CMP-39](/CMP/issues/CMP-39)에서는 위 10개 first-wave 페이지를 동일 측정 기준선으로 맞춥니다.
 - [CMP-28](/CMP/issues/CMP-28)에서는 위 제외 기준을 QA 체크리스트와 launch guardrail로 옮깁니다.
 - [CMP-25](/CMP/issues/CMP-25)가 실제 slot ID를 확정하면 key -> slot ID 매핑만 연결하고 운영 기준은 바꾸지 않습니다.

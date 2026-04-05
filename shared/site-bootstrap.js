@@ -43,6 +43,12 @@
             || pagePath.endsWith('/' + segment + '/index.html');
     }
 
+    function hasAnyPathSegment(segments) {
+        return (segments || []).some(function (segment) {
+            return hasPathSegment(segment);
+        });
+    }
+
     function parseJsonAttribute(name) {
         var value = script.dataset[name];
 
@@ -56,6 +62,18 @@
             console.warn('Invalid bootstrap JSON attribute:', name, error);
             return null;
         }
+    }
+
+    function defaultLiveSlotMap() {
+        return {
+            'home-banner': '6465515811',
+            'home-multiplex': '3895192795',
+            'game-2048-banner': '1269029459',
+            'ai-chess-banner': '6162263489',
+            'ai-gomoku-banner': '5679047756',
+            'lunch-roulette-banner': '9843525601',
+            'travel-result-banner': '3567889735'
+        };
     }
 
     function buildAnalyticsPayload(params) {
@@ -401,7 +419,32 @@
     }
 
     function resolveSlotMap() {
-        return parseJsonAttribute('adSlots') || window.quizCollectionAdSlots || {};
+        var slotMap = defaultLiveSlotMap();
+        var inlineSlotMap = parseJsonAttribute('adSlots');
+        var windowSlotMap = window.quizCollectionAdSlots;
+
+        if (inlineSlotMap && typeof inlineSlotMap === 'object') {
+            Object.assign(slotMap, inlineSlotMap);
+        }
+
+        if (windowSlotMap && typeof windowSlotMap === 'object') {
+            Object.assign(slotMap, windowSlotMap);
+        }
+
+        return slotMap;
+    }
+
+    function pushQuizResultPlacement(placements, slotMap, config) {
+        placements.push({
+            key: 'quiz-result-banner',
+            selector: '[data-quiz-result-anchor]',
+            position: 'after',
+            variant: 'banner',
+            title: config.title,
+            description: config.description,
+            fallbackLinks: config.fallbackLinks,
+            slotId: slotMap['quiz-result-banner'] || null
+        });
     }
 
     function buildPlacements(slotMap) {
@@ -525,11 +568,73 @@
             });
         }
 
+        if (hasPathSegment('mbti-pokemon-quiz')) {
+            pushQuizResultPlacement(placements, slotMap, {
+                title: '이 결과 다음으로 보기 좋은 테스트',
+                description: '결과 확인과 공유 흐름을 먼저 끝낸 뒤, 비슷한 결의 테스트나 짧은 게임으로 자연스럽게 이어지게 배치했습니다.',
+                fallbackLinks: [
+                    { href: 'love-style-quiz/', label: '연애 스타일 테스트', meta: '결과형 퀴즈를 같은 톤으로 더 이어보기' },
+                    { href: 'beer-recommendation-quiz/', label: '맥주 추천 퀴즈', meta: '지금 기분과 취향을 다른 방식으로 확인' },
+                    { href: '2048-game/', label: '2048 게임', meta: '짧게 머물기 좋은 퍼즐로 전환' }
+                ]
+            });
+        }
+
+        if (hasPathSegment('love-style-quiz')) {
+            pushQuizResultPlacement(placements, slotMap, {
+                title: '다음으로 가볍게 이어볼 콘텐츠',
+                description: '관계 성향 결과를 본 뒤 바로 다른 결과형 테스트나 짧은 게임으로 이동할 수 있게 결과 카드 아래에 배치합니다.',
+                fallbackLinks: [
+                    { href: 'mbti-pokemon-quiz/', label: 'MBTI 포켓몬 테스트', meta: '캐릭터형 결과로 성향 비교하기' },
+                    { href: 'beer-recommendation-quiz/', label: '맥주 추천 퀴즈', meta: '취향형 결과를 다른 주제로 이어보기' },
+                    { href: 'travel-destination-quiz/', label: '여행지 추천 테스트', meta: '오늘 기분에 맞는 선택형 결과 보기' }
+                ]
+            });
+        }
+
+        if (hasPathSegment('beer-recommendation-quiz')) {
+            pushQuizResultPlacement(placements, slotMap, {
+                title: '취향 결과 뒤에 이어보기',
+                description: '추천 맥주와 다시 하기 흐름을 먼저 노출한 뒤, 다른 결과형 콘텐츠로 넘어갈 수 있게 결과 카드 끝에만 추가합니다.',
+                fallbackLinks: [
+                    { href: 'love-style-quiz/', label: '연애 스타일 테스트', meta: '감정/관계 성향으로 방향 바꾸기' },
+                    { href: 'lol-position-quiz/', label: 'LOL 포지션 테스트', meta: '성향을 게임 역할로 번역해보기' },
+                    { href: 'lunch-roulette/', label: '점심 룰렛', meta: '바로 선택이 필요한 순간용 도구' }
+                ]
+            });
+        }
+
+        if (hasPathSegment('lol-position-quiz')) {
+            pushQuizResultPlacement(placements, slotMap, {
+                title: '포지션 결과 다음 추천',
+                description: '결과와 다시 하기 버튼을 먼저 보여준 뒤, 비슷한 결과형 콘텐츠나 가벼운 전환용 콘텐츠를 결과 카드 아래에 붙입니다.',
+                fallbackLinks: [
+                    { href: 'mbti-pokemon-quiz/', label: 'MBTI 포켓몬 테스트', meta: '성향 결과를 캐릭터형으로 다시 보기' },
+                    { href: 'beer-recommendation-quiz/', label: '맥주 추천 퀴즈', meta: '취향 기반 결과를 다른 주제로 이어보기' },
+                    { href: 'ai-chess/', label: 'AI 체스', meta: '전략 게임으로 바로 넘어가기' }
+                ]
+            });
+        }
+
         return placements;
     }
 
     function markProtectedRegions() {
         var selectors = ['header'];
+
+        if (pageKind === 'quiz') {
+            selectors = selectors.concat([
+                '.intro-screen',
+                '.question-screen',
+                '.question-screen .options',
+                '.question-screen .progress-bar',
+                '.question-screen .quiz-shell-options',
+                '.question-screen .quiz-shell-progress-track',
+                '.question-screen .quiz-shell-progress-fill',
+                '[data-quiz-result-actions]',
+                '[data-quiz-result-related]'
+            ]);
+        }
 
         if (pageKind === 'hub') {
             selectors = selectors.concat(['.intro-section', '.quiz-grid', '.quiz-card']);
@@ -551,7 +656,13 @@
             selectors = selectors.concat(['.result-display', 'button.primary', '.stats']);
         }
 
-        if (hasPathSegment('travel-destination-quiz')) {
+        if (hasAnyPathSegment([
+            'travel-destination-quiz',
+            'mbti-pokemon-quiz',
+            'love-style-quiz',
+            'beer-recommendation-quiz',
+            'lol-position-quiz'
+        ])) {
             selectors = selectors.concat(['#quiz-container', '#quiz-container .progress-bar', '#quiz-container .options']);
         }
 
