@@ -313,6 +313,14 @@
             font-size: .92rem;
             line-height: 1.55;
         }
+        .map-panel.needs-location {
+            outline: 4px solid rgba(37, 99, 235, .22);
+            box-shadow: 0 24px 70px rgba(37, 99, 235, .22);
+        }
+        .map-panel.needs-location .map-label {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
 
         .empty-state { text-align: center; background: white; border: 1px dashed rgba(15,23,42,.18); border-radius: 24px; padding: 42px 20px; color: var(--muted); }
 
@@ -342,6 +350,7 @@
                 <p class="hero-text">현재 위치 또는 검색어를 기준으로 가까운 대여소를 정렬하고, 대여 가능한 자전거 수와 거치 현황을 카드로 보여줍니다. 로그인, 알림, 경로 안내 없이 필요한 정보만 가볍게 확인하세요.</p>
                 <div class="hero-actions">
                     <button id="locateBtn" class="primary-btn" type="button">내 주변 보기</button>
+                    <button id="manualLocationBtn" class="ghost-btn" type="button">지도에서 위치 선택</button>
                     <button id="demoBtn" class="ghost-btn" type="button">데모 데이터 새로 보기</button>
                 </div>
             </div>
@@ -394,7 +403,7 @@
             </div>
         </section>
 
-        <section class="map-panel" aria-label="대여소 지도와 현재 위치">
+        <section id="mapPanel" class="map-panel" aria-label="대여소 지도와 현재 위치">
             <div class="map-head">
                 <div>
                     <h2>실제 지도에서 보기</h2>
@@ -455,6 +464,7 @@
             allStations: [],
             userPosition: null,
             userAccuracy: null,
+            awaitingManualLocation: false,
             dataMode: '데모',
             updatedAt: null,
             loading: false,
@@ -468,6 +478,7 @@
 
         const els = {
             locateBtn: document.getElementById('locateBtn'),
+            manualLocationBtn: document.getElementById('manualLocationBtn'),
             demoBtn: document.getElementById('demoBtn'),
             refreshBtn: document.getElementById('refreshBtn'),
             liveBtn: document.getElementById('liveBtn'),
@@ -486,6 +497,7 @@
             updatedAt: document.getElementById('updatedAt'),
             stationMap: document.getElementById('stationMap'),
             mapFallback: document.getElementById('mapFallback'),
+            mapPanel: document.getElementById('mapPanel'),
             mapMeta: document.getElementById('mapMeta')
         };
 
@@ -583,7 +595,7 @@
 
         function setLoading(isLoading) {
             state.loading = isLoading;
-            [els.refreshBtn, els.liveBtn, els.demoBtn, els.locateBtn].forEach(button => button.disabled = isLoading);
+            [els.refreshBtn, els.liveBtn, els.demoBtn, els.locateBtn, els.manualLocationBtn].forEach(button => button.disabled = isLoading);
             if (isLoading) setStatus('대여소 정보를 불러오는 중입니다...');
         }
 
@@ -645,9 +657,23 @@
             }
         }
 
+        function focusMapForManualLocation(message = '지도에서 실제 위치를 클릭하거나 파란 점을 드래그해 위치를 보정하세요.') {
+            state.awaitingManualLocation = true;
+            if (els.mapPanel) els.mapPanel.classList.add('needs-location');
+            if (els.mapMeta) els.mapMeta.textContent = '지도에서 내 위치를 클릭해 선택하세요';
+            setStatus(message, 'warn');
+            renderMap(getFilteredStations());
+            setTimeout(() => {
+                if (els.mapPanel) els.mapPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (state.map) state.map.invalidateSize({ pan: false, animate: false });
+            }, 80);
+        }
+
         function setManualPosition(latLng, message) {
             state.userPosition = { lat: latLng.lat, lng: latLng.lng };
             state.userAccuracy = null;
+            state.awaitingManualLocation = false;
+            if (els.mapPanel) els.mapPanel.classList.remove('needs-location');
             els.sortSelect.value = 'distance';
             setStatus(message, 'good');
             render();
@@ -662,6 +688,8 @@
             navigator.geolocation.getCurrentPosition(position => {
                 state.userPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
                 state.userAccuracy = Number.isFinite(position.coords.accuracy) ? position.coords.accuracy : null;
+                state.awaitingManualLocation = false;
+                if (els.mapPanel) els.mapPanel.classList.remove('needs-location');
                 els.sortSelect.value = 'distance';
                 setLoading(false);
                 const accuracyText = state.userAccuracy ? ` 위치 정확도 약 ${Math.round(state.userAccuracy).toLocaleString('ko-KR')}m.` : '';
@@ -669,8 +697,8 @@
                 render();
             }, error => {
                 setLoading(false);
-                setStatus(`위치 권한을 받을 수 없습니다. 검색어로 찾아보세요. (${error.message})`, 'warn');
-                render();
+                const reason = error && error.message ? error.message : '브라우저가 현재 위치를 찾지 못했습니다.';
+                focusMapForManualLocation(`자동 위치를 가져오지 못했습니다. (${reason}) 지도에서 실제 위치를 클릭해 내 위치를 지정하세요.`);
             }, { enableHighAccuracy: true, timeout: 9000, maximumAge: 60000 });
         }
 
@@ -803,6 +831,7 @@
         }
 
         els.locateBtn.addEventListener('click', useMyLocation);
+        els.manualLocationBtn.addEventListener('click', () => focusMapForManualLocation());
         els.demoBtn.addEventListener('click', () => loadDemoStations('데모 데이터를 다시 불러왔습니다.'));
         els.refreshBtn.addEventListener('click', () => refreshStations(false));
         els.liveBtn.addEventListener('click', () => refreshStations(true));
