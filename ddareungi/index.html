@@ -299,12 +299,19 @@
         .bike-marker.low { background: var(--yellow); }
         .bike-marker.empty { background: var(--red); }
         .user-marker-dot {
-            width: 28px;
-            height: 28px;
+            width: 22px;
+            height: 22px;
             border-radius: 999px;
             background: #2563eb;
             border: 4px solid white;
-            box-shadow: 0 0 0 8px rgba(37,99,235,.18), 0 12px 26px rgba(37,99,235,.35);
+            box-shadow: 0 10px 24px rgba(37,99,235,.35);
+            display: block;
+        }
+        .location-help {
+            margin-top: 10px;
+            color: #64748b;
+            font-size: .92rem;
+            line-height: 1.55;
         }
 
         .empty-state { text-align: center; background: white; border: 1px dashed rgba(15,23,42,.18); border-radius: 24px; padding: 42px 20px; color: var(--muted); }
@@ -391,7 +398,7 @@
             <div class="map-head">
                 <div>
                     <h2>실제 지도에서 보기</h2>
-                    <p>일반 지도 위에 검색·필터 결과를 표시합니다. “내 주변 보기”를 누르면 현재 위치가 파란 점으로 함께 나타납니다.</p>
+                    <p>일반 지도 위에 검색·필터 결과를 표시합니다. “내 주변 보기”를 누르면 현재 위치가 파란 점으로 나타나고, 위치가 어긋나면 지도를 클릭하거나 파란 점을 드래그해 보정할 수 있습니다.</p>
                 </div>
                 <div id="mapMeta" class="map-meta">현재 위치 없음</div>
             </div>
@@ -406,6 +413,7 @@
                 <span class="legend-dot empty">0대</span>
                 <span class="legend-dot me">현재 위치</span>
             </div>
+            <p class="location-help">위치가 정확하지 않으면 지도에서 실제 위치를 클릭하거나 파란 현재 위치 점을 드래그하세요. 보정한 위치 기준으로 거리와 가까운 순 정렬이 다시 계산됩니다.</p>
         </section>
 
         <section>
@@ -446,6 +454,7 @@
         const state = {
             allStations: [],
             userPosition: null,
+            userAccuracy: null,
             dataMode: '데모',
             updatedAt: null,
             loading: false,
@@ -533,6 +542,7 @@
 
             state.stationLayer = L.layerGroup().addTo(state.map);
             state.userLayer = L.layerGroup().addTo(state.map);
+            state.map.on('click', event => setManualPosition(event.latlng, '지도에서 선택한 위치로 보정했습니다.'));
             state.leafletReady = true;
             if (els.mapFallback) els.mapFallback.hidden = true;
 
@@ -635,6 +645,14 @@
             }
         }
 
+        function setManualPosition(latLng, message) {
+            state.userPosition = { lat: latLng.lat, lng: latLng.lng };
+            state.userAccuracy = null;
+            els.sortSelect.value = 'distance';
+            setStatus(message, 'good');
+            render();
+        }
+
         function useMyLocation() {
             if (!navigator.geolocation) {
                 setStatus('이 브라우저는 위치 정보를 지원하지 않습니다. 검색어로 대여소를 찾아보세요.', 'warn');
@@ -643,9 +661,11 @@
             setLoading(true);
             navigator.geolocation.getCurrentPosition(position => {
                 state.userPosition = { lat: position.coords.latitude, lng: position.coords.longitude };
+                state.userAccuracy = Number.isFinite(position.coords.accuracy) ? position.coords.accuracy : null;
                 els.sortSelect.value = 'distance';
                 setLoading(false);
-                setStatus('현재 위치 기준으로 가까운 대여소를 정렬했습니다.', 'good');
+                const accuracyText = state.userAccuracy ? ` 위치 정확도 약 ${Math.round(state.userAccuracy).toLocaleString('ko-KR')}m.` : '';
+                setStatus(`현재 위치 기준으로 가까운 대여소를 정렬했습니다.${accuracyText} 위치가 어긋나면 지도에서 직접 보정하세요.`, 'good');
                 render();
             }, error => {
                 setLoading(false);
@@ -718,17 +738,12 @@
             if (state.userPosition) {
                 const userLatLng = [state.userPosition.lat, state.userPosition.lng];
                 bounds.push(userLatLng);
-                L.marker(userLatLng, { icon: makeUserIcon(), title: '현재 위치' })
-                    .bindPopup('현재 위치')
+                L.marker(userLatLng, { icon: makeUserIcon(), title: '현재 위치', draggable: true })
+                    .bindPopup('현재 위치 — 드래그해서 보정할 수 있어요')
+                    .on('dragend', event => setManualPosition(event.target.getLatLng(), '현재 위치 점을 옮겨 보정했습니다.'))
                     .addTo(state.userLayer);
-                L.circle(userLatLng, {
-                    radius: 3000,
-                    color: '#2563eb',
-                    weight: 1,
-                    fillColor: '#2563eb',
-                    fillOpacity: 0.08
-                }).addTo(state.userLayer);
-                els.mapMeta.textContent = `현재 위치 ${state.userPosition.lat.toFixed(4)}, ${state.userPosition.lng.toFixed(4)}`;
+                const accuracyText = state.userAccuracy ? ` · 정확도 약 ${Math.round(state.userAccuracy).toLocaleString('ko-KR')}m` : ' · 수동 보정 위치';
+                els.mapMeta.textContent = `현재 위치 ${state.userPosition.lat.toFixed(4)}, ${state.userPosition.lng.toFixed(4)}${accuracyText}`;
             } else {
                 els.mapMeta.textContent = '현재 위치 없음 · 대여소만 표시';
             }
