@@ -6,6 +6,9 @@
     <meta name="description" content="서울 따릉이 주변 대여소의 대여 가능 자전거 수를 빠르게 확인하는 정적 웹앱입니다.">
     <meta name="keywords" content="따릉이, 서울자전거, 공공자전거, 대여소, 자전거 대여, 서울">
     <title>따릉이 주변 대여소 찾기 🚲</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIINfQ6nnhWrlyQ1SZgMNFx4NZuJ6w1q6Sg="
+          crossorigin="anonymous">
     <style>
         :root {
             --bg: #ecfdf5;
@@ -219,31 +222,46 @@
         .map-meta { color: var(--green-dark); font-weight: 900; text-align: right; min-width: 180px; }
         .map-wrap {
             position: relative;
-            min-height: 420px;
+            min-height: 460px;
             border-radius: 24px;
             overflow: hidden;
             border: 1px solid rgba(15,23,42,.1);
-            background:
-                linear-gradient(90deg, rgba(15,23,42,.06) 1px, transparent 1px),
-                linear-gradient(rgba(15,23,42,.06) 1px, transparent 1px),
-                radial-gradient(circle at 52% 45%, rgba(16,185,129,.20), transparent 18rem),
-                linear-gradient(135deg, #f8fafc, #dcfce7 55%, #dbeafe);
-            background-size: 48px 48px, 48px 48px, auto, auto;
+            background: #dbeafe;
         }
-        .map-svg { width: 100%; height: 420px; display: block; }
-        .map-river { fill: none; stroke: rgba(14,165,233,.34); stroke-width: 18; stroke-linecap: round; }
+        .map-canvas {
+            width: 100%;
+            height: 460px;
+            min-height: 460px;
+            z-index: 1;
+        }
         .map-label {
             position: absolute;
             left: 16px;
             top: 16px;
-            background: rgba(255,255,255,.86);
+            z-index: 500;
+            background: rgba(255,255,255,.90);
             border: 1px solid rgba(15,23,42,.08);
             color: #334155;
             border-radius: 999px;
             padding: 8px 12px;
             font-weight: 900;
             font-size: .88rem;
+            box-shadow: 0 8px 22px rgba(15,23,42,.10);
+            pointer-events: none;
         }
+        .map-fallback {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            color: #475569;
+            background: linear-gradient(135deg, #f8fafc, #dcfce7 55%, #dbeafe);
+            padding: 28px;
+            line-height: 1.65;
+        }
+        .map-fallback[hidden] { display: none; }
         .map-legend {
             display: flex;
             flex-wrap: wrap;
@@ -257,13 +275,31 @@
         .legend-dot.low::before { background: var(--yellow); }
         .legend-dot.empty::before { background: var(--red); }
         .legend-dot.me::before { background: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,.16); }
-        .map-marker { cursor: pointer; transition: r .15s ease, opacity .15s ease; }
-        .map-marker:hover { r: 9; }
-        .map-marker.good { fill: var(--green); }
-        .map-marker.low { fill: var(--yellow); }
-        .map-marker.empty { fill: var(--red); }
-        .user-marker { fill: #2563eb; stroke: white; stroke-width: 3; filter: drop-shadow(0 8px 18px rgba(37,99,235,.38)); }
-        .user-range { fill: rgba(37,99,235,.08); stroke: rgba(37,99,235,.22); stroke-width: 1.5; }
+        .leaflet-container { font: inherit; }
+        .bike-div-icon, .user-div-icon { background: transparent; border: 0; }
+        .bike-marker {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 950;
+            border: 3px solid white;
+            box-shadow: 0 10px 24px rgba(15,23,42,.22);
+        }
+        .bike-marker.good { background: var(--green); }
+        .bike-marker.low { background: var(--yellow); }
+        .bike-marker.empty { background: var(--red); }
+        .user-marker-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            background: #2563eb;
+            border: 4px solid white;
+            box-shadow: 0 0 0 8px rgba(37,99,235,.18), 0 12px 26px rgba(37,99,235,.35);
+        }
 
         .empty-state { text-align: center; background: white; border: 1px dashed rgba(15,23,42,.18); border-radius: 24px; padding: 42px 20px; color: var(--muted); }
 
@@ -275,8 +311,7 @@
             .controls, .api-row { grid-template-columns: 1fr; }
             .topbar, .results-head, .map-head { align-items: flex-start; flex-direction: column; }
             .source-chip, .updated, .map-meta { text-align: left; }
-            .map-wrap { min-height: 340px; }
-            .map-svg { height: 340px; }
+            .map-wrap, .map-canvas { min-height: 360px; height: 360px; }
         }
     </style>
 </head>
@@ -349,14 +384,15 @@
         <section class="map-panel" aria-label="대여소 지도와 현재 위치">
             <div class="map-head">
                 <div>
-                    <h2>대여소 미니 지도</h2>
-                    <p>검색·필터 결과를 서울 좌표 기준으로 표시합니다. “내 주변 보기”를 누르면 현재 위치가 파란 점으로 함께 나타납니다.</p>
+                    <h2>실제 지도에서 보기</h2>
+                    <p>OpenStreetMap 지도 위에 검색·필터 결과를 표시합니다. “내 주변 보기”를 누르면 현재 위치가 파란 점으로 함께 나타납니다.</p>
                 </div>
                 <div id="mapMeta" class="map-meta">현재 위치 없음</div>
             </div>
             <div class="map-wrap">
-                <div class="map-label">서울 좌표 기반 미니 지도</div>
-                <svg id="stationMap" class="map-svg" viewBox="0 0 1000 620" role="img" aria-label="따릉이 대여소 위치 지도"></svg>
+                <div class="map-label">OpenStreetMap 기반 일반 지도</div>
+                <div id="stationMap" class="map-canvas" role="img" aria-label="따릉이 대여소 지도"></div>
+                <div id="mapFallback" class="map-fallback" hidden>지도를 불러오지 못했습니다. 네트워크 상태를 확인하거나 아래 대여소 목록을 이용하세요.</div>
             </div>
             <div class="map-legend" aria-label="지도 범례">
                 <span class="legend-dot">3대 이상</span>
@@ -380,10 +416,12 @@
         </p>
     </main>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin="anonymous"></script>
     <script>
         const SEOUL_API_BASE = 'http://openapi.seoul.go.kr:8088';
-        const SEOUL_BOUNDS = { minLat: 37.41, maxLat: 37.72, minLng: 126.76, maxLng: 127.20 };
-        const MAP_SIZE = { width: 1000, height: 620, padding: 54 };
+        const DEFAULT_CENTER = [37.5665, 126.9780];
         const DEMO_STATIONS = [
             { rackTotCnt: '15', stationName: '102. 망원역 1번출구 앞', parkingBikeTotCnt: '8', shared: '53', stationLatitude: '37.55564880', stationLongitude: '126.91062927', stationId: 'ST-4' },
             { rackTotCnt: '14', stationName: '103. 망원역 2번출구 앞', parkingBikeTotCnt: '5', shared: '36', stationLatitude: '37.55495071', stationLongitude: '126.91083527', stationId: 'ST-5' },
@@ -404,7 +442,11 @@
             userPosition: null,
             dataMode: '데모',
             updatedAt: null,
-            loading: false
+            loading: false,
+            map: null,
+            stationLayer: null,
+            userLayer: null,
+            leafletReady: false
         };
 
         const els = {
@@ -426,6 +468,7 @@
             statusMessage: document.getElementById('statusMessage'),
             updatedAt: document.getElementById('updatedAt'),
             stationMap: document.getElementById('stationMap'),
+            mapFallback: document.getElementById('mapFallback'),
             mapMeta: document.getElementById('mapMeta')
         };
 
@@ -459,17 +502,48 @@
             return radius * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
         }
 
-        function projectToMap(point) {
-            const lat = Math.min(Math.max(point.lat, SEOUL_BOUNDS.minLat), SEOUL_BOUNDS.maxLat);
-            const lng = Math.min(Math.max(point.lng, SEOUL_BOUNDS.minLng), SEOUL_BOUNDS.maxLng);
-            const xRatio = (lng - SEOUL_BOUNDS.minLng) / (SEOUL_BOUNDS.maxLng - SEOUL_BOUNDS.minLng);
-            const yRatio = (SEOUL_BOUNDS.maxLat - lat) / (SEOUL_BOUNDS.maxLat - SEOUL_BOUNDS.minLat);
-            const innerWidth = MAP_SIZE.width - MAP_SIZE.padding * 2;
-            const innerHeight = MAP_SIZE.height - MAP_SIZE.padding * 2;
-            return {
-                x: MAP_SIZE.padding + xRatio * innerWidth,
-                y: MAP_SIZE.padding + yRatio * innerHeight
-            };
+        function initMap() {
+            if (!els.stationMap || state.map || typeof L === 'undefined') {
+                if (typeof L === 'undefined' && els.mapFallback) els.mapFallback.hidden = false;
+                return;
+            }
+
+            state.map = L.map(els.stationMap, {
+                center: DEFAULT_CENTER,
+                zoom: 12,
+                scrollWheelZoom: false
+            });
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(state.map);
+
+            state.stationLayer = L.layerGroup().addTo(state.map);
+            state.userLayer = L.layerGroup().addTo(state.map);
+            state.leafletReady = true;
+            if (els.mapFallback) els.mapFallback.hidden = true;
+        }
+
+        function makeBikeIcon(station) {
+            const tone = markerTone(station.bikes);
+            return L.divIcon({
+                className: 'bike-div-icon',
+                html: `<span class="bike-marker ${tone}" aria-hidden="true">${station.bikes}</span>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15],
+                popupAnchor: [0, -16]
+            });
+        }
+
+        function makeUserIcon() {
+            return L.divIcon({
+                className: 'user-div-icon',
+                html: '<span class="user-marker-dot" aria-hidden="true"></span>',
+                iconSize: [28, 28],
+                iconAnchor: [14, 14],
+                popupAnchor: [0, -16]
+            });
         }
 
         function setStatus(message, tone = '') {
@@ -593,40 +667,54 @@
         }
 
         function renderMap(stations) {
-            if (!els.stationMap) return;
-            const stationMarkers = stations.slice(0, 80).map(station => {
-                const point = projectToMap({ lat: station.lat, lng: station.lng });
-                const radius = Math.max(5, Math.min(13, 5 + station.bikes * 0.35));
-                const title = `${station.name} · ${station.bikes}대 · ${station.distance == null ? '거리 정보 없음' : station.distance.toFixed(1) + 'km'}`;
-                return `
-                    <circle class="map-marker ${markerTone(station.bikes)}" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="${radius.toFixed(1)}" opacity="0.86">
-                        <title>${escapeHtml(title)}</title>
-                    </circle>
-                `;
-            }).join('');
+            initMap();
+            if (!state.leafletReady || !state.map || !state.stationLayer || !state.userLayer) return;
 
-            const userMarkup = state.userPosition ? (() => {
-                const point = projectToMap(state.userPosition);
-                return `
-                    <circle class="user-range" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="72"></circle>
-                    <circle class="user-marker" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="12">
-                        <title>현재 위치</title>
-                    </circle>
-                `;
-            })() : '';
+            state.stationLayer.clearLayers();
+            state.userLayer.clearLayers();
 
-            els.stationMap.innerHTML = `
-                <path class="map-river" d="M80 355 C220 320, 310 380, 440 342 S690 300, 920 336" />
-                <text x="88" y="388" fill="rgba(14,116,144,.7)" font-size="24" font-weight="800">한강</text>
-                ${stationMarkers}
-                ${userMarkup}
-            `;
+            const bounds = [];
+            stations.slice(0, 120).forEach(station => {
+                const latLng = [station.lat, station.lng];
+                bounds.push(latLng);
+                const distanceText = station.distance == null ? '위치 기준 없음' : `${station.distance.toFixed(1)}km`;
+                L.marker(latLng, { icon: makeBikeIcon(station), title: station.name })
+                    .bindPopup(`
+                        <strong>${escapeHtml(station.name)}</strong><br>
+                        대여 가능: ${station.bikes}대<br>
+                        거치대: ${station.racks} · 거치율: ${station.shared}%<br>
+                        거리: ${distanceText}
+                    `)
+                    .addTo(state.stationLayer);
+            });
 
             if (state.userPosition) {
+                const userLatLng = [state.userPosition.lat, state.userPosition.lng];
+                bounds.push(userLatLng);
+                L.marker(userLatLng, { icon: makeUserIcon(), title: '현재 위치' })
+                    .bindPopup('현재 위치')
+                    .addTo(state.userLayer);
+                L.circle(userLatLng, {
+                    radius: 3000,
+                    color: '#2563eb',
+                    weight: 1,
+                    fillColor: '#2563eb',
+                    fillOpacity: 0.08
+                }).addTo(state.userLayer);
                 els.mapMeta.textContent = `현재 위치 ${state.userPosition.lat.toFixed(4)}, ${state.userPosition.lng.toFixed(4)}`;
             } else {
                 els.mapMeta.textContent = '현재 위치 없음 · 대여소만 표시';
             }
+
+            if (bounds.length > 1) {
+                state.map.fitBounds(bounds, { padding: [34, 34], maxZoom: state.userPosition ? 15 : 13 });
+            } else if (bounds.length === 1) {
+                state.map.setView(bounds[0], 15);
+            } else {
+                state.map.setView(DEFAULT_CENTER, 12);
+            }
+
+            setTimeout(() => state.map.invalidateSize(), 0);
         }
 
         function renderStationCard(station) {
