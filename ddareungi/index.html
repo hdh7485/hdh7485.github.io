@@ -198,6 +198,73 @@
         .detail small { color: var(--muted); }
         .distance { color: var(--green-dark); font-weight: 900; }
 
+        .map-panel {
+            background: var(--card);
+            border: 1px solid rgba(255,255,255,0.76);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            padding: 22px;
+            margin: 22px 0;
+            backdrop-filter: blur(16px);
+        }
+        .map-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+        .map-head h2 { font-size: clamp(1.45rem, 3vw, 2rem); letter-spacing: -0.04em; }
+        .map-head p { color: var(--muted); line-height: 1.55; margin-top: 4px; }
+        .map-meta { color: var(--green-dark); font-weight: 900; text-align: right; min-width: 180px; }
+        .map-wrap {
+            position: relative;
+            min-height: 420px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(15,23,42,.1);
+            background:
+                linear-gradient(90deg, rgba(15,23,42,.06) 1px, transparent 1px),
+                linear-gradient(rgba(15,23,42,.06) 1px, transparent 1px),
+                radial-gradient(circle at 52% 45%, rgba(16,185,129,.20), transparent 18rem),
+                linear-gradient(135deg, #f8fafc, #dcfce7 55%, #dbeafe);
+            background-size: 48px 48px, 48px 48px, auto, auto;
+        }
+        .map-svg { width: 100%; height: 420px; display: block; }
+        .map-river { fill: none; stroke: rgba(14,165,233,.34); stroke-width: 18; stroke-linecap: round; }
+        .map-label {
+            position: absolute;
+            left: 16px;
+            top: 16px;
+            background: rgba(255,255,255,.86);
+            border: 1px solid rgba(15,23,42,.08);
+            color: #334155;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-weight: 900;
+            font-size: .88rem;
+        }
+        .map-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+            color: #475569;
+            font-size: .93rem;
+        }
+        .legend-dot { display: inline-flex; align-items: center; gap: 6px; }
+        .legend-dot::before { content: ''; width: 11px; height: 11px; border-radius: 999px; display: inline-block; background: var(--green); }
+        .legend-dot.low::before { background: var(--yellow); }
+        .legend-dot.empty::before { background: var(--red); }
+        .legend-dot.me::before { background: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,.16); }
+        .map-marker { cursor: pointer; transition: r .15s ease, opacity .15s ease; }
+        .map-marker:hover { r: 9; }
+        .map-marker.good { fill: var(--green); }
+        .map-marker.low { fill: var(--yellow); }
+        .map-marker.empty { fill: var(--red); }
+        .user-marker { fill: #2563eb; stroke: white; stroke-width: 3; filter: drop-shadow(0 8px 18px rgba(37,99,235,.38)); }
+        .user-range { fill: rgba(37,99,235,.08); stroke: rgba(37,99,235,.22); stroke-width: 1.5; }
+
         .empty-state { text-align: center; background: white; border: 1px dashed rgba(15,23,42,.18); border-radius: 24px; padding: 42px 20px; color: var(--muted); }
 
         .footer-note { color: #475569; line-height: 1.65; margin-top: 28px; font-size: .94rem; }
@@ -206,8 +273,10 @@
         @media (max-width: 860px) {
             .hero { grid-template-columns: 1fr; }
             .controls, .api-row { grid-template-columns: 1fr; }
-            .topbar, .results-head { align-items: flex-start; flex-direction: column; }
-            .source-chip, .updated { text-align: left; }
+            .topbar, .results-head, .map-head { align-items: flex-start; flex-direction: column; }
+            .source-chip, .updated, .map-meta { text-align: left; }
+            .map-wrap { min-height: 340px; }
+            .map-svg { height: 340px; }
         }
     </style>
 </head>
@@ -277,6 +346,26 @@
             </div>
         </section>
 
+        <section class="map-panel" aria-label="대여소 지도와 현재 위치">
+            <div class="map-head">
+                <div>
+                    <h2>대여소 미니 지도</h2>
+                    <p>검색·필터 결과를 서울 좌표 기준으로 표시합니다. “내 주변 보기”를 누르면 현재 위치가 파란 점으로 함께 나타납니다.</p>
+                </div>
+                <div id="mapMeta" class="map-meta">현재 위치 없음</div>
+            </div>
+            <div class="map-wrap">
+                <div class="map-label">서울 좌표 기반 미니 지도</div>
+                <svg id="stationMap" class="map-svg" viewBox="0 0 1000 620" role="img" aria-label="따릉이 대여소 위치 지도"></svg>
+            </div>
+            <div class="map-legend" aria-label="지도 범례">
+                <span class="legend-dot">3대 이상</span>
+                <span class="legend-dot low">1~2대</span>
+                <span class="legend-dot empty">0대</span>
+                <span class="legend-dot me">현재 위치</span>
+            </div>
+        </section>
+
         <section>
             <div class="results-head">
                 <h2>대여소 현황</h2>
@@ -293,6 +382,8 @@
 
     <script>
         const SEOUL_API_BASE = 'http://openapi.seoul.go.kr:8088';
+        const SEOUL_BOUNDS = { minLat: 37.41, maxLat: 37.72, minLng: 126.76, maxLng: 127.20 };
+        const MAP_SIZE = { width: 1000, height: 620, padding: 54 };
         const DEMO_STATIONS = [
             { rackTotCnt: '15', stationName: '102. 망원역 1번출구 앞', parkingBikeTotCnt: '8', shared: '53', stationLatitude: '37.55564880', stationLongitude: '126.91062927', stationId: 'ST-4' },
             { rackTotCnt: '14', stationName: '103. 망원역 2번출구 앞', parkingBikeTotCnt: '5', shared: '36', stationLatitude: '37.55495071', stationLongitude: '126.91083527', stationId: 'ST-5' },
@@ -333,7 +424,9 @@
             nearCount: document.getElementById('nearCount'),
             dataMode: document.getElementById('dataMode'),
             statusMessage: document.getElementById('statusMessage'),
-            updatedAt: document.getElementById('updatedAt')
+            updatedAt: document.getElementById('updatedAt'),
+            stationMap: document.getElementById('stationMap'),
+            mapMeta: document.getElementById('mapMeta')
         };
 
         function toNumber(value) {
@@ -364,6 +457,19 @@
             const lat2 = b.lat * Math.PI / 180;
             const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
             return radius * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+        }
+
+        function projectToMap(point) {
+            const lat = Math.min(Math.max(point.lat, SEOUL_BOUNDS.minLat), SEOUL_BOUNDS.maxLat);
+            const lng = Math.min(Math.max(point.lng, SEOUL_BOUNDS.minLng), SEOUL_BOUNDS.maxLng);
+            const xRatio = (lng - SEOUL_BOUNDS.minLng) / (SEOUL_BOUNDS.maxLng - SEOUL_BOUNDS.minLng);
+            const yRatio = (SEOUL_BOUNDS.maxLat - lat) / (SEOUL_BOUNDS.maxLat - SEOUL_BOUNDS.minLat);
+            const innerWidth = MAP_SIZE.width - MAP_SIZE.padding * 2;
+            const innerHeight = MAP_SIZE.height - MAP_SIZE.padding * 2;
+            return {
+                x: MAP_SIZE.padding + xRatio * innerWidth,
+                y: MAP_SIZE.padding + yRatio * innerHeight
+            };
         }
 
         function setStatus(message, tone = '') {
@@ -482,6 +588,47 @@
             return ['good', '대여 가능'];
         }
 
+        function markerTone(bikes) {
+            return availabilityTone(bikes)[0];
+        }
+
+        function renderMap(stations) {
+            if (!els.stationMap) return;
+            const stationMarkers = stations.slice(0, 80).map(station => {
+                const point = projectToMap({ lat: station.lat, lng: station.lng });
+                const radius = Math.max(5, Math.min(13, 5 + station.bikes * 0.35));
+                const title = `${station.name} · ${station.bikes}대 · ${station.distance == null ? '거리 정보 없음' : station.distance.toFixed(1) + 'km'}`;
+                return `
+                    <circle class="map-marker ${markerTone(station.bikes)}" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="${radius.toFixed(1)}" opacity="0.86">
+                        <title>${escapeHtml(title)}</title>
+                    </circle>
+                `;
+            }).join('');
+
+            const userMarkup = state.userPosition ? (() => {
+                const point = projectToMap(state.userPosition);
+                return `
+                    <circle class="user-range" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="72"></circle>
+                    <circle class="user-marker" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="12">
+                        <title>현재 위치</title>
+                    </circle>
+                `;
+            })() : '';
+
+            els.stationMap.innerHTML = `
+                <path class="map-river" d="M80 355 C220 320, 310 380, 440 342 S690 300, 920 336" />
+                <text x="88" y="388" fill="rgba(14,116,144,.7)" font-size="24" font-weight="800">한강</text>
+                ${stationMarkers}
+                ${userMarkup}
+            `;
+
+            if (state.userPosition) {
+                els.mapMeta.textContent = `현재 위치 ${state.userPosition.lat.toFixed(4)}, ${state.userPosition.lng.toFixed(4)}`;
+            } else {
+                els.mapMeta.textContent = '현재 위치 없음 · 대여소만 표시';
+            }
+        }
+
         function renderStationCard(station) {
             const [tone, label] = availabilityTone(station.bikes);
             const distanceText = station.distance == null ? '위치 기준 없음' : `${station.distance.toFixed(station.distance < 10 ? 1 : 0)}km`;
@@ -518,6 +665,7 @@
             els.nearCount.textContent = state.userPosition ? nearCount.toLocaleString('ko-KR') : '-';
             els.dataMode.textContent = state.dataMode;
             els.updatedAt.textContent = state.updatedAt ? `조회 시각 ${state.updatedAt.toLocaleString('ko-KR')}` : '조회 전';
+            renderMap(stations);
             els.stationGrid.innerHTML = stations.slice(0, 60).map(renderStationCard).join('');
             els.emptyState.hidden = stations.length > 0;
         }
